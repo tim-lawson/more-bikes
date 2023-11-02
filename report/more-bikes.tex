@@ -1,0 +1,78 @@
+% !TEX root=more-bikes.tex
+
+\documentclass[a4paper,11pt]{extarticle}
+
+% Page layout
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Typography
+\frenchspacing
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\usepackage{microtype}
+
+% Bibliography
+\usepackage[
+  style=authoryear,
+  maxcitenames=2,
+  uniquename=false,
+  doi=false,
+  isbn=false,
+  url=false,
+]{biblatex}
+
+% TODO: replace with project-specific bibliography.
+\addbibresource{~/library.bib}
+
+% Context-sensitive quotations
+\usepackage{csquotes}
+
+% Code snippets
+\usepackage{listings}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Input/include relative paths
+\usepackage{import}
+
+% Lists
+\usepackage{enumitem}
+
+% Math symbols and theorem environments
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{dsfont}
+\usepackage{thmtools}
+
+% Comments/TODOs
+\setlength{\marginparwidth}{1in}
+\usepackage{todonotes}
+
+% Tables
+\usepackage{multirow}
+
+% Commands
+
+\begin{document}
+
+\title{`More Bikes': Machine-learning experiments to predict rental-bike availability}
+\author{Tim Lawson}
+\date{\today}
+
+\maketitle
+
+\begin{abstract}
+  TODO
+\end{abstract}
+
+\import{sections/}{introduction.tex}
+\import{sections/}{data_analysis.tex}
+\section{Subtasks}
+\import{sections/subtasks/}{subtask_1.tex}
+
+% \printbibliography
+
+\end{document}

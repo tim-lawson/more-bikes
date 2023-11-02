@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "pytest", "-rP"],
+      "options": { "cwd": "${workspaceFolder}/src" },
+      "label": "[chore] test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "more_bikes.experiments.task_1a.task_1a_experiments",
+        "-f"
+      ],
+      "options": { "cwd": "${workspaceFolder}/src" },
+      "label": "[task 1a]",
+      "group": {
+        "kind": "none"
+      }
+    },
+    {
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "more_bikes.experiments.task_1b.task_1b_experiments",
+        "-f"
+      ],
+      "options": { "cwd": "${workspaceFolder}/src" },
+      "label": "[task 1b]",
+      "group": {
+        "kind": "none"
+      }
+    }
+  ]
+}

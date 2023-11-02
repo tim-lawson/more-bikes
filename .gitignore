@@ -1,0 +1,33 @@
+# Data
+data/**/*.csv
+
+# LaTeX
+**/*.aux
+**/*.bbl
+**/*.bcf
+**/*.blg
+**/*.fdb_latexmk
+**/*.fls
+**/*.idx
+**/*.ilg
+**/*.ind
+**/*.loe
+**/*.log
+**/*.nav
+**/*.out
+**/*.run.xml
+**/*.snm
+**/*.synctex.gz
+**/*.toc
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+.pytest_cache
+
+# Output
+src/more_bikes/experiments/**/*.log
+src/more_bikes/experiments/**/*.csv
+!src/more_bikes/experiments/**/*_submission.csv
