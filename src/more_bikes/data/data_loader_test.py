@@ -1,6 +1,6 @@
 """Test the data-loader classes."""
 
-from more_bikes.util.dataframe import split
+from more_bikes.util.processing import split
 
 from .data_loader import (
     DataLoaderTest1,

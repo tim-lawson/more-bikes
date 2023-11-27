@@ -4,15 +4,18 @@ from pandas import DataFrame, Series, concat
 from sklearn.model_selection import BaseCrossValidator, GridSearchCV
 
 from more_bikes.data.data_loader import DataLoaderTest1, DataLoaderTrain1
-from more_bikes.experiments.experiment import Experiment, Model
-from more_bikes.util.dataframe import chain_map, split, submission
+from more_bikes.experiments.experiment import Experiment, Model, Processing
+from more_bikes.util.processing import pre_chain, split
 
 
 class Task1AExperiment(Experiment):
     """A class to run task 1A experiments."""
 
-    def __init__(self, model: Model, cv: BaseCrossValidator | None = None) -> None:
-        super().__init__(model, f"./more_bikes/experiments/task_1a/{model.name}", cv)
+    def __init__(
+        self, model: Model, processing: Processing, cv: BaseCrossValidator | None = None
+    ) -> None:
+        self._output_path = f"./more_bikes/experiments/task_1a/{model.name}"
+        super().__init__(self._output_path, processing, model, cv)
 
     def run(
         self,
@@ -40,8 +43,10 @@ class Task1AExperiment(Experiment):
     def __run_station_id(self, station_id: int) -> tuple[DataFrame, float]:
         self._logger.info("station id %s", station_id)
 
+        pre = pre_chain(self._processing.pre)
+
         x_train, y_train = split(
-            chain_map(self._model.preprocessing)(DataLoaderTrain1(station_id).data)
+            pre(DataLoaderTrain1(station_id).data), self._processing.target
         )
 
         x_test = DataLoaderTest1(station_id).data
@@ -64,7 +69,7 @@ class Task1AExperiment(Experiment):
 
             y_pred = grid_search_cv.predict(x_test)
 
-            return submission(x_test, y_pred), -grid_search_cv.best_score_
+            return self._output(x_test, y_pred, -grid_search_cv.best_score_)
 
         # If there is no parameter grid, run the pipeline.
         return self.__run_pipeline(x_train, y_train, x_test)
@@ -78,11 +83,10 @@ class Task1AExperiment(Experiment):
         self._model.pipeline.fit(x_train, y_train)
 
         y_pred = self._model.pipeline.predict(x_test)
-
         assert not isinstance(y_pred, tuple)
 
         score = float(self._model.pipeline.score(x_train, y_train))
 
         self._logger.info("score %.3f", score)
 
-        return submission(x_test, y_pred), score
+        return self._output(x_test, y_pred, score)

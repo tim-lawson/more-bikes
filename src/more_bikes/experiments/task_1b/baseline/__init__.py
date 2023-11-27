@@ -1,31 +1,34 @@
-"""Task 1B: baseline (average)."""
+"""Task 1B: Baseline (average)."""
 
 from sklearn.pipeline import make_pipeline
 
 from more_bikes.estimators.average_regressor import AverageRegressor
 from more_bikes.experiments.experiment import Model
+from more_bikes.experiments.params.bikes_fraction import proc_bikes_fraction
 from more_bikes.experiments.params.cv import time_series_split
 from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
-from more_bikes.util.dataframe import create_dropna_row
 
-params = [
+param_grid = [
     {
         "averageregressor__average": ["mean"],
     }
 ]
 
-baseline = Task1BExperiment(
-    model=Model(
-        name="baseline",
-        pipeline=make_pipeline(
-            AverageRegressor(),
+
+def baseline():
+    """Baseline (average)."""
+    return Task1BExperiment(
+        model=Model(
+            name="baseline",
+            pipeline=make_pipeline(
+                AverageRegressor(),
+            ),
+            params=param_grid,
         ),
-        params=params,
-        preprocessing=[create_dropna_row()],
-    ),
-    cv=time_series_split,
-)
+        processing=proc_bikes_fraction(True),
+        cv=time_series_split,
+    )
 
 
 if __name__ == "__main__":
-    baseline.run().save()
+    baseline().run().save()

@@ -36,6 +36,8 @@ Analysis and experiments:
 - Experiment with learning algorithms, e.g., kernel regression, Gaussian processes,
   ensemble methods, etc.
 - Improve evaluation of learning algorithms and models
+- Reorganise pre- and post-processing functions
+- Integrate pre- and post-processing functions into the pipeline
 
 Documentation:
 

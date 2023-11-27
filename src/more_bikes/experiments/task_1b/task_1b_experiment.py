@@ -7,9 +7,9 @@ from sklearn.model_selection import BaseCrossValidator, GridSearchCV
 from sklearn_genetic import GASearchCV
 
 from more_bikes.data.data_loader import DataLoaderTestN, DataLoaderTrainN
-from more_bikes.experiments.experiment import Experiment, Model
+from more_bikes.experiments.experiment import Experiment, Model, Processing
 from more_bikes.experiments.params.util import GASearchCVParams, SearchStrategy
-from more_bikes.util.dataframe import chain_map, split, submission
+from more_bikes.util.processing import pre_chain, split
 
 
 class Task1BExperiment(Experiment):
@@ -18,11 +18,13 @@ class Task1BExperiment(Experiment):
     def __init__(
         self,
         model: Model,
+        processing: Processing,
         cv: BaseCrossValidator | None = None,
         search: SearchStrategy = "grid",
         ga_search_cv_params: GASearchCVParams | None = None,
     ) -> None:
-        super().__init__(model, f"./more_bikes/experiments/task_1b/{model.name}", cv)
+        self._output_path = f"./more_bikes/experiments/task_1b/{model.name}"
+        super().__init__(self._output_path, processing, model, cv)
 
         self._search = search
         self._ga_search_cv_params = ga_search_cv_params or GASearchCVParams()
@@ -41,8 +43,11 @@ class Task1BExperiment(Experiment):
         return self
 
     def __run(self) -> tuple[DataFrame, float]:
+        pre = pre_chain(self._processing.pre)
+
         x_train, y_train = split(
-            chain_map(self._model.preprocessing)(DataLoaderTrainN().data)
+            pre(DataLoaderTrainN().data),
+            self._processing.target,
         )
 
         x_test = DataLoaderTestN().data
@@ -82,7 +87,7 @@ class Task1BExperiment(Experiment):
 
             y_pred = search.predict(x_test)
 
-            return submission(x_test, y_pred), -search.best_score_
+            return self._output(x_test, y_pred, -search.best_score_)
 
         # If there is no parameter grid, run the pipeline.
         return self.__run_pipeline(x_train, y_train, x_test)
@@ -102,11 +107,10 @@ class Task1BExperiment(Experiment):
         self._model.pipeline.fit(x_train, y_train)
 
         y_pred = self._model.pipeline.predict(x_test)
-
         assert not isinstance(y_pred, tuple)
 
         score = float(self._model.pipeline.score(x_train, y_train))
 
         self._logger.info("score %.3f", score)
 
-        return submission(x_test, y_pred), score
+        return self._output(x_test, y_pred, score)

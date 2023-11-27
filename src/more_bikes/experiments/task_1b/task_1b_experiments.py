@@ -16,4 +16,4 @@ task_experiments: list[TaskExperiment] = [
 if __name__ == "__main__":
     for task_experiment in task_experiments:
         if task_experiment.run:
-            task_experiment.experiment.run().save()
+            task_experiment.experiment().run().save()
