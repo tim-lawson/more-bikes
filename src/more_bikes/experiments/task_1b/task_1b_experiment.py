@@ -87,7 +87,7 @@ class Task1BExperiment(Experiment):
 
             y_pred = search.predict(x_test)
 
-            return self._output(x_test, y_pred, -search.best_score_)
+            return self._output(x_test, y_pred, search.best_score_)
 
         # If there is no parameter grid, run the pipeline.
         return self.__run_pipeline(x_train, y_train, x_test)

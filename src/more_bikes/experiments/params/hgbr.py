@@ -9,8 +9,8 @@ from more_bikes.experiments.params.util import ParamGrid, ParamSpace
 hgbr_param_grid: ParamGrid = [
     {
         "histgradientboostingregressor__loss": [
-            "squared_error",
-            # "absolute_error",
+            # "squared_error",
+            "absolute_error",
             # "poisson",
         ],
         # `quantile` is irrelevant for `loss="absolute_error"`.
@@ -19,16 +19,16 @@ hgbr_param_grid: ParamGrid = [
             0.1,
             # 1,
         ],
-        "histgradientboostingregressor__max_iter": [100],
+        "histgradientboostingregressor__max_iter": [500],
         "histgradientboostingregressor__max_leaf_nodes": [
             None,
-            # 15,
+            15,
             # 31,
             # 63,
         ],
         "histgradientboostingregressor__max_depth": [
             None,
-            5,
+            # 5,
             # 10,
             # 20,
         ],
@@ -39,10 +39,10 @@ hgbr_param_grid: ParamGrid = [
         ],
         "histgradientboostingregressor__l2_regularization": [
             0.0,
-            # 0.1,
-            # 0.2,
-            # 0.5,
-            # 1.0,
+            0.1,
+            0.2,
+            0.5,
+            1.0,
         ],
         # "histgradientboostingregressor__max_bins": [255],
         "histgradientboostingregressor__categorical_features": [categorical_features],
