@@ -20,7 +20,7 @@ def hgbr():
             pipeline=make_pipeline(
                 ordinal_transformer.set_output(transform="pandas"),
                 column_transformer_1a.set_output(transform="pandas"),
-                HistGradientBoostingRegressor(random_state=42, verbose=1),
+                HistGradientBoostingRegressor(random_state=42),
             ),
             params=hgbr_param_grid,
         ),

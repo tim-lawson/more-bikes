@@ -36,7 +36,7 @@ class DataLoaderTrain1(DataLoader):
             names=FEATURE_TRAIN,
             dtype=FEATURE_DTYPE,
             na_values="NA",
-        )
+        ).sort_values(by=["timestamp"])
 
 
 class DataLoaderTrainN(DataLoader):
@@ -64,7 +64,7 @@ class DataLoaderTrainN(DataLoader):
                 for path in self.paths
             ],
             ignore_index=True,
-        )
+        ).sort_values(by=["timestamp"])
 
 
 class DataLoaderTest1(DataLoader):
@@ -84,7 +84,7 @@ class DataLoaderTest1(DataLoader):
             dtype=FEATURE_DTYPE,
             na_values="NA",
         )
-        return data[data["station"] == self.station_id]
+        return data[data["station"] == self.station_id].sort_values(by=["timestamp"])
 
 
 class DataLoaderTestN(DataLoader):
@@ -102,4 +102,4 @@ class DataLoaderTestN(DataLoader):
             names=FEATURE_TEST,
             dtype=FEATURE_DTYPE,
             na_values="NA",
-        )
+        ).sort_values(by=["timestamp"])

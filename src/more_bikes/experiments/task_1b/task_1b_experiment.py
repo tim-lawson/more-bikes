@@ -1,5 +1,6 @@
 """Task 1B experiment class."""
 
+from contextlib import redirect_stdout
 from typing import Self
 
 from pandas import DataFrame, Series
@@ -54,28 +55,31 @@ class Task1BExperiment(Experiment):
 
         # If there is a parameter grid, search it.
         if self._cv is not None and self._model.params is not None:
-            # Genetic algorithm.
-            if self._search == "genetic":
-                search = GASearchCV(
-                    estimator=self._model.pipeline,
-                    param_grid=self._model.params,
-                    scoring=self._model.scoring,
-                    refit=self._model.scoring,  # type: ignore
-                    cv=self._cv,  # type: ignore
-                    **self._ga_search_cv_params.__dict__,
-                )
-            # Grid search.
-            else:
-                search = GridSearchCV(
-                    estimator=self._model.pipeline,
-                    param_grid=self._model.params,
-                    scoring=[self._model.scoring],
-                    refit=self._model.scoring,
-                    cv=self._cv,
-                    verbose=True,
-                )
-
-            search.fit(x_train, y_train)
+            outfile = f"{self._output_path}/{self._model.name}_cv.log"
+            with open(outfile, "w", encoding="utf-8") as out:
+                with redirect_stdout(out):
+                    # Genetic algorithm.
+                    if self._search == "genetic":
+                        search = GASearchCV(
+                            estimator=self._model.pipeline,
+                            param_grid=self._model.params,
+                            scoring=self._model.scoring,
+                            refit=self._model.scoring,  # type: ignore
+                            cv=self._cv,  # type: ignore
+                            verbose=True,
+                            **self._ga_search_cv_params.__dict__,
+                        )
+                    # Grid search.
+                    else:
+                        search = GridSearchCV(
+                            estimator=self._model.pipeline,
+                            param_grid=self._model.params,
+                            scoring=[self._model.scoring],
+                            refit=self._model.scoring,
+                            cv=self._cv,
+                            verbose=3,
+                        )
+                    search.fit(x_train, y_train)
 
             self._logger.info("score %.3f", -search.best_score_)
             self._logger.info("params %s", search.best_params_)

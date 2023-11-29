@@ -19,10 +19,14 @@ hgbr_param_grid: ParamGrid = [
             0.1,
             # 1,
         ],
-        "histgradientboostingregressor__max_iter": [500],
+        "histgradientboostingregressor__max_iter": [
+            100,
+            # 200,
+            # 500,
+        ],
         "histgradientboostingregressor__max_leaf_nodes": [
             None,
-            15,
+            # 15,
             # 31,
             # 63,
         ],
@@ -38,11 +42,11 @@ hgbr_param_grid: ParamGrid = [
             50,
         ],
         "histgradientboostingregressor__l2_regularization": [
-            0.0,
-            0.1,
-            0.2,
+            # 0.0,
+            # 0.1,
+            # 0.2,
             0.5,
-            1.0,
+            # 1.0,
         ],
         # "histgradientboostingregressor__max_bins": [255],
         "histgradientboostingregressor__categorical_features": [categorical_features],
@@ -53,7 +57,6 @@ hgbr_param_grid: ParamGrid = [
         # "histgradientboostingregressor__validation_fraction": [0.1],
         # "histgradientboostingregressor__n_iter_no_change": [10],
         # "histgradientboostingregressor__tol": [1e-7],
-        # `verbose`, `random_state` are fixed.
     }
 ]
 
@@ -86,5 +89,4 @@ hgbr_param_space: ParamSpace = {
     # "histgradientboostingregressor__validation_fraction": Continuous(0.1, 0.1),
     # "histgradientboostingregressor__n_iter_no_change": Integer(10, 10),
     # "histgradientboostingregressor__tol": Continuous(1e-7, 1e-7),
-    # `verbose`, `random_state` are fixed.
 }

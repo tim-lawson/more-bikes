@@ -24,11 +24,8 @@ def hgbr():
             name="hgbr",
             pipeline=make_pipeline(
                 ordinal_transformer.set_output(transform="pandas"),
-                # column_transformer_1b.set_output(transform="pandas"),
-                HistGradientBoostingRegressor(
-                    random_state=42,
-                    verbose=1,
-                ),
+                column_transformer_1b.set_output(transform="pandas"),
+                HistGradientBoostingRegressor(random_state=42),
             ),
             params=params,
         ),

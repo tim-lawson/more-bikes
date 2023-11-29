@@ -30,7 +30,7 @@ def mlp():
                 ordinal_transformer.set_output(transform="pandas"),
                 column_transformer_1b.set_output(transform="pandas"),
                 SimpleImputer(missing_values=nan, strategy="mean"),
-                MLPRegressor(random_state=42, verbose=True),
+                MLPRegressor(random_state=42),
             ),
             params=params,
         ),

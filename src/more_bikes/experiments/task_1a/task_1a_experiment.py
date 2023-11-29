@@ -1,5 +1,7 @@
 """Task 1A experiment class."""
 
+from contextlib import redirect_stdout
+
 from pandas import DataFrame, Series, concat
 from sklearn.model_selection import BaseCrossValidator, GridSearchCV
 
@@ -53,23 +55,25 @@ class Task1AExperiment(Experiment):
 
         # If there is a parameter grid, search it.
         if self._cv and self._model.params is not None:
-            grid_search_cv = GridSearchCV(
-                estimator=self._model.pipeline,
-                param_grid=self._model.params,
-                scoring=[self._model.scoring],
-                refit=self._model.scoring,
-                cv=self._cv,
-                verbose=1,
-            )
-
-            grid_search_cv.fit(x_train, y_train)
+            outfile = f"{self._output_path}/{self._model.name}_cv.log"
+            with open(outfile, "w", encoding="utf-8") as out:
+                with redirect_stdout(out):
+                    grid_search_cv = GridSearchCV(
+                        estimator=self._model.pipeline,
+                        param_grid=self._model.params,
+                        scoring=[self._model.scoring],
+                        refit=self._model.scoring,
+                        cv=self._cv,
+                        verbose=3,
+                    )
+                    grid_search_cv.fit(x_train, y_train)
 
             self._logger.info("score %.3f", -grid_search_cv.best_score_)
             self._logger.info("params %s", grid_search_cv.best_params_)
 
             y_pred = grid_search_cv.predict(x_test)
 
-            return self._output(x_test, y_pred, -grid_search_cv.best_score_)
+            return self._output(x_test, y_pred, grid_search_cv.best_score_)
 
         # If there is no parameter grid, run the pipeline.
         return self.__run_pipeline(x_train, y_train, x_test)

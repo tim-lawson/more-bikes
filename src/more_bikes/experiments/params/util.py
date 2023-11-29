@@ -26,7 +26,6 @@ class GASearchCVParams:
     tournament_size: int = 3
     elitism: bool = True
     n_jobs: int | None = -1
-    verbose: bool = True
     keep_top_k: int = 1
     algorithm: Literal[
         "eaMuPlusLambda", "eaMuCommaLambda", "eaSimple"
