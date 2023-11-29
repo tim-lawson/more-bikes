@@ -14,9 +14,22 @@ from more_bikes.preprocessing.ordinal import ordinal_transformer
 
 params = [
     {
-        "mlpregressor__hidden_layer_sizes": [(16), (32), (64), (128), (256)],
-        "mlpregressor__activation": ["logistic", "tanh", "relu"],
-        "mlpregressor__learning_rate": ["constant", "invscaling", "adaptive"],
+        "mlpregressor__hidden_layer_sizes": [
+            (16),
+            (16, 16),
+            (16, 16, 16),
+            (16, 16, 16, 16),
+        ],
+        "mlpregressor__activation": [
+            "logistic",
+            "tanh",
+            "relu",
+        ],
+        "mlpregressor__learning_rate": [
+            "constant",
+            "invscaling",
+            "adaptive",
+        ],
     }
 ]
 

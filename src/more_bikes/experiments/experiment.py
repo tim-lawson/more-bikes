@@ -8,7 +8,7 @@ from pandas import DataFrame
 from sklearn.model_selection import BaseCrossValidator
 from sklearn.pipeline import Pipeline
 
-from more_bikes.data.feature import TARGET, Feature
+from more_bikes.data.feature import BIKES, Feature
 from more_bikes.experiments.params.util import ParamGrid, ParamSpace
 from more_bikes.util.array import NDArray
 from more_bikes.util.log import create_logger
@@ -29,7 +29,7 @@ class Processing:
     """Processing specification."""
 
     # The target variable.
-    target: Feature | str = TARGET
+    target: Feature | str = BIKES
 
     # A sequence of fixed pre-processing steps to apply before the pipeline.
     pre: list[PreProcessing] = field(default_factory=lambda: [pre_identity])

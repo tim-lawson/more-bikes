@@ -27,6 +27,8 @@ class Task1BExperiment(Experiment):
         self._output_path = f"./more_bikes/experiments/task_1b/{model.name}"
         super().__init__(self._output_path, processing, model, cv)
 
+        self._pre = pre_chain(self._processing.pre)
+
         self._search = search
         self._ga_search_cv_params = ga_search_cv_params or GASearchCVParams()
 
@@ -44,10 +46,8 @@ class Task1BExperiment(Experiment):
         return self
 
     def __run(self) -> tuple[DataFrame, float]:
-        pre = pre_chain(self._processing.pre)
-
         x_train, y_train = split(
-            pre(DataLoaderTrainN().data),
+            self._pre(DataLoaderTrainN().data),
             self._processing.target,
         )
 

@@ -6,7 +6,7 @@ from typing import Callable
 from numpy import clip, float_
 from pandas import DataFrame, Series
 
-from more_bikes.data.feature import TARGET, Feature
+from more_bikes.data.feature import BIKES, Feature
 from more_bikes.util.array import NDArray
 
 
@@ -15,7 +15,7 @@ def dropna_col(data: DataFrame) -> DataFrame:
     return data.dropna(axis=1)
 
 
-def split(data: DataFrame, target: Feature | str = TARGET) -> tuple[DataFrame, Series]:
+def split(data: DataFrame, target: Feature | str = BIKES) -> tuple[DataFrame, Series]:
     """Split the feature and target columns."""
     return data.drop(columns=target), data[target]
 
@@ -30,6 +30,11 @@ def pre_chain(sequence: list[PreProcessing]) -> PreProcessing:
     return lambda data: reduce(lambda x, f: f(x), sequence, data)
 
 
+def pre_identity(data: DataFrame) -> DataFrame:
+    """Pre-processing: Identity/no-op."""
+    return data
+
+
 def pre_drop_columns(columns: list[str]) -> PreProcessing:
     """Drop columns."""
     return lambda data: data.drop(columns=columns)
@@ -39,12 +44,7 @@ def pre_dropna_row(columns: list[str] | None = None) -> PreProcessing:
     """
     Drop rows with `NaN` values in the specified columns (defaults to target).
     """
-    return lambda data: data.dropna(axis=0, subset=columns or [TARGET])
-
-
-def pre_identity(data: DataFrame) -> DataFrame:
-    """Pre-processing: Identity/no-op."""
-    return data
+    return lambda data: data.dropna(axis=0, subset=columns or [BIKES])
 
 
 BIKES_FRACTION = "bikes_fraction"
@@ -53,8 +53,8 @@ BIKES_FRACTION = "bikes_fraction"
 def pre_do_bikes_fraction(data: DataFrame) -> DataFrame:
     """Pre-processing: Add a feature that is `bikes` divided by `docks`."""
     data = data.copy()
-    data[BIKES_FRACTION] = data["bikes"] / data["docks"]
-    data.drop("bikes", axis=1, inplace=True)
+    data[BIKES_FRACTION] = data[BIKES] / data["docks"]
+    data.drop(BIKES, axis=1, inplace=True)
     return data
 
 

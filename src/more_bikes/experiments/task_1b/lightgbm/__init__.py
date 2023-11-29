@@ -1,7 +1,7 @@
 """Task 1B: LightGBM."""
 
 from lightgbm import LGBMRegressor
-from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import FunctionTransformer, make_pipeline
 
 from more_bikes.experiments.experiment import Model
 from more_bikes.experiments.params.bikes_fraction import proc_bikes_fraction
@@ -12,11 +12,33 @@ from more_bikes.preprocessing.ordinal import ordinal_transformer
 
 params = [
     {
-        # "lgbmregressor__boosting_type": ["gbdt", "dart"],
-        # "lgbmregressor__num_leaves": [15, 31, 63, 127],
-        "lgbmregressor__max_depth": [-1],
-        "lgbmregressor__learning_rate": [1e-1],
-        "lgbmregressor__n_estimators": [100],
+        "lgbmregressor__boosting_type": [
+            "gbdt",
+            # "dart",
+        ],
+        "lgbmregressor__num_leaves": [
+            # 15,
+            31,
+            # 63,
+            # 127,
+        ],
+        "lgbmregressor__max_depth": [
+            -1,
+            # 5,
+            # 10,
+            # 20,
+        ],
+        "lgbmregressor__learning_rate": [
+            # 1e-2,
+            1e-1,
+            # 1.0,
+        ],
+        "lgbmregressor__n_estimators": [
+            100,
+            # 200,
+            # 500,
+            # 1000,
+        ],
     }
 ]
 
@@ -29,7 +51,7 @@ def lightgbm():
             pipeline=make_pipeline(
                 ordinal_transformer.set_output(transform="pandas"),
                 column_transformer_1b.set_output(transform="pandas"),
-                LGBMRegressor(random_state=42, n_jobs=10),
+                LGBMRegressor(random_state=42, verbosity=2),
             ),
             params=params,
         ),

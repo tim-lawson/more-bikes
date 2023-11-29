@@ -92,7 +92,7 @@ FEATURE_DTYPE: dict[Feature, DType] = {
     "bikes": "float",
 }
 
-TARGET = "bikes"
+BIKES = "bikes"
 
 WEEKDAY = (
     [

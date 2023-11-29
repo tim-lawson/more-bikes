@@ -19,6 +19,8 @@ class Task1AExperiment(Experiment):
         self._output_path = f"./more_bikes/experiments/task_1a/{model.name}"
         super().__init__(self._output_path, processing, model, cv)
 
+        self._pre = pre_chain(self._processing.pre)
+
     def run(
         self,
         station_id_min=201,
@@ -45,10 +47,8 @@ class Task1AExperiment(Experiment):
     def __run_station_id(self, station_id: int) -> tuple[DataFrame, float]:
         self._logger.info("station id %s", station_id)
 
-        pre = pre_chain(self._processing.pre)
-
         x_train, y_train = split(
-            pre(DataLoaderTrain1(station_id).data), self._processing.target
+            self._pre(DataLoaderTrain1(station_id).data), self._processing.target
         )
 
         x_test = DataLoaderTest1(station_id).data
