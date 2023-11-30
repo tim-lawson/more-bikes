@@ -7,9 +7,9 @@ from more_bikes.experiments.task_1b.lightgbm import lightgbm
 from more_bikes.experiments.task_1b.mlp import mlp
 
 task_experiments: list[TaskExperiment] = [
-    TaskExperiment(baseline, False),
-    TaskExperiment(hgbr, False),
-    TaskExperiment(lightgbm, False),
+    TaskExperiment(baseline, True),
+    TaskExperiment(hgbr, True),
+    TaskExperiment(lightgbm, True),
     TaskExperiment(mlp, True),
 ]
 

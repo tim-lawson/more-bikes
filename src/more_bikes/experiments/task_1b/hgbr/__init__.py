@@ -1,5 +1,6 @@
 """Task 1B: Histogram-based gradient-boosting regression tree."""
 
+from sklearn.discriminant_analysis import StandardScaler
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.pipeline import make_pipeline
 
@@ -25,6 +26,7 @@ def hgbr():
             pipeline=make_pipeline(
                 ordinal_transformer.set_output(transform="pandas"),
                 column_transformer_1b.set_output(transform="pandas"),
+                StandardScaler().set_output(transform="pandas"),
                 HistGradientBoostingRegressor(random_state=42),
             ),
             params=params,
