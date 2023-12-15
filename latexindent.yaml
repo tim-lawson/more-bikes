@@ -14,4 +14,4 @@ modifyLineBreaks:
     sentenceIndent: ""
   preserveBlankLines: 1
   textWrapOptions:
-    columns: 80
+    columns: 88

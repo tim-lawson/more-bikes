@@ -3,9 +3,13 @@ data/**/*.csv
 
 # LaTeX
 **/*.aux
+**/*.auxlock
 **/*.bbl
 **/*.bcf
 **/*.blg
+**/*.dep
+**/*.dpth
+**/*.md5
 **/*.fdb_latexmk
 **/*.fls
 **/*.idx
@@ -18,10 +22,14 @@ data/**/*.csv
 **/*.run.xml
 **/*.snm
 **/*.synctex.gz
+**/*.synctex(busy)
 **/*.toc
 
 # macOS
 .DS_Store
+
+# Python
+__pycache__/
 
 # Python
 __pycache__/

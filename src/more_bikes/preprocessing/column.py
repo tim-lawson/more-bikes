@@ -22,6 +22,7 @@ def make_drop_column_transformer(
     )
 
 
+# Drop columns with zero variance and ~duplicates.
 column_transformer_1a = make_drop_column_transformer(
     [
         "latitude",

@@ -1,7 +1,6 @@
 """Task 1B: LightGBM."""
 
 from lightgbm import LGBMRegressor
-from sklearn.discriminant_analysis import StandardScaler
 from sklearn.pipeline import make_pipeline
 
 from more_bikes.experiments.experiment import Model
@@ -52,7 +51,6 @@ def lightgbm():
             pipeline=make_pipeline(
                 ordinal_transformer.set_output(transform="pandas"),
                 column_transformer_1b.set_output(transform="pandas"),
-                StandardScaler().set_output(transform="pandas"),
                 LGBMRegressor(random_state=42, verbosity=2),
             ),
             params=params,

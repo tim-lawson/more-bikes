@@ -29,7 +29,6 @@ Analysis and experiments:
 - Complete tasks 2 and 3
 - Experiment with imputation methods
 - Experiment with representations of temporal features
-- Constrain models to be non-negative
 - Improve implementation of genetic parameter search
 - Implement genetic parameter search for task 1.1
 - Determine appropriate parameter search spaces
