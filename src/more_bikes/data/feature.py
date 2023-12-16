@@ -94,16 +94,7 @@ FEATURE_DTYPE: dict[Feature, DType] = {
 
 BIKES = "bikes"
 
-WEEKDAY = (
-    [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-    ],
-)
+WEEKDAY = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 
 categorical_features = ["weekday", "is_holiday"]

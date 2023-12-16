@@ -1,0 +1,51 @@
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+        group style = {
+            group size = 1 by 1,
+            ylabels at = edge left,
+            vertical sep = 2.5in,
+            horizontal sep = 0.7in,
+          },
+        width = 5in,
+        height = 3in,
+        cycle list/Paired,
+        xlabel = {Hour of the day},
+        ylabel = {Fraction of available bikes},
+        xmin = 0,
+        xmax = 23,
+        ymin = 0,
+        legend style = {
+            draw = none,
+            font = \small,
+            at={(1.05, 0.5)},
+            anchor=west,
+          },
+        legend cell align={left},
+      ]
+      \nextgroupplot
+      \foreach \weekday in {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday}{
+          \addplot+[
+            sharp plot,
+            mark = none,
+            line width = 0.8pt,
+            discard if not = {weekday}{\weekday},
+          ] table [
+              col sep=comma,
+              x = hour,
+              y = fraction,
+            ]{../src/more_bikes/analysis/csv/average_fraction_weekday.csv};
+          \addlegendentryexpanded{\weekday}
+        }
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{The average hourly fraction of available bikes on each day of the week over
+    the ten stations for which a year's data is available.
+    The distributions are generally bimodal, with peaks in the middle of the day and in the
+    evening.
+    A distinction between weekdays and weekends is also evident, with the exception of
+    Friday evenings, where the distribution is more similar to that of a weekend day.
+  }
+  \label{fig:chart-weekday}
+\end{figure}

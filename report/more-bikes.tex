@@ -53,14 +53,12 @@
 % Quotations
 \usepackage{csquotes}
 
-% Hyperlinks
-\usepackage{hyperref}
-
 % Input/include relative paths
 \usepackage{import}
 
-% Fix references
-\usepackage{bookmark}
+% References
+\usepackage{hyperref}
+\usepackage{cleveref}
 
 % Math
 \usepackage{amsmath}
@@ -135,6 +133,132 @@
 \date{\today}
 
 \maketitle
+
+\section{Task description}
+
+The task is to predict the number of available bikes at 75 rental stations in three
+hours' time for a period of three months, beginning in November 2014.
+It is divided into three sub-tasks, which differ in the information that is available:
+\begin{itemize}
+  \item \textbf{Sub-task 1}.
+        The number of available bikes at each of the 75 stations for the month of October 2014.
+        This sub-task may be approached by building a separate model for each station or a
+        single model for all 75 stations.
+  \item \textbf{Sub-task 2}.
+        A set of linear models that were trained on the number of available bikes at each of a
+        separate set of 200 stations for a year.
+        For the first ten stations, this data is available for analysis but not training.
+  \item \textbf{Sub-task 3}.
+        Both of the above.
+\end{itemize}
+The predictions are evaluated by the mean absolute error (MAE) between the predicted
+and true numbers of available bikes over the period of three months.
+The evaluation data is not available to participants but the score achieved on a
+held-out test set is reported on the leaderboard.
+
+In each case, the task is a supervised univariate regression or time-series forecasting
+problem.
+Sub-tasks 2 and, optionally, 3 require the use of ensemble methods.
+This report begins with a preliminary analysis of the data and then describes the
+approach taken to each sub-task and the cross-validation results obtained.
+
+\section{Preliminary analysis}
+
+The data is recorded at hourly intervals; a summary of its features is given in
+\cref{table:features}.
+The `station' features are constant for all instances at a given station and the
+meteorological features are constant for all instances at a given timestamp.
+The `profile' features, i.e., the numbers of available bikes at preceding times and
+derivations thereof, are not defined for the first week of instances at each station.
+Preliminary analysis showed that the precipitation feature was zero for all instances;
+hence, it was discarded in the following analysis.
+Naturally, the number of bikes available at a given station is bounded by zero and the
+number of docks at that station.
+
+\begin{figure}
+  \centering
+  \begin{tabular}{lll}
+    Category                               & Feature                              & Data type
+    \\
+    \hline \multirow{4}{*}{Station}        & \texttt{station}                     &
+    \texttt{int}
+    \\
+                                           & \texttt{latitude}                    & \texttt{float}
+    \\
+                                           & \texttt{longitude}                   &
+    \texttt{float}
+    \\
+                                           & \texttt{docks}                       & \texttt{int}
+    \\
+    \hline \multirow{8}{*}{Temporal}       &
+    \texttt{timestamp}                     & \texttt{int}
+    \\
+                                           & \texttt{year}                        & \texttt{int}
+    \\
+                                           & \texttt{month}
+                                           & \texttt{int}
+    \\
+                                           & \texttt{day}                         & \texttt{int}
+    \\
+                                           & \texttt{hour}                        & \texttt{int}
+    \\
+                                           &
+    \texttt{weekday}                       & \texttt{str}
+    \\
+                                           & \texttt{weekhour}                    & \texttt{int}
+    \\
+                                           &
+    \texttt{is\_holiday}                   & \texttt{bool}
+    \\
+    \hline \multirow{7}{*}{Meteorological} &
+    \texttt{wind\_speed\_max}              & \texttt{float}
+    \\
+                                           & \texttt{wind\_speed\_avg}            &
+    \texttt{float}
+    \\
+                                           & \texttt{wind\_direction}             & \texttt{float}
+    \\
+                                           & \texttt{temperature}
+                                           & \texttt{float}
+    \\
+                                           & \texttt{humidity}                    & \texttt{float}
+    \\
+                                           & \texttt{pressure}                    &
+    \texttt{float}
+    \\
+                                           & \texttt{precipitation}               & \texttt{float}
+    \\
+    \hline
+    \multirow{6}{*}{Available bikes}       & \texttt{bikes\_3h}                   & \texttt{int}
+    \\
+                                           &
+    \texttt{bikes\_3h\_diff\_avg\_full}    & \texttt{float}
+    \\
+                                           & \texttt{bikes\_avg\_full}            &
+    \texttt{float}
+    \\
+                                           & \texttt{bikes\_3h\_diff\_avg\_short} & \texttt{float}
+    \\
+                                           &
+    \texttt{bikes\_avg\_short}             & \texttt{float}
+    \\
+                                           & \texttt{bikes}                       & \texttt{int}
+  \end{tabular}
+  \caption{A summary of the features of the data.
+  }
+  \label{table:features}
+\end{figure}
+
+\import{.}{figure-chart-weekday.tex}
+
+\subsection{Temporal features}
+
+\todonum{Describe the distributions of the fraction of available bikes in terms of
+  temporal features and the possible derived features.}
+
+\section{Sub-task 1}
+\section{Sub-task 2}
+\section{Sub-task 3}
 
 \printbibliography
 

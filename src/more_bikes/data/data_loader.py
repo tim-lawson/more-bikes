@@ -21,7 +21,7 @@ class DataLoader(metaclass=ABCMeta):
 
 
 class DataLoaderTrain1(DataLoader):
-    """Data loader for a single station."""
+    """Train data loader for a single station."""
 
     def __init__(self, station_id: int):
         super().__init__()
@@ -40,7 +40,7 @@ class DataLoaderTrain1(DataLoader):
 
 
 class DataLoaderTrainN(DataLoader):
-    """Data loader for multiple stations."""
+    """Train data loader for multiple stations."""
 
     def __init__(self, station_ids: list[int] | None = None):
         super().__init__()
@@ -102,4 +102,51 @@ class DataLoaderTestN(DataLoader):
             names=FEATURE_TEST,
             dtype=FEATURE_DTYPE,
             na_values="NA",
+        ).sort_values(by=["timestamp"])
+
+
+class DataLoaderFull1(DataLoader):
+    """Full data loader for a single station."""
+
+    def __init__(self, station_id: int):
+        super().__init__()
+        self.station_id = station_id
+        self.path = f"../data/train/station_{station_id}_train.csv"
+
+    @cached_property
+    def data(self):
+        return read_csv(
+            filepath_or_buffer=self.path,
+            header=0,
+            names=FEATURE_TRAIN,
+            dtype=FEATURE_DTYPE,
+            na_values="NA",
+        ).sort_values(by=["timestamp"])
+
+
+class DataLoaderFullN(DataLoader):
+    """Full data loader for multiple stations."""
+
+    def __init__(self, station_ids: list[int] | None = None):
+        super().__init__()
+        self.station_ids = station_ids or list(range(1, 11))
+        self.paths = [
+            f"../data/train/station_{station_id}_train.csv"
+            for station_id in self.station_ids
+        ]
+
+    @cached_property
+    def data(self):
+        return concat(
+            [
+                read_csv(
+                    filepath_or_buffer=path,
+                    header=0,
+                    names=FEATURE_TRAIN,
+                    dtype=FEATURE_DTYPE,
+                    na_values="NA",
+                )
+                for path in self.paths
+            ],
+            ignore_index=True,
         ).sort_values(by=["timestamp"])
