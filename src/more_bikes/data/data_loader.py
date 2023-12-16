@@ -150,3 +150,18 @@ class DataLoaderFullN(DataLoader):
             ],
             ignore_index=True,
         ).sort_values(by=["timestamp"])
+
+
+class DataLoaderAll(DataLoader):
+    """Data loader for all sources."""
+
+    def __init__(self):
+        super().__init__()
+        self.train = DataLoaderTrainN()
+        self.full = DataLoaderFullN()
+
+    @cached_property
+    def data(self):
+        return concat(
+            [self.train.data, self.full.data], ignore_index=True, sort=False
+        ).sort_values(by=["timestamp"])
