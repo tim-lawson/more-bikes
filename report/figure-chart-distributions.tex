@@ -1,0 +1,145 @@
+
+\pgfplotsset{
+  cycle list/Paired
+}
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+        group style = {
+            group size = 2 by 4,
+            ylabels at = edge left,
+            vertical sep = 1in,
+            horizontal sep = 0.75in,
+          },
+        width = 3in,
+        height = 2in,
+        ybar interval,
+        xtick = ,
+      ]
+
+      \nextgroupplot[title = Wind speed maximum]
+      \addplot table [
+          col sep = comma,
+          x = divisions,
+          y = counts,
+        ]{../src/more_bikes/analysis/csv/histogram_wind_speed_max.csv};
+
+      \nextgroupplot[title = Wind speed average]
+      \addplot table [
+          col sep = comma,
+          x = divisions,
+          y = counts,
+        ]{../src/more_bikes/analysis/csv/histogram_wind_speed_avg.csv};
+
+      \nextgroupplot[title = Wind direction]
+      \addplot table [
+          col sep = comma,
+          x = divisions,
+          y = counts,
+        ]{../src/more_bikes/analysis/csv/histogram_wind_direction.csv};
+
+      \nextgroupplot[title = Temperature]
+      \addplot table [
+          col sep = comma,
+          x = divisions,
+          y = counts,
+        ]{../src/more_bikes/analysis/csv/histogram_temperature.csv};
+
+      \nextgroupplot[title = Humidity]
+      \addplot table [
+          col sep = comma,
+          x = divisions,
+          y = counts,
+        ]{../src/more_bikes/analysis/csv/histogram_humidity.csv};
+
+      \nextgroupplot[title = Pressure]
+      \addplot table [
+          col sep = comma,
+          x = divisions,
+          y = counts,
+        ]{../src/more_bikes/analysis/csv/histogram_pressure.csv};
+
+      \nextgroupplot[title = Precipitation]
+      \addplot table [
+          col sep = comma,
+          x = divisions,
+          y = counts,
+        ]{../src/more_bikes/analysis/csv/histogram_precipitation.csv};
+
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{}
+  \label{fig:chart-distributions-meteorological}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+        group style = {
+            group size = 2 by 4,
+            ylabels at = edge left,
+            vertical sep = 1in,
+            horizontal sep = 0.75in,
+          },
+        width = 3in,
+        height = 2in,
+        ybar interval,
+        xtick = ,
+      ]
+      \nextgroupplot[title = {Three hours ago}]
+      \addplot table[
+          col sep = comma,
+          x = divisions,
+          y = counts
+        ]{../src/more_bikes/analysis/csv/histogram_bikes_3h.csv};
+
+      \nextgroupplot[title = {Average difference}]
+      \addplot table[
+          col sep = comma,
+          x = divisions,
+          y = counts
+        ]{../src/more_bikes/analysis/csv/histogram_bikes_3h_diff_avg_full.csv};
+
+      \nextgroupplot[title = {Average}]
+      \addplot table[
+          col sep = comma,
+          x = divisions,
+          y = counts
+        ]{../src/more_bikes/analysis/csv/histogram_bikes_avg_full.csv};
+
+      \nextgroupplot[title = {Average difference short}]
+      \addplot table[
+          col sep = comma,
+          x = divisions,
+          y = counts
+        ]{../src/more_bikes/analysis/csv/histogram_bikes_3h_diff_avg_short.csv};
+
+      \nextgroupplot[title = {Average short}]
+      \addplot table[
+          col sep = comma,
+          x = divisions,
+          y = counts
+        ]{../src/more_bikes/analysis/csv/histogram_bikes_avg_short.csv};
+
+      \nextgroupplot[title = {Bikes}]
+      \addplot table[
+          col sep = comma,
+          x = divisions,
+          y = counts
+        ]{../src/more_bikes/analysis/csv/histogram_bikes.csv};
+
+      \nextgroupplot[title = {Fraction of bikes}]
+      \addplot table[
+          col sep = comma,
+          x = divisions,
+          y = counts
+        ]{../src/more_bikes/analysis/csv/histogram_fraction.csv};
+
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{}
+  \label{fig:chart-distributions-bikes}
+\end{figure}

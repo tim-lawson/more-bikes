@@ -35,13 +35,12 @@
               col sep=comma,
               x = hour,
               y = fraction,
-            ]{../src/more_bikes/analysis/csv/average_fraction_weekday.csv};
+            ]{../src/more_bikes/analysis/csv/average_fraction_weekday_hour.csv};
           \addlegendentryexpanded{\weekday}
         }
     \end{groupplot}
   \end{tikzpicture}
-  \caption{The average hourly fraction of available bikes on each day of the week over
-    the ten stations for which a year's data is available.
+  \caption{The average hourly fraction of available bikes on each day of the week.
     The distributions are generally bimodal, with peaks in the middle of the day and in the
     evening.
     A distinction between weekdays and weekends is also evident, with the exception of
