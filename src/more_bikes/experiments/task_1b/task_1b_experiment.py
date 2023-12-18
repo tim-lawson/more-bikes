@@ -4,11 +4,13 @@ from contextlib import redirect_stdout
 from typing import Self
 
 from pandas import DataFrame, Series
+from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import BaseCrossValidator, GridSearchCV
 from sklearn_genetic import GASearchCV
 
 from more_bikes.data.data_loader import DataLoaderTestN, DataLoaderTrainN
 from more_bikes.experiments.experiment import Experiment, Model, Processing
+from more_bikes.experiments.params.cv import time_series_split
 from more_bikes.experiments.params.util import GASearchCVParams, SearchStrategy
 from more_bikes.util.processing import pre_chain, split
 
@@ -19,8 +21,8 @@ class Task1BExperiment(Experiment):
     def __init__(
         self,
         model: Model,
-        processing: Processing,
-        cv: BaseCrossValidator | None = None,
+        processing: Processing = Processing(),
+        cv: BaseCrossValidator = time_series_split,
         search: SearchStrategy = "grid",
         ga_search_cv_params: GASearchCVParams | None = None,
     ) -> None:
@@ -74,7 +76,7 @@ class Task1BExperiment(Experiment):
                         search = GridSearchCV(
                             estimator=self._model.pipeline,
                             param_grid=self._model.params,
-                            scoring=[self._model.scoring],
+                            scoring=(self._model.scoring),
                             refit=self._model.scoring,
                             cv=self._cv,
                             verbose=3,
@@ -113,8 +115,9 @@ class Task1BExperiment(Experiment):
         y_pred = self._model.pipeline.predict(x_test)
         assert not isinstance(y_pred, tuple)
 
-        score = float(self._model.pipeline.score(x_train, y_train))
+        score = mean_absolute_error(y_train, self._model.pipeline.predict(x_train))
+        assert isinstance(score, float)
 
         self._logger.info("score %.3f", score)
 
-        return self._output(x_test, y_pred, score)
+        return self._output(x_test, y_pred, -float(score))

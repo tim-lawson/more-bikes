@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import Callable, Self
 
 from pandas import DataFrame
+from sklearn.compose import TransformedTargetRegressor
 from sklearn.model_selection import BaseCrossValidator
 from sklearn.pipeline import Pipeline
 
@@ -17,7 +18,7 @@ from more_bikes.util.processing import (
     PreProcessing,
     Submission,
     post_identity,
-    pre_identity,
+    pre_dropna_row,
     submission,
 )
 
@@ -32,7 +33,7 @@ class Processing:
     target: Feature | str = BIKES
 
     # A sequence of fixed pre-processing steps to apply before the pipeline.
-    pre: list[PreProcessing] = field(default_factory=lambda: [pre_identity])
+    pre: list[PreProcessing] = field(default_factory=lambda: [pre_dropna_row()])
 
     # A fixed post-processing step to apply after predicting.
     post: PostProcessing = field(default_factory=lambda: post_identity)
@@ -48,7 +49,7 @@ class Model:
     name: str
 
     # The pipeline to evaluate.
-    pipeline: Pipeline
+    pipeline: Pipeline | TransformedTargetRegressor
 
     # If the pipeline is parameterised, the grid or space to search.
     params: ParamGrid | ParamSpace | None = None
@@ -101,7 +102,7 @@ class Experiment(metaclass=ABCMeta):
         if self.data is None:
             raise NotImplementedError("No results.")
 
-        self.data.to_csv(
+        self.data.sort_values(by=["Id"]).to_csv(
             f"{self._output_path}/{self._model.name}_submission.csv",
             index=False,
         )

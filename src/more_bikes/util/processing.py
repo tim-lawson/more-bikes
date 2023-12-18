@@ -1,10 +1,11 @@
-"""pandas DataFrame utilities."""
+"""pandas `DataFrame` and scikit-learn `TransformerMixin` utilities."""
 
 from functools import reduce
 from typing import Callable
 
 from numpy import clip, float_
 from pandas import DataFrame, Series
+from sklearn.base import BaseEstimator, TransformerMixin
 
 from more_bikes.data.feature import BIKES, Feature
 from more_bikes.util.array import NDArray
@@ -88,3 +89,22 @@ def submission(x_test: DataFrame, y_pred: NDArray[float_]) -> DataFrame:
             "bikes": y_pred,
         }
     )
+
+
+# Transformers.
+
+
+class BikesFractionTransformer(BaseEstimator, TransformerMixin):
+    """Transform `bikes` to `bikes` divided by `docks`."""
+
+    def fit(self, _x: NDArray, _y: NDArray):
+        """Fit."""
+        return self
+
+    def transform(self, x: NDArray, y: NDArray) -> NDArray:
+        """Transform."""
+        return y / x["docks"]
+
+    def inverse_transform(self, x: NDArray, y: NDArray) -> NDArray:
+        """Inverse transform."""
+        return y * x["docks"]
