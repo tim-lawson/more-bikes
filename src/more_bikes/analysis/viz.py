@@ -2,7 +2,6 @@
 
 # pylint: disable=redefined-outer-name
 
-from matplotlib import pyplot as plt
 from numpy import histogram
 from pandas import CategoricalDtype, DataFrame
 from scipy.stats import describe
@@ -11,10 +10,17 @@ from more_bikes.data.data_loader import DataLoaderAll
 from more_bikes.data.feature import WEEKDAY
 
 
-def _get_box_plot(data: DataFrame, column: str, target: str = "bikes"):
-    grouped = data.groupby(column, observed=False)
+def _get_columns_stats(
+    data: DataFrame, columns: str | list[str], target: str = "bikes"
+):
+    grouped = data.groupby(columns, observed=False)
     return DataFrame(
         {
+            "count": grouped[target].count(),
+            "mean": grouped[target].mean(),
+            "lower": grouped[target].mean() - grouped[target].std(),
+            "upper": grouped[target].mean() + grouped[target].std(),
+            # Box plot
             "minimum": grouped[target].min(),
             "maximum": grouped[target].max(),
             "median": grouped[target].median(),
@@ -24,23 +30,12 @@ def _get_box_plot(data: DataFrame, column: str, target: str = "bikes"):
     )
 
 
-def _get_average_fraction(data: DataFrame, columns: list[str]):
-    return DataFrame(data.groupby(columns, observed=False)["fraction"].mean())
-
-
-def _plot_average_fraction(data: DataFrame, columns: list[str]):
-    _, ax = plt.subplots()
-    average_fraction = _get_average_fraction(data, columns)
-    average_fraction.plot(ax=ax)
-    plt.show()
-
-
-def _get_stats(data: DataFrame, column: str):
+def _get_column_stats(data: DataFrame, column: str):
     stats = describe(data[column].dropna().to_numpy())
     return DataFrame([stats], columns=stats._fields)
 
 
-def _get_histogram(data: DataFrame, column: str):
+def _get_column_histogram(data: DataFrame, column: str):
     counts, divisions = histogram(data[column].dropna().to_numpy(), density=True)
     return DataFrame({"counts": counts, "divisions": divisions[:-1]})
 
@@ -53,15 +48,17 @@ if __name__ == "__main__":
 
     data["fraction"] = data["bikes"] / data["docks"]
 
-    for columns in [["weekday"], ["weekday", "hour"]]:
-        average_fraction = _get_average_fraction(data, columns)
-        average_fraction.to_csv(
-            f"more_bikes/analysis/csv/average_fraction_{'_'.join(columns)}.csv",
+    for columns in [
+        ["day"],
+        ["hour"],
+        ["is_holiday"],
+        ["weekday"],
+        ["weekday", "hour"],
+    ]:
+        columns_stats = _get_columns_stats(data, columns, "fraction")
+        columns_stats.to_csv(
+            f"more_bikes/analysis/csv/fraction_{'_'.join(columns)}.csv",
         )
-
-    for column in ["weekday", "is_holiday"]:
-        box_plot = _get_box_plot(data, column)
-        box_plot.to_csv(f"more_bikes/analysis/csv/box_plot_{column}.csv", index=False)
 
     for column in [
         "wind_speed_max",
@@ -79,8 +76,8 @@ if __name__ == "__main__":
         "bikes",
         "fraction",
     ]:
-        hist = _get_histogram(data, column)
+        hist = _get_column_histogram(data, column)
         hist.to_csv(f"more_bikes/analysis/csv/histogram_{column}.csv", index=False)
 
-        stats = _get_stats(data, column)
+        stats = _get_column_stats(data, column)
         stats.to_csv(f"more_bikes/analysis/csv/stats_{column}.csv", index=False)
