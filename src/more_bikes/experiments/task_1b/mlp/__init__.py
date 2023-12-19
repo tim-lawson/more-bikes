@@ -11,7 +11,7 @@ from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
 from more_bikes.preprocessing.column import column_transformer_1b
 from more_bikes.preprocessing.ordinal import ordinal_transformer
 from more_bikes.util.processing import BikesFractionTransformer
-from more_bikes.util.target import HackTransformedTargetRegressor
+from more_bikes.util.target import TransformedTargetRegressor
 
 params = [
     {
@@ -39,7 +39,7 @@ def mlp():
     return Task1BExperiment(
         model=Model(
             name="mlp",
-            pipeline=HackTransformedTargetRegressor(
+            pipeline=TransformedTargetRegressor(
                 make_pipeline(
                     ordinal_transformer.set_output(transform="pandas"),
                     column_transformer_1b.set_output(transform="pandas"),

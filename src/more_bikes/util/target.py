@@ -1,13 +1,14 @@
 """A wrapper for `TransformedTargetRegressor` that allows x-dependent transforms."""
 
 # pylint: disable=arguments-differ
+# TODO: Pylance(?) doesn't pick up the types of `regressor` and `transformer`.
 # pyright: reportGeneralTypeIssues=false
 
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.compose import TransformedTargetRegressor
+from sklearn.compose import TransformedTargetRegressor as _TransformedTargetRegressor
 
 
-class HackTransformedTargetRegressor(TransformedTargetRegressor):
+class TransformedTargetRegressor(_TransformedTargetRegressor):
     """A wrapper for `TransformedTargetRegressor` that allows x-dependent transforms."""
 
     def __init__(

@@ -12,7 +12,7 @@ from more_bikes.preprocessing.column import make_drop_column_transformer
 from more_bikes.preprocessing.ordinal import make_ordinal_transformer
 from more_bikes.util.datetime import make_datetime_columns
 from more_bikes.util.processing import BikesFractionTransformer
-from more_bikes.util.target import HackTransformedTargetRegressor
+from more_bikes.util.target import TransformedTargetRegressor
 
 SEARCH: SearchStrategy = "grid"
 
@@ -24,7 +24,7 @@ def hgbr():
     return Task1BExperiment(
         model=Model(
             name="hgbr",
-            pipeline=HackTransformedTargetRegressor(
+            pipeline=TransformedTargetRegressor(
                 make_pipeline(
                     FunctionTransformer(make_datetime_columns),
                     make_ordinal_transformer(
