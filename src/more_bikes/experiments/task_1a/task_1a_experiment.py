@@ -4,7 +4,7 @@ from contextlib import redirect_stdout
 
 from pandas import DataFrame, Series, concat
 from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import BaseCrossValidator, GridSearchCV
+from sklearn.model_selection import BaseCrossValidator, GridSearchCV, cross_val_score
 
 from more_bikes.data.data_loader import DataLoaderTest1, DataLoaderTrain1
 from more_bikes.experiments.experiment import Experiment, Model, Processing
@@ -34,22 +34,35 @@ class Task1AExperiment(Experiment):
         """Run the task 1A experiment."""
         super().run()
 
-        dataframes: list[DataFrame] = []
+        results_dataframes: list[DataFrame] = []
         scores: list[float] = []
 
+        scores_dataframes: DataFrame = DataFrame(
+            {"station": [], "split": [], "score": []}
+        )
+
         for station_id in range(station_id_min, station_id_max + 1):
-            station, score = self.__run_station_id(station_id)
+            results_dataframe, best_score, scores_dataframe = self.__run_station_id(
+                station_id
+            )
 
-            dataframes.append(station)
-            scores.append(score)
+            results_dataframes.append(results_dataframe)
+            scores.append(best_score)
 
-        self.data = concat(dataframes, ignore_index=True)
+            scores_dataframe["station"] = station_id
+            scores_dataframes = concat(
+                [scores_dataframes, scores_dataframe], ignore_index=True
+            )
+
+        self.data = concat(results_dataframes, ignore_index=True)
+        self.scores = scores_dataframes
+        self.scores = self.scores.astype({"station": "int", "split": "int"})
 
         self._logger.info("mean score %.3f", sum(scores) / len(scores))
 
         return self
 
-    def __run_station_id(self, station_id: int) -> tuple[DataFrame, float]:
+    def __run_station_id(self, station_id: int) -> tuple[DataFrame, float, DataFrame]:
         self._logger.info("station id %s", station_id)
 
         x_train, y_train = split(
@@ -76,27 +89,18 @@ class Task1AExperiment(Experiment):
             self._logger.info("score %.3f", -grid_search_cv.best_score_)
             self._logger.info("params %s", grid_search_cv.best_params_)
 
+            best_scores: list[float] = []
+            for index in range(grid_search_cv.n_splits_):
+                best_score = -grid_search_cv.cv_results_[f"split{index}_test_score"][
+                    grid_search_cv.best_index_
+                ]
+                self._logger.info("split %s", index)
+                self._logger.info("split score %.3f", best_score)
+                best_scores.append(best_score)
+
             y_pred = grid_search_cv.predict(x_test)
 
-            return self._output(x_test, y_pred, grid_search_cv.best_score_)
+            return self._output(x_test, y_pred, grid_search_cv.best_score_, best_scores)
 
         # If there is no parameter grid, run the pipeline.
-        return self.__run_pipeline(x_train, y_train, x_test)
-
-    def __run_pipeline(
-        self,
-        x_train: DataFrame,
-        y_train: Series,
-        x_test: DataFrame,
-    ):
-        self._model.pipeline.fit(x_train, y_train)
-
-        y_pred = self._model.pipeline.predict(x_test)
-        assert not isinstance(y_pred, tuple)
-
-        score = mean_absolute_error(y_train, self._model.pipeline.predict(x_train))
-        assert isinstance(score, float)
-
-        self._logger.info("score %.3f", score)
-
-        return self._output(x_test, y_pred, -float(score))
+        return self._run_pipeline(x_train, y_train, x_test)

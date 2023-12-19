@@ -4,9 +4,10 @@ from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import Callable, Self
 
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from sklearn.compose import TransformedTargetRegressor
-from sklearn.model_selection import BaseCrossValidator
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import BaseCrossValidator, cross_val_score
 from sklearn.pipeline import Pipeline
 
 from more_bikes.data.feature import BIKES, Feature
@@ -64,6 +65,9 @@ class Experiment(metaclass=ABCMeta):
     # The results of the experiment.
     data: DataFrame | None = None
 
+    # The cross-validation scores of the experiment.
+    scores: DataFrame | None = None
+
     def __init__(
         self,
         output_path: str,
@@ -86,15 +90,13 @@ class Experiment(metaclass=ABCMeta):
         self._logger.info("run")
 
     def _output(
-        self,
-        x_test: DataFrame,
-        y_pred: NDArray,
-        score: float,
-    ) -> tuple[DataFrame, float]:
+        self, x_test: DataFrame, y_pred: NDArray, score: float, scores: list[float]
+    ) -> tuple[DataFrame, float, DataFrame]:
         y_pred = self._processing.post(x_test)(y_pred)
         return (
             self._processing.submit(x_test, y_pred),
             -score,
+            DataFrame({"split": range(len(scores)), "score": scores}),
         )
 
     def save(self) -> None:
@@ -106,6 +108,35 @@ class Experiment(metaclass=ABCMeta):
             f"{self._output_path}/{self._model.name}_submission.csv",
             index=False,
         )
+
+        if self.scores is not None:
+            self.scores.to_csv(
+                f"{self._output_path}/{self._model.name}_cv.csv",
+                index=False,
+            )
+
+    def _run_pipeline(
+        self,
+        x_train: DataFrame,
+        y_train: Series,
+        x_test: DataFrame,
+    ) -> tuple[DataFrame, float, DataFrame]:
+        self._model.pipeline.fit(x_train, y_train)
+
+        y_pred = self._model.pipeline.predict(x_test)
+        assert not isinstance(y_pred, tuple)
+
+        scores = cross_val_score(
+            self._model.pipeline,
+            x_train,
+            y_train,
+            cv=self._cv,
+            scoring=mean_absolute_error,
+        )
+
+        self._logger.info("score %.3f", scores.mean())
+
+        return self._output(x_test, y_pred, -float(scores.mean()), list(scores))
 
 
 @dataclass()

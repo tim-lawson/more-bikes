@@ -5,7 +5,7 @@ from typing import Self
 
 from pandas import DataFrame, Series
 from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import BaseCrossValidator, GridSearchCV
+from sklearn.model_selection import BaseCrossValidator, GridSearchCV, cross_val_score
 from sklearn_genetic import GASearchCV
 
 from more_bikes.data.data_loader import DataLoaderTestN, DataLoaderTrainN
@@ -40,14 +40,17 @@ class Task1BExperiment(Experiment):
         """Run the task 1B experiment."""
         super().run()
 
-        data, score = self.__run()
+        results_dataframe, best_score, scores_dataframe = self.__run()
 
-        self.data = data
-        self._logger.info("score %.3f", score)
+        self.data = results_dataframe
+        self.scores = scores_dataframe
+        self.scores = self.scores.astype({"split": "int"})
+
+        self._logger.info("score %.3f", best_score)
 
         return self
 
-    def __run(self) -> tuple[DataFrame, float]:
+    def __run(self) -> tuple[DataFrame, float, DataFrame]:
         x_train, y_train = split(
             self._pre(DataLoaderTrainN().data),
             self._processing.target,
@@ -86,6 +89,15 @@ class Task1BExperiment(Experiment):
             self._logger.info("score %.3f", -search.best_score_)
             self._logger.info("params %s", search.best_params_)
 
+            best_scores: list[float] = []
+            for index in range(search.n_splits_):
+                best_score = -search.cv_results_[f"split{index}_test_score"][
+                    search.best_index_
+                ]
+                self._logger.info("split %s", index)
+                self._logger.info("split score %.3f", best_score)
+                best_scores.append(best_score)
+
             # Save the genetic-algorithm results.
             if self._search == "genetic":
                 self.__to_csv(DataFrame(search.history), "history")  # type: ignore
@@ -93,31 +105,13 @@ class Task1BExperiment(Experiment):
 
             y_pred = search.predict(x_test)
 
-            return self._output(x_test, y_pred, search.best_score_)
+            return self._output(x_test, y_pred, search.best_score_, best_scores)
 
         # If there is no parameter grid, run the pipeline.
-        return self.__run_pipeline(x_train, y_train, x_test)
+        return self._run_pipeline(x_train, y_train, x_test)
 
     def __to_csv(self, data: DataFrame, name: str) -> None:
         data.to_csv(
             f"{self._output_path}/{self._model.name}/{self._model.name}_{name}.csv",
             index=False,
         )
-
-    def __run_pipeline(
-        self,
-        x_train: DataFrame,
-        y_train: Series,
-        x_test: DataFrame,
-    ) -> tuple[DataFrame, float]:
-        self._model.pipeline.fit(x_train, y_train)
-
-        y_pred = self._model.pipeline.predict(x_test)
-        assert not isinstance(y_pred, tuple)
-
-        score = mean_absolute_error(y_train, self._model.pipeline.predict(x_train))
-        assert isinstance(score, float)
-
-        self._logger.info("score %.3f", score)
-
-        return self._output(x_test, y_pred, -float(score))

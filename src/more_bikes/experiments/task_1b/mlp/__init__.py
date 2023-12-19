@@ -16,8 +16,8 @@ from more_bikes.util.target import TransformedTargetRegressor
 params = [
     {
         "regressor__mlpregressor__hidden_layer_sizes": [
-            (16, 16, 16),
-            (32, 32, 32),
+            # (16, 16, 16),
+            # (32, 32, 32),
             (64, 64, 64),
         ],
         "regressor__mlpregressor__activation": [
@@ -27,7 +27,7 @@ params = [
         ],
         "regressor__mlpregressor__learning_rate": [
             # "constant",
-            "invscaling",
+            # "invscaling",
             "adaptive",
         ],
     }

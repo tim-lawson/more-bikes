@@ -9,8 +9,8 @@ from more_bikes.experiments.task_1b.mlp import mlp
 task_experiments: list[TaskExperiment] = [
     TaskExperiment(baseline, True),
     TaskExperiment(hgbr, True),
-    TaskExperiment(lightgbm, False),
-    TaskExperiment(mlp, False),
+    TaskExperiment(lightgbm, True),
+    TaskExperiment(mlp, True),
 ]
 
 if __name__ == "__main__":
