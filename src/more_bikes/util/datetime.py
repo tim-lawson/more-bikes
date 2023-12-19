@@ -18,3 +18,18 @@ def utc_from_timestamp_series(series: Series) -> Series:
 def utc_from_timestamp_data(data: DataFrame):
     """Convert a DataFrame of timestamp rows to UTC."""
     return data.apply(utc_from_timestamp_series, axis=1)
+
+
+def make_datetime_columns(data: DataFrame):
+    """Add date-time columns to a DataFrame."""
+    data["weekend"] = data["weekday"].apply(
+        lambda weekday: "True" if weekday in ["Saturday", "Sunday"] else "False"
+    )
+    data["period"] = data["hour"].apply(
+        lambda hour: "night"
+        if hour < 6 or hour > 22
+        else "midday"
+        if hour < 14
+        else "afternoon"
+    )
+    return data

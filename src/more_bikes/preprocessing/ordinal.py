@@ -9,9 +9,13 @@ from more_bikes.data.feature import categorical_features, categories
 
 
 def make_ordinal_transformer(
-    name: str, categorical_features_: list[str], categories_: list[list[Any]]
+    name: str = "ordinal",
+    categorical_features_: list[str] | None = None,
+    categories_: list[list[Any]] | None = None,
 ) -> ColumnTransformer:
     """Ordinal transformer for categorical features."""
+    categorical_features_ = categorical_features_ or categorical_features
+    categories_ = categories_ or categories
     return ColumnTransformer(
         transformers=[
             (
@@ -25,8 +29,4 @@ def make_ordinal_transformer(
     )
 
 
-ordinal_transformer = make_ordinal_transformer(
-    "ordinal",
-    categorical_features,
-    categories,
-)
+ordinal_transformer = make_ordinal_transformer()

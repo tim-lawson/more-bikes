@@ -7,10 +7,10 @@ from more_bikes.experiments.task_1b.lightgbm import lightgbm
 from more_bikes.experiments.task_1b.mlp import mlp
 
 task_experiments: list[TaskExperiment] = [
-    TaskExperiment(baseline, True),
+    TaskExperiment(baseline, False),
     TaskExperiment(hgbr, True),
-    TaskExperiment(lightgbm, True),
-    TaskExperiment(mlp, True),
+    TaskExperiment(lightgbm, False),
+    TaskExperiment(mlp, False),
 ]
 
 if __name__ == "__main__":
