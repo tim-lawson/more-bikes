@@ -12,7 +12,7 @@ params: ParamGrid = [
     {
         "regressor__strategy": [
             "mean",
-            "median",
+            # "median",
         ]
     }
 ]
