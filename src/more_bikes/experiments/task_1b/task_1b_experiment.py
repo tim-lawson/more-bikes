@@ -46,8 +46,6 @@ class Task1BExperiment(Experiment):
         self.scores = scores_dataframe
         self.scores = self.scores.astype({"split": "int"})
 
-        self._logger.info("score %.3f", best_score)
-
         return self
 
     def __run(self) -> tuple[DataFrame, float, DataFrame]:
