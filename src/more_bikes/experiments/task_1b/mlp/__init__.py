@@ -8,8 +8,8 @@ from sklearn.pipeline import make_pipeline
 
 from more_bikes.experiments.experiment import Model
 from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
-from more_bikes.preprocessing.column import column_transformer_1b
-from more_bikes.preprocessing.ordinal import ordinal_transformer
+from more_bikes.feature_selection.variance_threshold import feature_selection_variance
+from more_bikes.preprocessing.ordinal import preprocessing_ordinal
 from more_bikes.util.processing import BikesFractionTransformer
 from more_bikes.util.target import TransformedTargetRegressor
 
@@ -41,10 +41,13 @@ def mlp():
             name="mlp",
             pipeline=TransformedTargetRegressor(
                 make_pipeline(
-                    ordinal_transformer.set_output(transform="pandas"),
-                    column_transformer_1b.set_output(transform="pandas"),
+                    # preprocessing
+                    preprocessing_ordinal,
+                    SimpleImputer(strategy="constant", fill_value=0),
                     StandardScaler(),
-                    SimpleImputer(missing_values=nan, strategy="mean"),
+                    # feature selection
+                    feature_selection_variance,
+                    # regression
                     MLPRegressor(random_state=42),
                 ),
                 transformer=BikesFractionTransformer(),

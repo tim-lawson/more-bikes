@@ -3,9 +3,8 @@
 from contextlib import redirect_stdout
 from typing import Self
 
-from pandas import DataFrame, Series
-from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import BaseCrossValidator, GridSearchCV, cross_val_score
+from pandas import DataFrame
+from sklearn.model_selection import BaseCrossValidator, GridSearchCV
 from sklearn_genetic import GASearchCV
 
 from more_bikes.data.data_loader import DataLoaderTestN, DataLoaderTrainN
@@ -86,6 +85,7 @@ class Task1BExperiment(Experiment):
 
             self._logger.info("score %.3f", -search.best_score_)
             self._logger.info("params %s", search.best_params_)
+            self._save_attrs(search.best_estimator_)
 
             best_scores: list[float] = []
             for index in range(search.n_splits_):

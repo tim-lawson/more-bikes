@@ -8,7 +8,7 @@ from sklearn.preprocessing import OrdinalEncoder
 from more_bikes.data.feature import categorical_features, categories
 
 
-def make_ordinal_transformer(
+def make_preprocessing_ordinal(
     name: str = "ordinal",
     categorical_features_: list[str] | None = None,
     categories_: list[list[Any]] | None = None,
@@ -29,4 +29,4 @@ def make_ordinal_transformer(
     )
 
 
-ordinal_transformer = make_ordinal_transformer()
+preprocessing_ordinal = make_preprocessing_ordinal()

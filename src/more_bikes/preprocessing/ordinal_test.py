@@ -4,7 +4,7 @@ from numpy import array
 from numpy.testing import assert_array_equal
 from pandas import DataFrame
 
-from .ordinal import make_ordinal_transformer
+from .ordinal import make_preprocessing_ordinal
 
 
 def test_ordinal_transformer():
@@ -23,7 +23,7 @@ def test_ordinal_transformer():
         columns=["bikes", "weekday", "is_holiday"],
     )
 
-    transformer = make_ordinal_transformer(
+    transformer = make_preprocessing_ordinal(
         "ordinal",
         [
             "weekday",
@@ -45,22 +45,26 @@ def test_ordinal_transformer():
 
     assert_array_equal(
         array(transformer.fit_transform(data)),
-        [
-            [0.0, 1.0, 1.0],
-            [1.0, 0.0, 2.0],
-            [2.0, 1.0, 3.0],
-            [3.0, 0.0, 1.0],
-            [4.0, 1.0, 2.0],
-            [5.0, 0.0, 3.0],
-            [6.0, 1.0, 1.0],
-        ],
+        array(
+            [
+                [0.0, 1.0, 1.0],
+                [1.0, 0.0, 2.0],
+                [2.0, 1.0, 3.0],
+                [3.0, 0.0, 1.0],
+                [4.0, 1.0, 2.0],
+                [5.0, 0.0, 3.0],
+                [6.0, 1.0, 1.0],
+            ]
+        ),
     )
 
     assert_array_equal(
         transformer.get_feature_names_out(),
-        [
-            "weekday",
-            "is_holiday",
-            "bikes",
-        ],
+        array(
+            [
+                "weekday",
+                "is_holiday",
+                "bikes",
+            ]
+        ),
     )

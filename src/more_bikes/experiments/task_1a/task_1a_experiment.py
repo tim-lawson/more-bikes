@@ -2,9 +2,8 @@
 
 from contextlib import redirect_stdout
 
-from pandas import DataFrame, Series, concat
-from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import BaseCrossValidator, GridSearchCV, cross_val_score
+from pandas import DataFrame, concat
+from sklearn.model_selection import BaseCrossValidator, GridSearchCV
 
 from more_bikes.data.data_loader import DataLoaderTest1, DataLoaderTrain1
 from more_bikes.experiments.experiment import Experiment, Model, Processing
@@ -82,12 +81,13 @@ class Task1AExperiment(Experiment):
                         scoring=(self._model.scoring),
                         refit=self._model.scoring,
                         cv=self._cv,
-                        verbose=3,
+                        verbose=10,
                     )
                     grid_search_cv.fit(x_train, y_train)
 
             self._logger.info("score %.3f", -grid_search_cv.best_score_)
             self._logger.info("params %s", grid_search_cv.best_params_)
+            self._save_attrs(grid_search_cv.best_estimator_)
 
             best_scores: list[float] = []
             for index in range(grid_search_cv.n_splits_):

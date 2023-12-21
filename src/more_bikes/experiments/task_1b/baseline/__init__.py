@@ -1,6 +1,7 @@
 """Task 1B: Baseline (average)."""
 
 from sklearn.dummy import DummyRegressor
+from sklearn.pipeline import make_pipeline
 
 from more_bikes.experiments.experiment import Model
 from more_bikes.experiments.params.util import ParamGrid
@@ -10,7 +11,7 @@ from more_bikes.util.target import TransformedTargetRegressor
 
 params: ParamGrid = [
     {
-        "regressor__strategy": [
+        "regressor__dummyregressor__strategy": [
             "mean",
             # "median",
         ]
@@ -24,7 +25,7 @@ def baseline():
         model=Model(
             name="baseline",
             pipeline=TransformedTargetRegressor(
-                DummyRegressor(),
+                make_pipeline(DummyRegressor()),
                 transformer=BikesFractionTransformer(),
             ),
             params=params,

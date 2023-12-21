@@ -1,0 +1,17 @@
+feature,variance,support
+latitude,1.0,True
+longitude,0.9999999999999999,True
+docks,1.0000000000000004,True
+timestamp,0.9999999999999999,True
+year,0.0,False
+month,0.0,False
+day,1.0,True
+hour,1.0000000000000002,True
+weekhour,0.9999999999999999,True
+wind_speed_max,0.9999999999999999,True
+wind_speed_avg,1.0000000000000002,True
+wind_direction,1.0000000000000002,True
+temperature,0.9999999999999999,True
+humidity,1.0,True
+pressure,0.9999999999999999,True
+precipitation,0.0,False

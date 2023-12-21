@@ -39,6 +39,16 @@
       "group": {
         "kind": "none"
       }
+    },
+    {
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "more_bikes.util.test", "-f"],
+      "options": { "cwd": "${workspaceFolder}/src" },
+      "label": "[stats]",
+      "group": {
+        "kind": "none"
+      }
     }
   ]
 }

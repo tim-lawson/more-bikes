@@ -37,6 +37,3 @@ __pycache__/
 
 # Output
 src/more_bikes/experiments/**/*.log
-src/more_bikes/experiments/**/*.csv
-!src/more_bikes/experiments/**/*_submission.csv
-!src/more_bikes/experiments/**/*_cv.csv

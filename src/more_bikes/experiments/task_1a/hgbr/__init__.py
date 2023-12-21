@@ -6,8 +6,8 @@ from sklearn.pipeline import make_pipeline
 from more_bikes.experiments.experiment import Model
 from more_bikes.experiments.params.hgbr import hgbr_param_grid
 from more_bikes.experiments.task_1a.task_1a_experiment import Task1AExperiment
-from more_bikes.preprocessing.column import column_transformer_1a
-from more_bikes.preprocessing.ordinal import ordinal_transformer
+from more_bikes.feature_selection.variance_threshold import feature_selection_variance
+from more_bikes.preprocessing.ordinal import preprocessing_ordinal
 from more_bikes.util.processing import BikesFractionTransformer
 from more_bikes.util.target import TransformedTargetRegressor
 
@@ -19,8 +19,11 @@ def hgbr():
             name="hgbr",
             pipeline=TransformedTargetRegressor(
                 make_pipeline(
-                    ordinal_transformer.set_output(transform="pandas"),
-                    column_transformer_1a.set_output(transform="pandas"),
+                    # preprocessing
+                    preprocessing_ordinal,
+                    # feature selection
+                    feature_selection_variance,
+                    # regression
                     HistGradientBoostingRegressor(random_state=42),
                 ),
                 BikesFractionTransformer(),

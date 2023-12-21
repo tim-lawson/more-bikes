@@ -5,10 +5,11 @@ from dataclasses import dataclass, field
 from typing import Callable, Self
 
 from pandas import DataFrame, Series
-from sklearn.compose import TransformedTargetRegressor
+from sklearn.feature_selection import VarianceThreshold
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import BaseCrossValidator, cross_val_score
 from sklearn.pipeline import Pipeline
+from sklearn.utils import Bunch
 
 from more_bikes.data.feature import BIKES, Feature
 from more_bikes.experiments.params.util import ParamGrid, ParamSpace
@@ -22,6 +23,7 @@ from more_bikes.util.processing import (
     pre_dropna_row,
     submission,
 )
+from more_bikes.util.target import TransformedTargetRegressor
 
 SCORING = "neg_mean_absolute_error"
 
@@ -137,6 +139,37 @@ class Experiment(metaclass=ABCMeta):
         self._logger.info("score %.3f", scores.mean())
 
         return self._output(x_test, y_pred, -float(scores.mean()), list(scores))
+
+    def _named_steps(self, estimator: Pipeline | TransformedTargetRegressor) -> Bunch:
+        return (
+            estimator.named_steps
+            if isinstance(estimator, Pipeline)
+            else estimator.regressor.named_steps  # type: ignore
+            if isinstance(estimator, TransformedTargetRegressor)
+            else Bunch()
+        )
+
+    def _save_attrs(self, estimator: Pipeline | TransformedTargetRegressor) -> None:
+        named_steps = self._named_steps(estimator)
+
+        for named_step_name in named_steps:
+            named_step = named_steps[named_step_name]
+
+            if hasattr(named_step, "transformers_"):
+                for _, transformer, *_args in named_step.transformers_:
+                    transformer_name: str = transformer.__class__.__name__
+                    transformer_name = transformer_name.lower()
+                    if isinstance(transformer, VarianceThreshold):
+                        DataFrame(
+                            {
+                                "feature": transformer.feature_names_in_,
+                                "variance": transformer.variances_,
+                                "support": transformer.get_support(),
+                            }
+                        ).to_csv(
+                            f"{self._output_path}/{self._model.name}_{transformer_name}.csv",
+                            index=False,
+                        )
 
 
 @dataclass()
