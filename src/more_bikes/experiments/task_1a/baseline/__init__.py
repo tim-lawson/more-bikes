@@ -31,7 +31,3 @@ def baseline():
             params=params,
         ),
     )
-
-
-if __name__ == "__main__":
-    baseline().run().save()

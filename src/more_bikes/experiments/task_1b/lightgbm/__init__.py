@@ -62,7 +62,3 @@ def lightgbm():
             params=params,
         ),
     )
-
-
-if __name__ == "__main__":
-    lightgbm().run().save()

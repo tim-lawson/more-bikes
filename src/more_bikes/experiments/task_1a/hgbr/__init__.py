@@ -31,7 +31,3 @@ def hgbr():
             params=hgbr_param_grid,
         ),
     )
-
-
-if __name__ == "__main__":
-    hgbr().run().save()

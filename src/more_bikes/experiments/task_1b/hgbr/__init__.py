@@ -41,7 +41,3 @@ def hgbr():
             population_size=10,
         ),
     )
-
-
-if __name__ == "__main__":
-    hgbr().run().save()

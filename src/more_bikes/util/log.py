@@ -1,6 +1,5 @@
 """Logging utility functions."""
 
-from argparse import ArgumentParser
 from logging import (
     CRITICAL,
     FileHandler,
@@ -11,6 +10,8 @@ from logging import (
     getLogger,
 )
 from os import getcwd
+
+from more_bikes.util.args import get_logging_args
 
 
 def disable_logging(name: str) -> None:
@@ -23,7 +24,7 @@ def disable_logging(name: str) -> None:
 
 def create_logger(name: str, path: str = getcwd()) -> Logger:
     """Create a logger."""
-    file, level = get_args()
+    file, level = get_logging_args()
 
     formatter = Formatter("%(asctime)s %(name)s %(message)s")
 
@@ -42,26 +43,3 @@ def create_logger(name: str, path: str = getcwd()) -> Logger:
         logger.addHandler(file_handler)
 
     return logger
-
-
-def get_args() -> tuple[bool, str]:
-    """Get command-line arguments."""
-    parser = ArgumentParser()
-
-    parser.add_argument(
-        "-f",
-        "--file",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-l",
-        "--level",
-        default="info",
-    )
-
-    args = parser.parse_args()
-
-    assert isinstance(args.file, bool)
-    assert isinstance(args.level, str)
-
-    return args.file, args.level

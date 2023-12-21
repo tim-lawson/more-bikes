@@ -55,7 +55,3 @@ def mlp():
             params=params,
         ),
     )
-
-
-if __name__ == "__main__":
-    mlp().run().save()
