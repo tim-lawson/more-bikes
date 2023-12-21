@@ -127,6 +127,8 @@
   }%
 }
 
+\usepackage{siunitx}
+
 \usepackage{listings}
 \lstset{
     basicstyle=\tt,
@@ -134,6 +136,16 @@
 \newcommand{\sklearn}[1]{
   \href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.html}{\lstinline|sklearn.#1|}
 }
+
+\newcommand{\isholiday}{is\_holiday}
+\newcommand{\windspeedmax}{wind\_speed\_max}
+\newcommand{\windspeedavg}{wind\_speed\_avg}
+\newcommand{\winddirection}{wind\_direction}
+\newcommand{\bikesavgfull}{bikes\_avg\_full}
+\newcommand{\bikesavgshort}{bikes\_avg\_short}
+\newcommand{\bikesh}{bikes\_3h}
+\newcommand{\bikeshdiffavgfull}{bikes\_3h\_diff\_avg\_full}
+\newcommand{\bikeshdiffavgshort}{bikes\_3h\_diff\_avg\_short}
 
 \begin{document}
 
@@ -179,7 +191,7 @@ Notably, the meteorological features are constant for all stations at a given ti
 The `profile' features, i.e., the features derived from the numbers of available bikes
 at preceding times, are not defined for the first week of instances at each station,
 except for \texttt{bikes\_3h}.
-Naturally, the number of bikes available at a given station is bounded by zero and the
+Naturally, the number of available bikes at a given station is bounded by zero and the
 number of docks at that station.
 The variances and pairwise correlations of the features are described in \cref{sec:feature-selection}.
 
@@ -198,6 +210,12 @@ that implemented the \emph{transformer} interface; prediction was performed by
 estimators that implemented the \emph{predictor} interface; and estimators were
 composed into \texttt{Pipeline} objects over which hyperparameter search was performed
 \parencite[4-9]{Buitinck2013}.
+The bounds on the number of available bikes at a given station were enforced by
+predicting the \emph{fraction} of bikes, i.e., the number of bikes divided by the number
+of docks at the station.
+This was implemented by an extension of the \texttt{TransformedTargetRegressor}
+meta-estimator to permit data-dependent
+transforms\footnote{\sklearn{compose.TransformedTargetRegressor}}.
 
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
 to the inherent correlation between successive folds \parencite{Bergmeir2018}.
@@ -217,18 +235,31 @@ This behaviour is illustrated in \cref{fig:chart-cross-validation}.
 \subsection{Feature selection}
 \label{sec:feature-selection}
 
-In each case, zero-variance features were removed automatically from the
-data\footnote{\sklearn{feature\_selection.VarianceThreshold}}.
-The `station' features (\cref{table:features}) are constant for all instances at a given station; hence, for
-the first case of sub-task 1, the variances of these features are zero.
-Additionally, the \texttt{precipitation} feature is zero for all instances.
+In each case, zero-variance features were automatically
+excluded\footnote{\sklearn{feature\_selection.VarianceThreshold}} because they are
+individually uninformative.
+The available data for sub-task 1 is limited to the month of October 2014; therefore,
+the month and year were excluded.
+Additionally, the `station' features (\cref{table:features}) are constant for all
+instances at a given station; hence, for the first case of sub-task 1, the variances of
+these features are zero.
+Finally, the \texttt{precipitation} feature is zero for all instances.
 
+To determine which features are redundant, i.e., uninformative in combination, the
+Pearson correlation coefficients between pairs of quantitative features were computed
+(\cref{fig:chart-correlations}).
+This analysis yielded the following observations:
 \begin{itemize}
-  \item Which features are most informative?
-  \item Describe the distributions of the features and their correlations.
-  \item Describe the distributions of the fraction of available bikes in terms of
-        temporal features and the possible derived features.
+  \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are fully correlated ($r = 1.00$).
+  \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are fully correlated ($r = 1.00$).
+  \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
 \end{itemize}
+Hence, the second of each of these pairs of features was manually excluded.
+
+\import{.}{figure-chart-correlations.tex}
+
+\todonum{Describe the distributions of the fraction of available bikes in terms of
+  temporal features and the possible derived features.}
 
 \printbibliography
 

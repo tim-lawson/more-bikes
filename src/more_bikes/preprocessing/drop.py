@@ -1,4 +1,4 @@
-"""Column transformers."""
+"""Transformer to manually drop columns."""
 
 from sklearn.compose import ColumnTransformer
 

@@ -1,0 +1,59 @@
+\begin{figure}
+  \newcommand{\markersize}{8pt}
+  \catcode`\_=12 % category other
+  \begin{tikzpicture}
+    \begin{axis}[
+        axis equal image,
+        axis x line* = top,
+        axis line style = {draw = none},
+        enlarge x limits = {abs = \markersize},
+        enlarge y limits = {abs = \markersize},
+        height = 4in,
+        width = 4in,
+        mark size = \markersize,
+        scatter,
+        only marks,
+        mark = square*,
+        scatter/use mapped color = {draw opacity = 0, fill = mapped color},
+        colormap/viridis,
+        colorbar,
+        point meta min=0,
+        point meta max=1,
+        y dir = reverse,
+        grid = minor,
+        symbolic x coords = {{day,hour,weekhour,wind_speed_max,wind_speed_avg,wind_direction,temperature,humidity,pressure,bikes,bikes_avg_full,bikes_avg_short,bikes_3h,bikes_3h_diff_avg_full,bikes_3h_diff_avg_short}},
+        symbolic y coords = {{day,hour,weekhour,wind_speed_max,wind_speed_avg,wind_direction,temperature,humidity,pressure,bikes,bikes_avg_full,bikes_avg_short,bikes_3h,bikes_3h_diff_avg_full,bikes_3h_diff_avg_short}},
+        xtick = data,
+        ytick = data,
+        xticklabel = \texttt{\tick},
+        yticklabel = \texttt{\tick},
+        every tick label/.append style={font=\small},
+        x tick style = {draw = none},
+        y tick style = {draw = none},
+        x tick label style = {rotate = 90, anchor = west},
+        colorbar horizontal,
+        colorbar style = {
+            axis line style = {draw = none},
+            height = 12pt,
+            xlabel = {Pearson correlation coefficient},
+            xtick style={draw = none},
+          }
+      ]
+      \addplot [
+        point meta = explicit,
+      ] table [
+          col sep = comma,
+          x = x,
+          y = y,
+          meta = value,
+        ] {../src/more_bikes/analysis/csv/correlation.csv};
+    \end{axis}
+  \end{tikzpicture}
+  \catcode`\_=8 % category subscript
+  \caption{The Pearson correlation coefficients between pairs of quantitative features.
+    The ordering is the same as in \cref{table:features}.
+    Most of the temporal features are excluded, because they are obviously correlated.
+    The zero-variance `station' and \texttt{precipitation} features are also excluded
+    (\cref{sec:feature-selection}).}
+  \label{fig:chart-correlations}
+\end{figure}

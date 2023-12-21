@@ -3,11 +3,11 @@
 # pylint: disable=redefined-outer-name
 
 from numpy import histogram
-from pandas import CategoricalDtype, DataFrame
+from pandas import CategoricalDtype, DataFrame, set_option
 from scipy.stats import describe
 
 from more_bikes.data.data_loader import DataLoaderTrainN
-from more_bikes.data.feature import WEEKDAY
+from more_bikes.data.feature import WEEKDAY, numerical_features
 
 
 def _get_columns_stats(
@@ -47,6 +47,40 @@ if __name__ == "__main__":
     data["weekday"] = data["weekday"].astype(weekday)
 
     data["fraction"] = data["bikes"] / data["docks"]
+
+    set_option("display.float_format", "{:.2E}".format)
+    variance = data[numerical_features + ["bikes"]].var()
+    variance = variance.reset_index()
+    variance.columns = ["x", "value"]
+    variance.to_csv("more_bikes/analysis/csv/variance.csv", index=False)
+
+    print(variance)
+
+    correlation = data[
+        [
+            "day",
+            "hour",
+            "weekhour",
+            "wind_speed_max",
+            "wind_speed_avg",
+            "wind_direction",
+            "temperature",
+            "humidity",
+            "pressure",
+            "bikes",
+            "bikes_avg_full",
+            "bikes_avg_short",
+            "bikes_3h",
+            "bikes_3h_diff_avg_full",
+            "bikes_3h_diff_avg_short",
+        ]
+    ].corr()
+    correlation = correlation.reset_index().melt(id_vars="index")
+    correlation.columns = ["x", "y", "value"]
+    correlation.to_csv("more_bikes/analysis/csv/correlation.csv", index=False)
+
+    correlation = correlation.sort_values("value", ascending=False)
+    print(correlation[correlation["x"] != correlation["y"]].head(10))
 
     for columns in [
         ["day"],
