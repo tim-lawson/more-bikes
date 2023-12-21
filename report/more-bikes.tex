@@ -137,8 +137,9 @@
 
 \section{Task description}
 
-The task is to predict the number of available bikes at 75 rental stations in three
-hours' time for a period of three months, beginning in November 2014.
+The assignment is to predict the number of available bikes at 75 rental stations in
+three hours' time for a period of three months, beginning in November 2014, i.e., a
+supervised univariate regression problem.
 It is divided into three sub-tasks, which differ in the information that is available:
 \begin{itemize}
   \item \textbf{Sub-task 1}.
@@ -152,114 +153,45 @@ It is divided into three sub-tasks, which differ in the information that is avai
   \item \textbf{Sub-task 3}.
         Both of the above.
 \end{itemize}
-The predictions are evaluated by the mean absolute error (MAE) between the predicted
-and true numbers of available bikes over the period of three months.
-The evaluation data is not available to participants but the score achieved on a
-held-out test set is reported on the leaderboard.
-
-In each case, the task is a supervised univariate regression or time-series forecasting
-problem.
 Sub-tasks 2 and, optionally, 3 require the use of ensemble methods.
+The predictions are evaluated by the mean absolute error (MAE) between the predicted
+and true numbers of available bikes over the period of three months, beginning in
+November 2014.
+The evaluation data is not available to participants but the score achieved on a
+held-out test set is reported on the task leaderboard.
 This report begins with a preliminary analysis of the data and then describes the
 approach taken to each sub-task and the cross-validation results obtained.
 
-\section{Preliminary analysis}
+\section{Data analysis}
 
 The data is recorded at hourly intervals; a summary of its features is given in
 \cref{table:features}.
 The `station' features are constant for all instances at a given station and the
 meteorological features are constant for all instances at a given timestamp.
-The `profile' features, i.e., the numbers of available bikes at preceding times and
-derivations thereof, are not defined for the first week of instances at each station.
-Preliminary analysis showed that the precipitation feature was zero for all instances;
-hence, it was discarded in the following analysis.
+Hence, the variances of the `station' features are zero for the first case of sub-task
+1.
+The `profile' features, i.e., the features derived from the numbers of available bikes
+at preceding times are not defined for the first week of instances at each station.
 Naturally, the number of bikes available at a given station is bounded by zero and the
 number of docks at that station.
+Additionally, the variance of the \texttt{precipitation} feature is zero for both cases
+of sub-task 1.
 
 The following analysis is based on the combination of the available data for sub-task 1
 and the first ten stations in sub-task 2.
 It is assumed that the distributions of the feature values are representative of those
 in the evaluation data.
 
-\begin{figure}
-  \centering
-  \begin{tabular}{lll}
-    Category                               & Feature                              & Data type
-    \\
-    \hline \multirow{4}{*}{Station}        & \texttt{station}                     &
-    \texttt{int}
-    \\
-                                           & \texttt{latitude}                    & \texttt{float}
-    \\
-                                           & \texttt{longitude}                   &
-    \texttt{float}
-    \\
-                                           & \texttt{docks}                       & \texttt{int}
-    \\
-    \hline \multirow{8}{*}{Temporal}       &
-    \texttt{timestamp}                     & \texttt{int}
-    \\
-                                           & \texttt{year}                        & \texttt{int}
-    \\
-                                           & \texttt{month}
-                                           & \texttt{int}
-    \\
-                                           & \texttt{day}                         & \texttt{int}
-    \\
-                                           & \texttt{hour}                        & \texttt{int}
-    \\
-                                           &
-    \texttt{weekday}                       & \texttt{str}
-    \\
-                                           & \texttt{weekhour}                    & \texttt{int}
-    \\
-                                           &
-    \texttt{is\_holiday}                   & \texttt{bool}
-    \\
-    \hline \multirow{7}{*}{Meteorological} &
-    \texttt{wind\_speed\_max}              & \texttt{float}
-    \\
-                                           & \texttt{wind\_speed\_avg}            &
-    \texttt{float}
-    \\
-                                           & \texttt{wind\_direction}             & \texttt{float}
-    \\
-                                           & \texttt{temperature}
-                                           & \texttt{float}
-    \\
-                                           & \texttt{humidity}                    & \texttt{float}
-    \\
-                                           & \texttt{pressure}                    &
-    \texttt{float}
-    \\
-                                           & \texttt{precipitation}               & \texttt{float}
-    \\
-    \hline
-    \multirow{6}{*}{Available bikes}       & \texttt{bikes\_3h}                   & \texttt{int}
-    \\
-                                           &
-    \texttt{bikes\_3h\_diff\_avg\_full}    & \texttt{float}
-    \\
-                                           & \texttt{bikes\_avg\_full}            &
-    \texttt{float}
-    \\
-                                           & \texttt{bikes\_3h\_diff\_avg\_short} & \texttt{float}
-    \\
-                                           &
-    \texttt{bikes\_avg\_short}             & \texttt{float}
-    \\
-                                           & \texttt{bikes}                       & \texttt{int}
-  \end{tabular}
-  \caption{A summary of the features of the data.
-  }
-  \label{table:features}
-\end{figure}
-
+\import{.}{figure-table-features.tex}
 \import{.}{figure-chart-weekday.tex}
 % \import{.}{figure-chart-weekday-separate.tex}
 % \import{.}{figure-chart-distributions.tex}
 
 \subsection{Feature selection}
+
+\paragraph{Variance}
+
+Zero-variance features were removed automatically from the data.
 
 \begin{itemize}
   \item Which features are most informative?
@@ -270,9 +202,9 @@ in the evaluation data.
 
 \section{Methodology}
 
-In each case, ten-fold cross-validation was performed with out-of-sample (OOS)
-evaluation (\cref{fig:cross-validation}).
-Generally, standard $k$-fold cross-validation is disfavoured for time-series data, due
+Throughout this report, ten-fold `forward chaining' or nested cross-validation is
+performed, which is illustrated in \cref{fig:chart-cross-validation}.
+Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
 to the inherent correlation between successive folds \parencite{Bergmeir2018}.
 
 \begin{itemize}
@@ -281,7 +213,7 @@ to the inherent correlation between successive folds \parencite{Bergmeir2018}.
   \item Statistical significance tests (paired $t$-tests).
 \end{itemize}
 
-\import{.}{figure-cross-validation.tex}
+\import{.}{figure-chart-cross-validation.tex}
 
 \printbibliography
 

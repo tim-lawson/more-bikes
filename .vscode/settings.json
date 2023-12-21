@@ -22,8 +22,8 @@
   "latex-workshop.latex.recipe.default": "lastUsed",
   "latex-workshop.latex.recipes": [
     {
-      "name": "latexmk * 2",
-      "tools": ["latexmk", "latexmk"]
+      "name": "latexmk",
+      "tools": ["latexmk"]
     },
     {
       "name": "pdflatex -> bibtex -> pdflatex * 2",

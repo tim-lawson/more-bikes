@@ -24,10 +24,7 @@
         "hgbr"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1a]",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1a]"
     },
     {
       "type": "shell",
@@ -39,10 +36,7 @@
         "baseline"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1a] baseline",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1a] baseline"
     },
     {
       "type": "shell",
@@ -54,10 +48,7 @@
         "hgbr"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1a] hgbr",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1a] hgbr"
     },
     {
       "type": "shell",
@@ -73,10 +64,7 @@
         "mlp"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1b]",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1b]"
     },
     {
       "type": "shell",
@@ -89,10 +77,7 @@
         "baseline"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1b] baseline",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1b] baseline"
     },
     {
       "type": "shell",
@@ -105,10 +90,7 @@
         "hgbr"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1b] hgbr",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1b] hgbr"
     },
     {
       "type": "shell",
@@ -121,10 +103,7 @@
         "lightgbm"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1b] lightgbm",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1b] lightgbm"
     },
     {
       "type": "shell",
@@ -137,20 +116,21 @@
         "mlp"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[task 1b] mlp",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[task 1b] mlp"
     },
     {
       "type": "shell",
       "command": "${command:python.interpreterPath}",
-      "args": ["-m", "more_bikes.util.test", "-f"],
+      "args": ["-m", "more_bikes.analysis.viz"],
       "options": { "cwd": "${workspaceFolder}/src" },
-      "label": "[stats]",
-      "group": {
-        "kind": "none"
-      }
+      "label": "[analysis] visualisations"
+    },
+    {
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "more_bikes.util.test"],
+      "options": { "cwd": "${workspaceFolder}/src" },
+      "label": "[analysis] statistical tests"
     }
   ]
 }

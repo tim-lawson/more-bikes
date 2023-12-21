@@ -6,7 +6,7 @@ from numpy import histogram
 from pandas import CategoricalDtype, DataFrame
 from scipy.stats import describe
 
-from more_bikes.data.data_loader import DataLoaderAll
+from more_bikes.data.data_loader import DataLoaderTrainN
 from more_bikes.data.feature import WEEKDAY
 
 
@@ -41,7 +41,7 @@ def _get_column_histogram(data: DataFrame, column: str):
 
 
 if __name__ == "__main__":
-    data = DataLoaderAll().data
+    data = DataLoaderTrainN().data
 
     weekday = CategoricalDtype(categories=WEEKDAY, ordered=True)
     data["weekday"] = data["weekday"].astype(weekday)
