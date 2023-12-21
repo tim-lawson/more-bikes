@@ -2,7 +2,7 @@
 
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
-from typing import Callable, Self
+from typing import Self
 
 from pandas import DataFrame, Series
 from sklearn.feature_selection import VarianceThreshold
@@ -170,11 +170,3 @@ class Experiment(metaclass=ABCMeta):
                             f"{self._output_path}/{self._model.name}_{transformer_name}.csv",
                             index=False,
                         )
-
-
-@dataclass()
-class TaskExperiment:
-    """A convenience class to conditionally run experiments."""
-
-    experiment: Callable[[], Experiment]
-    run: bool = True
