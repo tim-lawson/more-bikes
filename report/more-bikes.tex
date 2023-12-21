@@ -259,14 +259,29 @@ in the evaluation data.
 % \import{.}{figure-chart-weekday-separate.tex}
 % \import{.}{figure-chart-distributions.tex}
 
-\subsection{Temporal features}
+\subsection{Feature selection}
 
-\todonum{Describe the distributions of the fraction of available bikes in terms of
-  temporal features and the possible derived features.}
+\begin{itemize}
+  \item Which features are most informative?
+  \item Describe the distributions of the features and their correlations.
+  \item Describe the distributions of the fraction of available bikes in terms of
+        temporal features and the possible derived features.
+\end{itemize}
 
-\section{Sub-task 1}
-\section{Sub-task 2}
-\section{Sub-task 3}
+\section{Methodology}
+
+In each case, ten-fold cross-validation was performed with out-of-sample (OOS)
+evaluation (\cref{fig:cross-validation}).
+Generally, standard $k$-fold cross-validation is disfavoured for time-series data, due
+to the inherent correlation between successive folds \parencite{Bergmeir2018}.
+
+\begin{itemize}
+  \item Hyperparameter search.
+  \item Evaluation metric.
+  \item Statistical significance tests (paired $t$-tests).
+\end{itemize}
+
+\import{.}{figure-cross-validation.tex}
 
 \printbibliography
 
