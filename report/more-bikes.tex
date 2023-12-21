@@ -127,6 +127,14 @@
   }%
 }
 
+\usepackage{listings}
+\lstset{
+    basicstyle=\tt,
+}
+\newcommand{\sklearn}[1]{
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.html}{\lstinline|sklearn.#1|}
+}
+
 \begin{document}
 
 \title{More Bikes: Experiments in Univariate Regression}
@@ -163,49 +171,40 @@ This report begins with a preliminary analysis of the data and then describes th
 approach taken to each sub-task and the cross-validation results obtained.
 
 \section{Data analysis}
+\label{sec:data-analysis}
 
-The data is recorded at hourly intervals; a summary of its features is given in
-\cref{table:features}.
-The `station' features are constant for all instances at a given station and the
-meteorological features are constant for all instances at a given timestamp.
-Hence, the variances of the `station' features are zero for the first case of sub-task
-1.
+The data is recorded at hourly intervals.
+A summary of the features is given in \cref{table:features}.
+Notably, the meteorological features are constant for all stations at a given timestamp.
 The `profile' features, i.e., the features derived from the numbers of available bikes
-at preceding times are not defined for the first week of instances at each station.
+at preceding times, are not defined for the first week of instances at each station,
+except for \texttt{bikes\_3h}.
 Naturally, the number of bikes available at a given station is bounded by zero and the
 number of docks at that station.
-Additionally, the variance of the \texttt{precipitation} feature is zero for both cases
-of sub-task 1.
-
-The following analysis is based on the combination of the available data for sub-task 1
-and the first ten stations in sub-task 2.
-It is assumed that the distributions of the feature values are representative of those
-in the evaluation data.
+The variances and pairwise correlations of the features are described in \cref{sec:feature-selection}.
 
 \import{.}{figure-table-features.tex}
-\import{.}{figure-chart-weekday.tex}
+% \import{.}{figure-chart-weekday.tex}
 % \import{.}{figure-chart-weekday-separate.tex}
 % \import{.}{figure-chart-distributions.tex}
 
-\subsection{Feature selection}
+\section{Methods}
+\label{sec:methods}
 
-\paragraph{Variance}
+Throughout this report, I used \texttt{scikit-learn} to conduct experiments
+\parencite{Pedregosa2011}.
+In each case, preprocessing and feature selection were performed by \emph{estimators}
+that implemented the \emph{transformer} interface; prediction was performed by
+estimators that implemented the \emph{predictor} interface; and estimators were
+composed into \texttt{Pipeline} objects over which hyperparameter search was performed
+\parencite[4-9]{Buitinck2013}.
 
-Zero-variance features were removed automatically from the data.
-
-\begin{itemize}
-  \item Which features are most informative?
-  \item Describe the distributions of the features and their correlations.
-  \item Describe the distributions of the fraction of available bikes in terms of
-        temporal features and the possible derived features.
-\end{itemize}
-
-\section{Methodology}
-
-Throughout this report, ten-fold `forward chaining' or nested cross-validation is
-performed, which is illustrated in \cref{fig:chart-cross-validation}.
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
 to the inherent correlation between successive folds \parencite{Bergmeir2018}.
+Instead, nested time-series
+cross-validation\footnote{\sklearn{model\_selection.TimeSeriesSplit}} with ten folds
+was performed to evaluate the models.
+This behaviour is illustrated in \cref{fig:chart-cross-validation}.
 
 \begin{itemize}
   \item Hyperparameter search.
@@ -214,6 +213,22 @@ to the inherent correlation between successive folds \parencite{Bergmeir2018}.
 \end{itemize}
 
 \import{.}{figure-chart-cross-validation.tex}
+
+\subsection{Feature selection}
+\label{sec:feature-selection}
+
+In each case, zero-variance features were removed automatically from the
+data\footnote{\sklearn{feature\_selection.VarianceThreshold}}.
+The `station' features (\cref{table:features}) are constant for all instances at a given station; hence, for
+the first case of sub-task 1, the variances of these features are zero.
+Additionally, the \texttt{precipitation} feature is zero for all instances.
+
+\begin{itemize}
+  \item Which features are most informative?
+  \item Describe the distributions of the features and their correlations.
+  \item Describe the distributions of the fraction of available bikes in terms of
+        temporal features and the possible derived features.
+\end{itemize}
 
 \printbibliography
 
