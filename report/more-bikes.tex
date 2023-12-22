@@ -193,7 +193,8 @@ at preceding times, are not defined for the first week of instances at each stat
 except for \texttt{bikes\_3h}.
 Naturally, the number of available bikes at a given station is bounded by zero and the
 number of docks at that station.
-The variances and pairwise correlations of the features are described in \cref{sec:feature-selection}.
+The variances and pairwise correlations of the features are described in
+\cref{sec:feature-selection}.
 
 \import{.}{figure-table-features.tex}
 % \import{.}{figure-chart-weekday.tex}
@@ -203,8 +204,8 @@ The variances and pairwise correlations of the features are described in \cref{s
 \section{Methods}
 \label{sec:methods}
 
-Throughout this report, I used \texttt{scikit-learn} to conduct experiments
-\parencite{Pedregosa2011}.
+The experiments in this report were conducted with the \texttt{scikit-learn} Python
+package \parencite{Pedregosa2011}.
 In each case, preprocessing and feature selection were performed by \emph{estimators}
 that implemented the \emph{transformer} interface; prediction was performed by
 estimators that implemented the \emph{predictor} interface; and estimators were
@@ -213,8 +214,8 @@ composed into \texttt{Pipeline} objects over which hyperparameter search was per
 The bounds on the number of available bikes at a given station were enforced by
 predicting the \emph{fraction} of bikes, i.e., the number of bikes divided by the number
 of docks at the station.
-This was implemented by an extension of the \texttt{TransformedTargetRegressor}
-meta-estimator to permit data-dependent
+This was implemented by extending the \texttt{TransformedTargetRegressor} meta-estimator
+to permit data-dependent
 transforms\footnote{\sklearn{compose.TransformedTargetRegressor}}.
 
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
@@ -260,6 +261,13 @@ Hence, the second of each of these pairs of features was manually excluded.
 
 \todonum{Describe the distributions of the fraction of available bikes in terms of
   temporal features and the possible derived features.}
+
+\subsection{Model selection}
+
+\begin{itemize}
+  \item Baseline 4.434 / 5.449
+  \item Decision tree
+\end{itemize}
 
 \printbibliography
 

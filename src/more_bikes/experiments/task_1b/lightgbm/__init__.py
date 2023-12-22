@@ -5,11 +5,15 @@ from sklearn.pipeline import make_pipeline
 
 from more_bikes.experiments.experiment import Model
 from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
-from more_bikes.feature_selection.variance_threshold import feature_selection_variance
-from more_bikes.preprocessing.drop import make_preprocessing_drop
-from more_bikes.preprocessing.ordinal import preprocessing_ordinal
-from more_bikes.util.processing import BikesFractionTransformer
-from more_bikes.util.target import TransformedTargetRegressor
+from more_bikes.feature_selection.drop import feature_selection_drop
+from more_bikes.feature_selection.variance_threshold import (
+    feature_selection_variance_threshold,
+)
+from more_bikes.preprocessing.bikes_fraction_transformer import BikesFractionTransformer
+from more_bikes.preprocessing.ordinal_transformer import preprocessing_ordinal
+from more_bikes.preprocessing.transformed_target_regressor import (
+    TransformedTargetRegressor,
+)
 
 params = [
     {
@@ -54,8 +58,8 @@ def lightgbm():
                     # preprocessing
                     preprocessing_ordinal,
                     # feature selection
-                    feature_selection_variance,
-                    make_preprocessing_drop(
+                    feature_selection_variance_threshold,
+                    feature_selection_drop(
                         [
                             "bikes_3h_diff_avg_short",
                             "bikes_avg_short",

@@ -1,4 +1,4 @@
-"""Parameters of `GASearchCV`."""
+"""Parameter grid and search-space utilities."""
 
 from dataclasses import dataclass
 from typing import Any, Literal

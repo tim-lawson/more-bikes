@@ -4,19 +4,11 @@ from sklearn.dummy import DummyRegressor
 from sklearn.pipeline import make_pipeline
 
 from more_bikes.experiments.experiment import Model
-from more_bikes.experiments.params.util import ParamGrid
 from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
-from more_bikes.util.processing import BikesFractionTransformer
-from more_bikes.util.target import TransformedTargetRegressor
-
-params: ParamGrid = [
-    {
-        "regressor__dummyregressor__strategy": [
-            "mean",
-            # "median",
-        ]
-    }
-]
+from more_bikes.preprocessing.bikes_fraction_transformer import BikesFractionTransformer
+from more_bikes.preprocessing.transformed_target_regressor import (
+    TransformedTargetRegressor,
+)
 
 
 def baseline():
@@ -28,6 +20,13 @@ def baseline():
                 make_pipeline(DummyRegressor()),
                 transformer=BikesFractionTransformer(),
             ),
-            params=params,
+            params=[
+                {
+                    "regressor__dummyregressor__strategy": [
+                        "mean",
+                        # "median",
+                    ]
+                }
+            ],
         ),
     )

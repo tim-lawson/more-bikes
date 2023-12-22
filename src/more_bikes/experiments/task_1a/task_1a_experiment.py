@@ -8,7 +8,7 @@ from sklearn.model_selection import BaseCrossValidator, GridSearchCV
 from more_bikes.data.data_loader import DataLoaderTest1, DataLoaderTrain1
 from more_bikes.experiments.experiment import Experiment, Model, Processing
 from more_bikes.experiments.params.cv import time_series_split
-from more_bikes.util.processing import pre_chain, split
+from more_bikes.preprocessing.util import pre_chain, split
 
 
 class Task1AExperiment(Experiment):

@@ -6,8 +6,10 @@ from sklearn.pipeline import make_pipeline
 from more_bikes.experiments.experiment import Model
 from more_bikes.experiments.params.util import ParamGrid
 from more_bikes.experiments.task_1a.task_1a_experiment import Task1AExperiment
-from more_bikes.util.processing import BikesFractionTransformer
-from more_bikes.util.target import TransformedTargetRegressor
+from more_bikes.preprocessing.bikes_fraction_transformer import BikesFractionTransformer
+from more_bikes.preprocessing.transformed_target_regressor import (
+    TransformedTargetRegressor,
+)
 
 params: ParamGrid = [
     {

@@ -48,6 +48,11 @@ if __name__ == "__main__":
 
     data["fraction"] = data["bikes"] / data["docks"]
 
+    na = data.isna().sum()
+    na = na.reset_index()
+    na.columns = ["x", "count"]
+    na.to_csv("more_bikes/analysis/csv/na.csv", index=False)
+
     set_option("display.float_format", "{:.2E}".format)
     variance = data[numerical_features + ["bikes"]].var()
     variance = variance.reset_index()

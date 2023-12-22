@@ -3,7 +3,7 @@
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_selection import VarianceThreshold
 
-feature_selection_variance = ColumnTransformer(
+feature_selection_variance_threshold = ColumnTransformer(
     transformers=[
         (
             "variance",

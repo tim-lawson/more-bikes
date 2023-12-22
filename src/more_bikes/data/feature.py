@@ -1,4 +1,4 @@
-"""Feature utilities."""
+"""Feature constants."""
 
 from typing import Literal
 

@@ -4,6 +4,7 @@ from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import Self
 
+from numpy import ndarray
 from pandas import DataFrame, Series
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.metrics import mean_absolute_error
@@ -13,9 +14,10 @@ from sklearn.utils import Bunch
 
 from more_bikes.data.feature import BIKES, Feature
 from more_bikes.experiments.params.util import ParamGrid, ParamSpace
-from more_bikes.util.array import NDArray
-from more_bikes.util.log import create_logger
-from more_bikes.util.processing import (
+from more_bikes.preprocessing.transformed_target_regressor import (
+    TransformedTargetRegressor,
+)
+from more_bikes.preprocessing.util import (
     PostProcessing,
     PreProcessing,
     Submission,
@@ -23,7 +25,7 @@ from more_bikes.util.processing import (
     pre_dropna_row,
     submission,
 )
-from more_bikes.util.target import TransformedTargetRegressor
+from more_bikes.util.log import create_logger
 
 SCORING = "neg_mean_absolute_error"
 
@@ -85,16 +87,15 @@ class Experiment(metaclass=ABCMeta):
         self._logger = create_logger(self._model.name, self._output_path)
 
     @abstractmethod
-    def run(
-        self,
-    ) -> Self:
+    def run(self) -> Self:
         """Run the experiment."""
         self._logger.info("run")
 
     def _output(
-        self, x_test: DataFrame, y_pred: NDArray, score: float, scores: list[float]
+        self, x_test: DataFrame, y_pred: ndarray, score: float, scores: list[float]
     ) -> tuple[DataFrame, float, DataFrame]:
         y_pred = self._processing.post(x_test)(y_pred)
+
         return (
             self._processing.submit(x_test, y_pred),
             -score,
@@ -118,10 +119,7 @@ class Experiment(metaclass=ABCMeta):
             )
 
     def _run_pipeline(
-        self,
-        x_train: DataFrame,
-        y_train: Series,
-        x_test: DataFrame,
+        self, x_train: DataFrame, y_train: Series, x_test: DataFrame
     ) -> tuple[DataFrame, float, DataFrame]:
         self._model.pipeline.fit(x_train, y_train)
 
@@ -141,15 +139,19 @@ class Experiment(metaclass=ABCMeta):
         return self._output(x_test, y_pred, -float(scores.mean()), list(scores))
 
     def _named_steps(self, estimator: Pipeline | TransformedTargetRegressor) -> Bunch:
+        """The named steps of the pipeline."""
         return (
             estimator.named_steps
             if isinstance(estimator, Pipeline)
+            # TODO: see `src/more_bikes/util/target.py`
             else estimator.regressor.named_steps  # type: ignore
             if isinstance(estimator, TransformedTargetRegressor)
             else Bunch()
         )
 
     def _save_attrs(self, estimator: Pipeline | TransformedTargetRegressor) -> None:
+        """Save attributes of the pipeline to CSVs."""
+
         named_steps = self._named_steps(estimator)
 
         for named_step_name in named_steps:
@@ -159,6 +161,7 @@ class Experiment(metaclass=ABCMeta):
                 for _, transformer, *_args in named_step.transformers_:
                     transformer_name: str = transformer.__class__.__name__
                     transformer_name = transformer_name.lower()
+
                     if isinstance(transformer, VarianceThreshold):
                         DataFrame(
                             {

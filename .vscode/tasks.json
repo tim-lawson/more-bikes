@@ -21,6 +21,7 @@
         "-f",
         "-e",
         "baseline",
+        "decision_tree",
         "hgbr"
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
@@ -37,6 +38,18 @@
       ],
       "options": { "cwd": "${workspaceFolder}/src" },
       "label": "[task 1a] baseline"
+    },
+    {
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "more_bikes.experiments.task_1a.task_1a_experiments",
+        "-e",
+        "decision_tree"
+      ],
+      "options": { "cwd": "${workspaceFolder}/src" },
+      "label": "[task 1a] decision tree"
     },
     {
       "type": "shell",
