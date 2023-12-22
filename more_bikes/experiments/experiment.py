@@ -143,7 +143,7 @@ class Experiment(metaclass=ABCMeta):
         return (
             estimator.named_steps
             if isinstance(estimator, Pipeline)
-            # TODO: see `src/more_bikes/util/target.py`
+            # TODO: see `more_bikes/util/target.py`
             else estimator.regressor.named_steps  # type: ignore
             if isinstance(estimator, TransformedTargetRegressor)
             else Bunch()

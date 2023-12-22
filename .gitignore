@@ -36,4 +36,4 @@ __pycache__/
 .pytest_cache
 
 # Output
-src/more_bikes/experiments/**/*.log
+more_bikes/experiments/**/*.log

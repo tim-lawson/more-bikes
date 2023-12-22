@@ -26,7 +26,7 @@ class DataLoaderTrain1(DataLoader):
     def __init__(self, station_id: int):
         super().__init__()
         self.station_id = station_id
-        self.path = f"../data/train/station_{station_id}_deploy.csv"
+        self.path = f"data/train/station_{station_id}_deploy.csv"
 
     @cached_property
     def data(self):
@@ -46,7 +46,7 @@ class DataLoaderTrainN(DataLoader):
         super().__init__()
         self.station_ids = station_ids or list(range(201, 274))
         self.paths = [
-            f"../data/train/station_{station_id}_deploy.csv"
+            f"data/train/station_{station_id}_deploy.csv"
             for station_id in self.station_ids
         ]
 
@@ -72,7 +72,7 @@ class DataLoaderTest1(DataLoader):
 
     def __init__(self, station_id: int):
         super().__init__()
-        self.path = "../data/test.csv"
+        self.path = "data/test.csv"
         self.station_id = station_id
 
     @cached_property
@@ -92,7 +92,7 @@ class DataLoaderTestN(DataLoader):
 
     def __init__(self):
         super().__init__()
-        self.path = "../data/test.csv"
+        self.path = "data/test.csv"
 
     @cached_property
     def data(self) -> DataFrame:
@@ -111,7 +111,7 @@ class DataLoaderFull1(DataLoader):
     def __init__(self, station_id: int):
         super().__init__()
         self.station_id = station_id
-        self.path = f"../data/train/station_{station_id}_train.csv"
+        self.path = f"data/train/station_{station_id}_train.csv"
 
     @cached_property
     def data(self):
@@ -131,7 +131,7 @@ class DataLoaderFullN(DataLoader):
         super().__init__()
         self.station_ids = station_ids or list(range(1, 11))
         self.paths = [
-            f"../data/train/station_{station_id}_train.csv"
+            f"data/train/station_{station_id}_train.csv"
             for station_id in self.station_ids
         ]
 

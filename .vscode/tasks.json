@@ -5,7 +5,7 @@
       "type": "shell",
       "command": "${command:python.interpreterPath}",
       "args": ["-m", "pytest", "-rP"],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[chore] test",
       "group": {
         "kind": "test",
@@ -24,7 +24,7 @@
         "decision_tree",
         "hgbr"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1a]"
     },
     {
@@ -36,7 +36,7 @@
         "-e",
         "baseline"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1a] baseline"
     },
     {
@@ -48,7 +48,7 @@
         "-e",
         "decision_tree"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1a] decision tree"
     },
     {
@@ -60,7 +60,7 @@
         "-e",
         "hgbr"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1a] hgbr"
     },
     {
@@ -76,7 +76,7 @@
         "lightgbm",
         "mlp"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1b]"
     },
     {
@@ -89,7 +89,7 @@
         "-e",
         "baseline"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1b] baseline"
     },
     {
@@ -102,7 +102,7 @@
         "-e",
         "hgbr"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1b] hgbr"
     },
     {
@@ -115,7 +115,7 @@
         "-e",
         "lightgbm"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1b] lightgbm"
     },
     {
@@ -128,21 +128,21 @@
         "-e",
         "mlp"
       ],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[task 1b] mlp"
     },
     {
       "type": "shell",
       "command": "${command:python.interpreterPath}",
       "args": ["-m", "more_bikes.analysis.viz"],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[analysis] visualisations"
     },
     {
       "type": "shell",
       "command": "${command:python.interpreterPath}",
       "args": ["-m", "more_bikes.util.test"],
-      "options": { "cwd": "${workspaceFolder}/src" },
+      "options": { "cwd": "${workspaceFolder}" },
       "label": "[analysis] statistical tests"
     }
   ]
