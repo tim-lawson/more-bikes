@@ -158,116 +158,121 @@
 \section{Task description}
 
 The assignment is to predict the number of available bikes at 75 rental stations in
-three hours' time for a period of three months, beginning in November 2014, i.e., a
+three hours' time for a period of three months beginning in November 2014, i.e., a
 supervised univariate regression problem.
 It is divided into three sub-tasks, which differ in the information that is available:
-\begin{itemize}
-  \item \textbf{Sub-task 1}.
-        The number of available bikes at each of the 75 stations for the month of October 2014.
+\begin{enumerate}
+  \item The number of available bikes at each of the 75 stations for the month of October 2014.
         This sub-task may be approached by building a separate model for each station or a
         single model for all 75 stations.
-  \item \textbf{Sub-task 2}.
-        A set of linear models that were trained on the number of available bikes at each of a
+  \item A set of linear models that were trained on the number of available bikes at each of a
         separate set of 200 stations for a year.
         For the first ten stations, this data is available for analysis but not training.
-  \item \textbf{Sub-task 3}.
-        Both of the above.
-\end{itemize}
-Sub-tasks 2 and, optionally, 3 require the use of ensemble methods.
+  \item Both of the above.
+\end{enumerate}
 The predictions are evaluated by the mean absolute error (MAE) between the predicted
 and true numbers of available bikes over the period of three months, beginning in
 November 2014.
-The evaluation data is not available to participants but the score achieved on a
-held-out test set is reported on the task leaderboard.
-This report begins with a preliminary analysis of the data and then describes the
-approach taken to each sub-task and the cross-validation results obtained.
+The evaluation data is not available to participants; however, the score achieved on a
+held-out test set is reported on the task
+leaderboard\footnote{\href{https://www.kaggle.com/competitions/morebikes2023/leaderboard}{\texttt{https://www.kaggle.com/competitions/morebikes2023/leaderboard}}}.
+This report begins with a preliminary analysis of the data in \cref{sec:data-analysis}.
+Then, I describe the general approach taken to the sub-tasks in \cref{sec:methods}.
+Finally, \cref{sec:results} presents the results of the experiments for each sub-task.
 
 \section{Data analysis}
 \label{sec:data-analysis}
 
+\import{.}{figure-table-features.tex}
+
+\import{.}{figure-chart-weekday.tex}
+
 The data is recorded at hourly intervals.
-A summary of the features is given in \cref{table:features}.
+A summary of its features is given in \cref{table:features}.
 Notably, the meteorological features are constant for all stations at a given timestamp.
 The `profile' features, i.e., the features derived from the numbers of available bikes
-at preceding times, are not defined for the first week of instances at each station,
-except for \texttt{bikes\_3h}.
+at preceding times, are not defined for the first week of instances at each station.
 Naturally, the number of available bikes at a given station is bounded by zero and the
 number of docks at that station.
-The variances and pairwise correlations of the features are described in
-\cref{sec:feature-selection}.
 
-\import{.}{figure-table-features.tex}
-% \import{.}{figure-chart-weekday.tex}
+\subsection{Feature selection}
+\label{sec:feature-selection}
+
+Intuitively, features that have zero or very low variance are unlikely to be informative
+for regression analysis.
+Hence, I automatically excluded zero-variance
+features\footnote{See \sklearn{feature\_selection.VarianceThreshold}.}.
+In the case of sub-task~1, the available data is limited to the month of October 2014;
+therefore, the month and year have zero variance.
+Additionally, the `station' features (\cref{table:features}) are constant for all
+instances at a given station; hence, for the first case of sub-task 1, these have zero
+variance.
+Finally, the \texttt{precipitation} feature is zero for all instances.
+
+Correlations between features and, more generally, multicollinearity, are undesirable
+in regression analysis \parencite[e.g.,][]{Alin2010}.
+Therefore, I sought to identify and exclude redundant features before applying models
+to the data.
+To determine the redundant features, I computed the Pearson correlation coefficients
+between pairs of quantitative features (\cref{fig:chart-correlations}).
+This analysis yielded the following observations:
+\begin{itemize}
+  \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are fully correlated ($r = 1.00$);
+  \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are fully correlated ($r  = 1.00$); and
+  \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
+\end{itemize}
+Hence, the second of each of these pairs of features was also excluded.
+
+\import{.}{figure-chart-correlations.tex}
 % \import{.}{figure-chart-weekday-separate.tex}
 % \import{.}{figure-chart-distributions.tex}
 
 \section{Methods}
 \label{sec:methods}
 
-The experiments in this report were conducted with the \texttt{scikit-learn} Python
-package \parencite{Pedregosa2011}.
-In each case, preprocessing and feature selection were performed by \emph{estimators}
-that implemented the \emph{transformer} interface; prediction was performed by
-estimators that implemented the \emph{predictor} interface; and estimators were
-composed into \texttt{Pipeline} objects over which hyperparameter search was performed
+The experiments described in this report were performed with the \texttt{scikit-learn}
+Python package \parencite{Pedregosa2011}.
+In each case, preprocessing and feature selection were performed by `estimators' that
+implemented the `transformer' interface; prediction was performed by estimators that
+implemented the `predictor' interface; and estimators were composed into
+\texttt{Pipeline} objects over which hyperparameter search was performed
 \parencite[4-9]{Buitinck2013}.
 The bounds on the number of available bikes at a given station were enforced by
 predicting the \emph{fraction} of bikes, i.e., the number of bikes divided by the number
 of docks at the station.
-This was implemented by extending the \texttt{TransformedTargetRegressor} meta-estimator
-to permit data-dependent
-transforms\footnote{\sklearn{compose.TransformedTargetRegressor}}.
+In each case, this was implemented by extending the \texttt{TransformedTargetRegressor}
+meta-estimator to permit data-dependent
+transforms\footnote{See \sklearn{compose.TransformedTargetRegressor}.}.
 
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
 to the inherent correlation between successive folds \parencite{Bergmeir2018}.
 Instead, nested time-series
-cross-validation\footnote{\sklearn{model\_selection.TimeSeriesSplit}} with ten folds
+cross-validation\footnote{See \sklearn{model\_selection.TimeSeriesSplit}.} with ten folds
 was performed to evaluate the models.
 This behaviour is illustrated in \cref{fig:chart-cross-validation}.
-
-\begin{itemize}
-  \item Hyperparameter search.
-  \item Evaluation metric.
-  \item Statistical significance tests (paired $t$-tests).
-\end{itemize}
+Hyperparameter tuning was performed by grid
+search\footnote{See \sklearn{model\_selection.GridSearchCV}.}.
+The evaluation metric used throughout was the mean absolute error between the predicted
+and true numbers of available bikes, following the task description.
+Finally, the statistical significance of the differences in performance between models
+was assessed by paired $t$-tests of the scores achieved on each of the ten
+cross-validation folds.
 
 \import{.}{figure-chart-cross-validation.tex}
 
-\subsection{Feature selection}
-\label{sec:feature-selection}
+Gradient-boosted decision trees are a popular choice for time-series forecasting
+problems
+\parencite[e.g.,][]{Bojer2021}.
+Hence, for sub-task 1, I elected to focus on this class of models and to compare their
+performance to simpler models.
+As a baseline, I predicted the mean fraction of available bikes at each station.
+The results of these experiments are presented in \cref{sec:results-subtask-1}.
 
-In each case, zero-variance features were automatically
-excluded\footnote{\sklearn{feature\_selection.VarianceThreshold}} because they are
-individually uninformative.
-The available data for sub-task 1 is limited to the month of October 2014; therefore,
-the month and year were excluded.
-Additionally, the `station' features (\cref{table:features}) are constant for all
-instances at a given station; hence, for the first case of sub-task 1, the variances of
-these features are zero.
-Finally, the \texttt{precipitation} feature is zero for all instances.
+\section{Results}
+\label{sec:results}
 
-To determine which features are redundant, i.e., uninformative in combination, the
-Pearson correlation coefficients between pairs of quantitative features were computed
-(\cref{fig:chart-correlations}).
-This analysis yielded the following observations:
-\begin{itemize}
-  \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are fully correlated ($r = 1.00$).
-  \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are fully correlated ($r = 1.00$).
-  \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
-\end{itemize}
-Hence, the second of each of these pairs of features was manually excluded.
-
-\import{.}{figure-chart-correlations.tex}
-
-\todonum{Describe the distributions of the fraction of available bikes in terms of
-  temporal features and the possible derived features.}
-
-\subsection{Model selection}
-
-\begin{itemize}
-  \item Baseline 4.434 / 5.449
-  \item Decision tree
-\end{itemize}
+\subsection{Sub-task 1}
+\label{sec:results-subtask-1}
 
 \printbibliography
 

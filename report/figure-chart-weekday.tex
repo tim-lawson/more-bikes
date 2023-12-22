@@ -12,7 +12,7 @@
         height = 3in,
         cycle list/Paired,
         xlabel = {Hour},
-        ylabel = {Average fraction},
+        ylabel = {Average fraction of available bikes},
         xmin = 0,
         xmax = 23,
         legend style = {
@@ -24,7 +24,7 @@
         legend cell align={left},
       ]
       \nextgroupplot
-      \foreach \weekday in {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday}{
+      \foreach \weekday in {Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday}{
           \addplot+[
             sharp plot,
             mark = none,
@@ -39,11 +39,9 @@
         }
     \end{groupplot}
   \end{tikzpicture}
-  \caption{The average hourly fraction of available bikes on each day of the week.
-    The distributions are generally bimodal, with peaks in the middle of the day and in the
-    evening.
-    A distinction between weekdays and weekends is also evident, with the exception of
-    Friday evenings, where the distribution is more similar to that of a weekend day.
+  \caption{The average fraction of available bikes at each hour of the day, separated
+    by the day of the week.
+    This chart is limited to the month of October 2014.
   }
   \label{fig:chart-weekday}
 \end{figure}
