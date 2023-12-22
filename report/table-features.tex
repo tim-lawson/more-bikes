@@ -1,0 +1,43 @@
+
+\begin{table}
+  \newcommand{\tablefeaturesrow}[4]{#1 & #2 & #3 & #4 \\}
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    \tablefeaturesrow{Category}{Feature}{Data type}{Kind}
+    \midrule
+    \tablefeaturesrow{\multirow{4}{*}{Station}}{\texttt{station}}{\texttt{int}}{ordinal}
+    \tablefeaturesrow{}{\texttt{latitude}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{longitude}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{docks}}{\texttt{int}}{}
+    \midrule
+    \tablefeaturesrow{\multirow{8}{*}{Temporal}}{\texttt{timestamp}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{year}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{month}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{day}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{hour}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{weekday}}{\texttt{str}}{ordinal}
+    \tablefeaturesrow{}{\texttt{weekhour}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{\isholiday}}{\texttt{bool}}{categorical}
+    \midrule
+    \tablefeaturesrow{\multirow{7}{*}{Meteorological}}{\texttt{\windspeedmax}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{\windspeedavg}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{\winddirection}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{temperature}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{humidity}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{pressure}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{precipitation}}{\texttt{float}}{}
+    \midrule
+    \tablefeaturesrow{\multirow{6}{*}{Bikes}}{\texttt{bikes}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{\bikesavgfull}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{\bikesavgshort}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{\bikesh}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{\bikeshdiffavgfull}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{\bikeshdiffavgshort}}{\texttt{float}}{}
+    \bottomrule
+  \end{tabular}
+  \caption{A summary of the features.
+    Except where indicated, the features are quantitative.
+  }
+  \label{tab:features}
+\end{table}

@@ -6,6 +6,16 @@ from pandas import DataFrame, concat, read_csv
 from scipy.stats import ttest_rel
 
 
+def mean_score(task: str, experiment: str):
+    """Mean score and variance for a given experiment."""
+
+    dataframe = read_csv(
+        f"more_bikes/experiments/{task}/{experiment}/{experiment}_cv.csv"
+    )
+
+    return dataframe["score"].mean(), dataframe["score"].var()
+
+
 def test_task_1a(experiment1: str, experiment2: str):
     """Dependent t-test for paired samples."""
 
@@ -56,6 +66,16 @@ def test_task_1b(experiment1: str, experiment2: str):
 
 
 if __name__ == "__main__":
+    print("task 1a")
+    for experiment in ["baseline", "decision_tree", "hgbr"]:
+        mean, variance = mean_score("task_1a", experiment)
+        print(f"{experiment}: {mean:.2f} ({variance:.2f})")
+
+    print("\ntask 1b")
+    for experiment in ["baseline", "hgbr", "lightgbm", "mlp"]:
+        mean, variance = mean_score("task_1b", experiment)
+        print(f"{experiment}: {mean:.2f} ({variance:.2f})")
+
     pair: tuple[str, str]
 
     P = 0.05

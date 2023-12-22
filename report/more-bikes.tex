@@ -65,6 +65,7 @@
 \usepackage{mathtools}
 
 % Tables and charts
+\usepackage{booktabs}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{array}
@@ -183,38 +184,37 @@ Finally, \cref{sec:results} presents the results of the experiments for each sub
 \section{Data analysis}
 \label{sec:data-analysis}
 
-\import{.}{figure-table-features.tex}
+\import{.}{table-features.tex}
+\import{.}{table-feature-stats.tex}
 
-\import{.}{figure-chart-weekday.tex}
-
-The data is recorded at hourly intervals.
-A summary of its features is given in \cref{table:features}.
-Notably, the meteorological features are constant for all stations at a given timestamp.
-The `profile' features, i.e., the features derived from the numbers of available bikes
-at preceding times, are not defined for the first week of instances at each station.
+The data is at hourly intervals with $n = 54385$ instances across 75 stations.
+A summary of its features and the distributional characteristics of the non-temporal
+quantitative features are given in \cref{tab:features,tab:feature-stats} respectively.
+This shows that many of the features, including the target variable
+\texttt{bikes}, are missing for $n = 73$ instances, which were excluded from the analysis.
+Additionally, the `profile' features, i.e., the features derived from the numbers of
+available bikes at preceding times, are not defined for the first week of instances at
+each station.
+Hence, they are missing for approximately $\frac{1}{4}$ of the instances.
+The meteorological features are constant for all stations at a given timestamp.
 Naturally, the number of available bikes at a given station is bounded by zero and the
 number of docks at that station.
 
 \subsection{Feature selection}
 \label{sec:feature-selection}
 
-Intuitively, features that have zero or very low variance are unlikely to be informative
-for regression analysis.
-Hence, I automatically excluded zero-variance
-features\footnote{See \sklearn{feature\_selection.VarianceThreshold}.}.
-In the case of sub-task~1, the available data is limited to the month of October 2014;
-therefore, the month and year have zero variance.
-Additionally, the `station' features (\cref{table:features}) are constant for all
-instances at a given station; hence, for the first case of sub-task 1, these have zero
-variance.
+Intuitively, features that have zero variance are not informative for regression
+analysis and were automatically
+excluded\footnote{See \sklearn{feature\_selection.VarianceThreshold}.}.
+In the case of sub-task~1, the available data is limited to the month of October 2014; therefore, these included the month and year.
+Additionally, the `station' features (\cref{tab:features}) are constant for all
+instances at a given station; hence, for the first case of sub-task~1, these were
+excluded.
 Finally, the \texttt{precipitation} feature is zero for all instances.
 
-Correlations between features and, more generally, multicollinearity, are undesirable
-in regression analysis \parencite[e.g.,][]{Alin2010}.
-Therefore, I sought to identify and exclude redundant features before applying models
-to the data.
-To determine the redundant features, I computed the Pearson correlation coefficients
-between pairs of quantitative features (\cref{fig:chart-correlations}).
+Correlations between features and, more generally, multicollinearity, are undesirable in regression analysis \parencite{Alin2010}.
+Therefore, I sought to identify and exclude redundant features.
+To determine these, I computed the Pearson correlation coefficients between pairs of quantitative features (\cref{fig:chart-correlations}).
 This analysis yielded the following observations:
 \begin{itemize}
   \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are fully correlated ($r = 1.00$);
@@ -223,9 +223,14 @@ This analysis yielded the following observations:
 \end{itemize}
 Hence, the second of each of these pairs of features was also excluded.
 
-\import{.}{figure-chart-correlations.tex}
-% \import{.}{figure-chart-weekday-separate.tex}
-% \import{.}{figure-chart-distributions.tex}
+\import{.}{figure-correlations.tex}
+% \import{.}{figure-weekday-separate.tex}
+% \import{.}{figure-distributions.tex}
+
+\subsection{Feature engineering}
+\label{sec:feature-engineering}
+
+\import{.}{figure-weekday.tex}
 
 \section{Methods}
 \label{sec:methods}
@@ -258,14 +263,19 @@ Finally, the statistical significance of the differences in performance between 
 was assessed by paired $t$-tests of the scores achieved on each of the ten
 cross-validation folds.
 
-\import{.}{figure-chart-cross-validation.tex}
+\import{.}{figure-cross-validation.tex}
 
 Gradient-boosted decision trees are a popular choice for time-series forecasting
 problems
-\parencite[e.g.,][]{Bojer2021}.
+\parencite{Bojer2021}.
+In particular, the \texttt{HistGradientBoostingRegressor}
+estimator\footnote{See \sklearn{ensemble.HistGradientBoostingRegressor}.}, inspired by
+the \texttt{LightGBM} implementation of gradient-boosted decision trees
+\parencite{Ke2017}, supports missing values, which are evident in the data
+(\cref{tab:feature-stats}).
 Hence, for sub-task 1, I elected to focus on this class of models and to compare their
-performance to simpler models.
-As a baseline, I predicted the mean fraction of available bikes at each station.
+performance to individual decision trees.
+As a baseline, I predicted the arithmetic mean fraction of available bikes at each station.
 The results of these experiments are presented in \cref{sec:results-subtask-1}.
 
 \section{Results}
@@ -273,6 +283,54 @@ The results of these experiments are presented in \cref{sec:results-subtask-1}.
 
 \subsection{Sub-task 1}
 \label{sec:results-subtask-1}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \begin{tabular}{lrr}
+      \toprule
+      Model                                  & $\mu$ & $\sigma^2$
+      \\
+      \midrule
+      Mean                                   & 4.43  & 3.82
+      \\
+      \texttt{DecisionTreeRegressor}         & 3.49  & 2.57
+      \\
+      \texttt{HistGradientBoostingRegressor} & 3.15  & 2.40
+      \\
+      \bottomrule
+    \end{tabular}
+    \caption{Separate model for each station}
+    \label{fig:chart-subtask-1-1}
+  \end{subfigure}
+  \par\bigskip\bigskip
+  \begin{subfigure}{\textwidth}
+    \centering
+    \begin{tabular}{lrr}
+      \toprule
+      Model                                  & $\mu$ & $\sigma^2$
+      \\
+      \midrule
+      Mean                                   & 5.45  & 0.06
+      \\
+      \texttt{HistGradientBoostingRegressor} & 2.60  & 0.08
+      \\
+      \texttt{LGBMRegressor}                 & 2.68  & 0.14
+      \\
+      \texttt{MLPRegressor}                  & 2.81  & 0.21
+      \\
+      \bottomrule
+    \end{tabular}
+    \caption{Single model for all stations}
+    \label{fig:chart-subtask-1-2}
+  \end{subfigure}
+  \caption{The mean average error achieved by the classes of model for the cases of sub-task~1.
+    In \cref{fig:chart-subtask-1-1}, $\mu$ is the average over stations and cross-validation folds.
+    In \cref{fig:chart-subtask-1-2}, $\mu$ is the average over cross-validation folds only.
+  }
+  \label{fig:chart-subtask-1}
+\end{figure}
 
 \printbibliography
 

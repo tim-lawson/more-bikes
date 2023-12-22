@@ -51,9 +51,9 @@
   \end{tikzpicture}
   \catcode`\_=8 % category subscript
   \caption{The Pearson correlation coefficients between pairs of quantitative features.
-    The ordering is the same as in \cref{table:features}.
-    Most of the temporal features are excluded, because they are obviously correlated.
-    The zero-variance `station' and \texttt{precipitation} features are also excluded
-    (\cref{sec:feature-selection}).}
+    The ordering of the features follows \cref{tab:features}.
+    Features that have zero variance for the first case of sub-task 1 are excluded (\cref{sec:feature-selection}).
+    The \texttt{timestamp} feature is also excluded because it is naturally correlated with the other temporal features.
+  }
   \label{fig:chart-correlations}
 \end{figure}

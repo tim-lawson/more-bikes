@@ -3,7 +3,7 @@
 # pylint: disable=redefined-outer-name
 
 from numpy import histogram
-from pandas import CategoricalDtype, DataFrame, set_option
+from pandas import CategoricalDtype, DataFrame, concat, set_option
 from scipy.stats import describe
 
 from more_bikes.data.data_loader import DataLoaderTrainN
@@ -30,14 +30,26 @@ def _get_columns_stats(
     )
 
 
-def _get_column_stats(data: DataFrame, column: str):
-    stats = describe(data[column].dropna().to_numpy())
-    return DataFrame([stats], columns=stats._fields)
-
-
 def _get_column_histogram(data: DataFrame, column: str):
     counts, divisions = histogram(data[column].dropna().to_numpy(), density=True)
     return DataFrame({"counts": counts, "divisions": divisions[:-1]})
+
+
+def _get_column_stats(data: DataFrame, column: str):
+    stats = describe(data[column].dropna().to_numpy())
+    return DataFrame(
+        {
+            "feature": [column],
+            "n": [stats.nobs],
+            "na": [data[column].isna().sum()],
+            "min": [stats.minmax[0]],
+            "max": [stats.minmax[1]],
+            "mean": [stats.mean],
+            "variance": [stats.variance],
+            "skewness": [stats.skewness],
+            "kurtosis": [stats.kurtosis],
+        }
+    )
 
 
 if __name__ == "__main__":
@@ -47,19 +59,6 @@ if __name__ == "__main__":
     data["weekday"] = data["weekday"].astype(weekday)
 
     data["fraction"] = data["bikes"] / data["docks"]
-
-    na = data.isna().sum()
-    na = na.reset_index()
-    na.columns = ["x", "count"]
-    na.to_csv("more_bikes/analysis/csv/na.csv", index=False)
-
-    set_option("display.float_format", "{:.2E}".format)
-    variance = data[numerical_features + ["bikes"]].var()
-    variance = variance.reset_index()
-    variance.columns = ["x", "value"]
-    variance.to_csv("more_bikes/analysis/csv/variance.csv", index=False)
-
-    print(variance)
 
     correlation = data[
         [
@@ -99,6 +98,8 @@ if __name__ == "__main__":
             f"more_bikes/analysis/csv/fraction_{'_'.join(columns)}.csv",
         )
 
+    stats: list[DataFrame] = []
+
     for column in [
         "wind_speed_max",
         "wind_speed_avg",
@@ -106,17 +107,18 @@ if __name__ == "__main__":
         "temperature",
         "humidity",
         "pressure",
-        "precipitation",
+        "bikes",
+        "bikes_avg_full",
+        "bikes_avg_short",
         "bikes_3h",
         "bikes_3h_diff_avg_full",
-        "bikes_avg_full",
         "bikes_3h_diff_avg_short",
-        "bikes_avg_short",
-        "bikes",
-        "fraction",
     ]:
         hist = _get_column_histogram(data, column)
         hist.to_csv(f"more_bikes/analysis/csv/histogram_{column}.csv", index=False)
 
-        stats = _get_column_stats(data, column)
-        stats.to_csv(f"more_bikes/analysis/csv/stats_{column}.csv", index=False)
+        stats.append(_get_column_stats(data, column))
+
+    concat(stats, ignore_index=True).to_csv(
+        "more_bikes/analysis/csv/stats.csv", index=False
+    )
