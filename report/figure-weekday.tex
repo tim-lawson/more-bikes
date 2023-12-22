@@ -3,27 +3,27 @@
   \begin{tikzpicture}
     \begin{groupplot}[
         group style = {
-            group size = 1 by 1,
+            group size = 1 by 2,
+            xlabels at = edge bottom,
             ylabels at = edge left,
-            vertical sep = 2.5in,
-            horizontal sep = 0.7in,
+            vertical sep = 1in,
           },
         width = 5in,
-        height = 3in,
+        height = 2in,
         cycle list/Paired,
         xlabel = {Hour},
-        ylabel = {Average fraction of available bikes},
+        ylabel = {Fraction},
         xmin = 0,
         xmax = 23,
         legend style = {
             draw = none,
             font = \small,
-            at={(1.05, 0.5)},
+            at={(1.05, 1.25)},
             anchor=west,
           },
         legend cell align={left},
       ]
-      \nextgroupplot
+      \nextgroupplot[title = {October 2014}]
       \foreach \weekday in {Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday}{
           \addplot+[
             sharp plot,
@@ -35,13 +35,26 @@
               x = hour,
               y = mean,
             ]{../more_bikes/analysis/csv/fraction_weekday_hour.csv};
+        }
+      \nextgroupplot[title = {June 2012 -- October 2014}]
+      \foreach \weekday in {Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday}{
+          \addplot+[
+            sharp plot,
+            mark = none,
+            line width = 0.8pt,
+            discard if not = {weekday}{\weekday},
+          ] table [
+              col sep=comma,
+              x = hour,
+              y = mean,
+            ]{../more_bikes/analysis/csv/fraction_weekday_hour_all.csv};
           \addlegendentryexpanded{\weekday}
         }
     \end{groupplot}
   \end{tikzpicture}
-  \caption{The average fraction of available bikes at each hour of the day, separated
-    by the day of the week.
-    This chart is limited to the month of October 2014.
+  \caption{The average fraction of available bikes at each hour of the day, separated by the day of the week.
+    In the top chart, the data is limited to the month of October 2014 for the 75 stations to predict.
+    In the bottom chart, the data from the first ten stations over a year is also included.
   }
   \label{fig:chart-weekday}
 \end{figure}

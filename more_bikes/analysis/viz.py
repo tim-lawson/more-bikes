@@ -3,11 +3,11 @@
 # pylint: disable=redefined-outer-name
 
 from numpy import histogram
-from pandas import CategoricalDtype, DataFrame, concat, set_option
+from pandas import CategoricalDtype, DataFrame, concat
 from scipy.stats import describe
 
-from more_bikes.data.data_loader import DataLoaderTrainN
-from more_bikes.data.feature import WEEKDAY, numerical_features
+from more_bikes.data.data_loader import DataLoaderAll, DataLoaderTrainN
+from more_bikes.data.feature import WEEKDAY
 
 
 def _get_columns_stats(
@@ -53,14 +53,17 @@ def _get_column_stats(data: DataFrame, column: str):
 
 
 if __name__ == "__main__":
-    data = DataLoaderTrainN().data
-
     weekday = CategoricalDtype(categories=WEEKDAY, ordered=True)
-    data["weekday"] = data["weekday"].astype(weekday)
 
-    data["fraction"] = data["bikes"] / data["docks"]
+    data_train = DataLoaderTrainN().data
+    data_train["weekday"] = data_train["weekday"].astype(weekday)
+    data_train["fraction"] = data_train["bikes"] / data_train["docks"]
 
-    correlation = data[
+    data_all = DataLoaderAll().data
+    data_all["weekday"] = data_all["weekday"].astype(weekday)
+    data_all["fraction"] = data_all["bikes"] / data_all["docks"]
+
+    correlation = data_train[
         [
             "day",
             "hour",
@@ -93,9 +96,14 @@ if __name__ == "__main__":
         ["weekday"],
         ["weekday", "hour"],
     ]:
-        columns_stats = _get_columns_stats(data, columns, "fraction")
-        columns_stats.to_csv(
-            f"more_bikes/analysis/csv/fraction_{'_'.join(columns)}.csv",
+        columns_stats_train = _get_columns_stats(data_train, columns, "fraction")
+        columns_stats_train.to_csv(
+            f"more_bikes/analysis/csv/fraction_{'_'.join(columns)}.csv"
+        )
+
+        columns_stats_all = _get_columns_stats(data_all, columns, "fraction")
+        columns_stats_all.to_csv(
+            f"more_bikes/analysis/csv/fraction_{'_'.join(columns)}_all.csv"
         )
 
     stats: list[DataFrame] = []
@@ -114,10 +122,10 @@ if __name__ == "__main__":
         "bikes_3h_diff_avg_full",
         "bikes_3h_diff_avg_short",
     ]:
-        hist = _get_column_histogram(data, column)
+        hist = _get_column_histogram(data_train, column)
         hist.to_csv(f"more_bikes/analysis/csv/histogram_{column}.csv", index=False)
 
-        stats.append(_get_column_stats(data, column))
+        stats.append(_get_column_stats(data_train, column))
 
     concat(stats, ignore_index=True).to_csv(
         "more_bikes/analysis/csv/stats.csv", index=False

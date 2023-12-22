@@ -162,6 +162,7 @@ class DataLoaderAll(DataLoader):
 
     @cached_property
     def data(self):
-        return concat(
+        data = concat(
             [self.train.data, self.full.data], ignore_index=True, sort=False
         ).sort_values(by=["timestamp"])
+        return data

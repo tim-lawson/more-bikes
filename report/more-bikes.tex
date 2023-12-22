@@ -168,24 +168,51 @@ It is divided into three sub-tasks, which differ in the information that is avai
         single model for all 75 stations.
   \item A set of linear models that were trained on the number of available bikes at each of a
         separate set of 200 stations for a year.
-        For the first ten stations, this data is available for analysis but not training.
   \item Both of the above.
 \end{enumerate}
+Additionally, the number of available bikes at each of the first ten stations is
+available for the period from June 2012 to October 2014 for analysis.
 The predictions are evaluated by the mean absolute error (MAE) between the predicted
 and true numbers of available bikes over the period of three months, beginning in
 November 2014.
-The evaluation data is not available to participants; however, the score achieved on a
+The evaluation data was not available to participants; however, the score achieved on a
 held-out test set is reported on the task
 leaderboard\footnote{\href{https://www.kaggle.com/competitions/morebikes2023/leaderboard}{\texttt{https://www.kaggle.com/competitions/morebikes2023/leaderboard}}}.
-This report begins with a preliminary analysis of the data in \cref{sec:data-analysis}.
-Then, I describe the general approach taken to the sub-tasks in \cref{sec:methods}.
-Finally, \cref{sec:results} presents the results of the experiments for each sub-task.
+
+This report begins with a description of the general approach taken to the assignment in \cref{sec:approach}.
+Then, \cref{sec:data-analysis} presents a preliminary analysis of the data.
+Finally, \cref{sec:results} details the results of the methods applied to each of the sub-tasks.
+
+\section{Approach}
+\label{sec:approach}
+
+The experiments described in this report were performed with the \texttt{scikit-learn}
+Python package \parencite{Pedregosa2011}.
+In each case, preprocessing and feature selection were performed by `estimators' that
+implemented the `transformer' interface; prediction was performed by estimators that
+implemented the `predictor' interface; and estimators were composed into
+\texttt{Pipeline} objects over which hyperparameter search could be performed
+\parencite[4-9]{Buitinck2013}.
+
+Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
+to the inherent correlation between successive folds \parencite{Bergmeir2018}.
+Instead, nested time-series
+cross-validation\footnote{See \sklearn{model\_selection.TimeSeriesSplit}.} with ten folds
+was used to evaluate the models.
+This behaviour is illustrated in \cref{fig:chart-cross-validation}.
+Hyperparameter tuning was performed by grid
+search\footnote{See \sklearn{model\_selection.GridSearchCV}.} with the mean absolute
+error as the scoring function, following the task description.
+Finally, the statistical significance of the differences in performance between models
+was assessed by paired $t$-tests of the scores achieved on the cross-validation
+folds.
+
+\import{.}{figure-cross-validation.tex}
 
 \section{Data analysis}
 \label{sec:data-analysis}
 
 \import{.}{table-features.tex}
-\import{.}{table-feature-stats.tex}
 
 The data is at hourly intervals with $n = 54385$ instances across 75 stations.
 A summary of its features and the distributional characteristics of the non-temporal
@@ -199,6 +226,8 @@ Hence, they are missing for approximately $\frac{1}{4}$ of the instances.
 The meteorological features are constant for all stations at a given timestamp.
 Naturally, the number of available bikes at a given station is bounded by zero and the
 number of docks at that station.
+
+\import{.}{table-feature-stats.tex}
 
 \subsection{Feature selection}
 \label{sec:feature-selection}
@@ -230,40 +259,32 @@ Hence, the second of each of these pairs of features was also excluded.
 \subsection{Feature engineering}
 \label{sec:feature-engineering}
 
-\import{.}{figure-weekday.tex}
-
-\section{Methods}
-\label{sec:methods}
-
-The experiments described in this report were performed with the \texttt{scikit-learn}
-Python package \parencite{Pedregosa2011}.
-In each case, preprocessing and feature selection were performed by `estimators' that
-implemented the `transformer' interface; prediction was performed by estimators that
-implemented the `predictor' interface; and estimators were composed into
-\texttt{Pipeline} objects over which hyperparameter search was performed
-\parencite[4-9]{Buitinck2013}.
 The bounds on the number of available bikes at a given station were enforced by
 predicting the \emph{fraction} of bikes, i.e., the number of bikes divided by the number
 of docks at the station.
 In each case, this was implemented by extending the \texttt{TransformedTargetRegressor}
 meta-estimator to permit data-dependent
 transforms\footnote{See \sklearn{compose.TransformedTargetRegressor}.}.
+I note that, while tree models are invariant to monotonic transformations of explanatory
+features \parencite[e.g.,][3184]{Death2000}, this does not apply to a data-dependent
+transformation of the target variable.
 
-Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
-to the inherent correlation between successive folds \parencite{Bergmeir2018}.
-Instead, nested time-series
-cross-validation\footnote{See \sklearn{model\_selection.TimeSeriesSplit}.} with ten folds
-was performed to evaluate the models.
-This behaviour is illustrated in \cref{fig:chart-cross-validation}.
-Hyperparameter tuning was performed by grid
-search\footnote{See \sklearn{model\_selection.GridSearchCV}.}.
-The evaluation metric used throughout was the mean absolute error between the predicted
-and true numbers of available bikes, following the task description.
-Finally, the statistical significance of the differences in performance between models
-was assessed by paired $t$-tests of the scores achieved on each of the ten
-cross-validation folds.
+\import{.}{figure-weekday.tex}
 
-\import{.}{figure-cross-validation.tex}
+Initially, I considered the possibility of deriving temporal features, e.g.,
+discretising the hour of the day into `day' and `night' intervals.
+However, as shown in \cref{fig:chart-weekday}, the average fraction of available bikes
+at each hour of the day differs substantially between the training data (top)
+and the data from the first ten stations (bottom).
+Additionally, having elected to investigate tree models for sub-task 1
+(\cref{sec:results-subtask-1}), discretisation is less appropriate because a tree
+naturally partitions the spaces of quantitative features \parencite[155]{Flach2012}.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Sub-task 1}
+\label{sec:results-subtask-1}
 
 Gradient-boosted decision trees are a popular choice for time-series forecasting
 problems
@@ -276,13 +297,6 @@ the \texttt{LightGBM} implementation of gradient-boosted decision trees
 Hence, for sub-task 1, I elected to focus on this class of models and to compare their
 performance to individual decision trees.
 As a baseline, I predicted the arithmetic mean fraction of available bikes at each station.
-The results of these experiments are presented in \cref{sec:results-subtask-1}.
-
-\section{Results}
-\label{sec:results}
-
-\subsection{Sub-task 1}
-\label{sec:results-subtask-1}
 
 \begin{figure}
   \centering
