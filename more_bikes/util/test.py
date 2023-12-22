@@ -1,14 +1,12 @@
 """Statistical tests."""
 
-from logging import Logger
+# pylint: disable=redefined-outer-name
 
-from pandas import read_csv
+from pandas import DataFrame, concat, read_csv
 from scipy.stats import ttest_rel
 
-from more_bikes.util.log import create_logger
 
-
-def test_task_1a(experiment1: str, experiment2: str, logger: Logger):
+def test_task_1a(experiment1: str, experiment2: str):
     """Dependent t-test for paired samples."""
 
     dataframe1 = read_csv(
@@ -36,12 +34,10 @@ def test_task_1a(experiment1: str, experiment2: str, logger: Logger):
     statistics = [round(statistic, 3) for statistic in statistics]
     pvalues = [round(pvalue, 3) for pvalue in pvalues]
 
-    logger.info("%s vs %s", experiment1, experiment2)
-    logger.info("statistics = %s", statistics)
-    logger.info("p-values = %s", pvalues)
+    return statistics, pvalues
 
 
-def test_task_1b(experiment1: str, experiment2: str, logger: Logger):
+def test_task_1b(experiment1: str, experiment2: str):
     """Dependent t-test for paired samples."""
 
     dataframe1 = read_csv(
@@ -56,19 +52,66 @@ def test_task_1b(experiment1: str, experiment2: str, logger: Logger):
 
     statistic, pvalue = ttest_rel(scores1, scores2)
 
-    logger.info("%s vs %s", experiment1, experiment2)
-    logger.info("statistic = %f", statistic)
-    logger.info("p-value = %f", pvalue)
+    return statistic, pvalue
 
 
 if __name__ == "__main__":
-    logger_1a = create_logger("test_1a")
-    logger_1b = create_logger("test_1b")
+    pair: tuple[str, str]
+
+    P = 0.05
+
+    results_1a = DataFrame(
+        {
+            "model1": [],
+            "model2": [],
+            "station": [],
+            "statistic": [],
+            "pvalue": [],
+            "model": [],
+            "significant": [],
+        }
+    )
 
     for pair in [
         ("baseline", "hgbr"),
+        ("baseline", "decision_tree"),
+        ("decision_tree", "hgbr"),
     ]:
-        test_task_1a(*pair, logger=logger_1a)
+        statistics, pvalues = test_task_1a(*pair)
+
+        for station, statistic, pvalue in zip(range(201, 276), statistics, pvalues):
+            results_1a = concat(
+                [
+                    results_1a,
+                    DataFrame(
+                        {
+                            "model1": [pair[0]],
+                            "model2": [pair[1]],
+                            "station": [station],
+                            "statistic": [statistic],
+                            "pvalue": [pvalue],
+                            "model": [pair[0] if statistic < 0 else pair[1]],
+                            "significant": [pvalue < P],
+                        }
+                    ),
+                ],
+                ignore_index=True,
+            )
+
+    results_1a["station"] = results_1a["station"].astype(int)
+    results_1a["significant"] = results_1a["significant"].astype(bool)
+    results_1a.to_csv("more_bikes/util/test_results_1a.csv", index=False)
+
+    results_1b = DataFrame(
+        {
+            "model1": [],
+            "model2": [],
+            "statistic": [],
+            "pvalue": [],
+            "model": [],
+            "significant": [],
+        }
+    )
 
     for pair in [
         ("baseline", "hgbr"),
@@ -78,4 +121,24 @@ if __name__ == "__main__":
         ("hgbr", "mlp"),
         ("lightgbm", "mlp"),
     ]:
-        test_task_1b(*pair, logger=logger_1b)
+        statistic, pvalue = test_task_1b(*pair)
+
+        results_1b = concat(
+            [
+                results_1b,
+                DataFrame(
+                    {
+                        "model1": [pair[0]],
+                        "model2": [pair[1]],
+                        "statistic": [statistic],
+                        "pvalue": [pvalue],
+                        "model": [pair[0] if statistic < 0 else pair[1]],
+                        "significant": [pvalue < P],
+                    }
+                ),
+            ],
+            ignore_index=True,
+        )
+
+    results_1b["significant"] = results_1b["significant"].astype(bool)
+    results_1b.to_csv("more_bikes/util/test_results_1b.csv", index=False)
