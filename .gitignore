@@ -36,4 +36,5 @@ __pycache__/
 .pytest_cache
 
 # Output
+more_bikes/experiments/**/*.json
 more_bikes/experiments/**/*.log

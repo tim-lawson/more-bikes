@@ -4,7 +4,7 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.pipeline import make_pipeline
 
 from more_bikes.experiments.experiment import Model
-from more_bikes.experiments.params.hgbr import hgbr_param_grid, hgbr_param_space
+from more_bikes.experiments.params.hgbr import hgbr_param_space, params
 from more_bikes.experiments.params.util import GASearchCVParams, SearchStrategy
 from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
 from more_bikes.feature_selection.drop import feature_selection_drop
@@ -17,9 +17,9 @@ from more_bikes.preprocessing.transformed_target_regressor import (
     TransformedTargetRegressor,
 )
 
-SEARCH: SearchStrategy = "grid"
+SEARCH: SearchStrategy = "halving"
 
-params = hgbr_param_grid if SEARCH == "grid" else hgbr_param_space
+params = hgbr_param_space if SEARCH == "genetic" else params
 
 
 def hgbr():

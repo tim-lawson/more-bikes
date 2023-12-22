@@ -28,10 +28,6 @@ Analysis and experiments:
 
 - Complete tasks 2 and 3
 - Experiment with imputation methods
-- Experiment with representations of temporal features
-- Improve implementation of genetic parameter search
-- Implement genetic parameter search for task 1.1
-- Determine appropriate parameter search spaces
 - Experiment with learning algorithms, e.g., kernel regression, Gaussian processes,
   ensemble methods, etc.
 - Improve evaluation of learning algorithms and models
