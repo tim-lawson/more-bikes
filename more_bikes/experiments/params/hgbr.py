@@ -24,9 +24,9 @@ params: ParamGrid = [
     {
         "regressor__histgradientboostingregressor__loss": ["absolute_error"],
         "regressor__histgradientboostingregressor__learning_rate": [
-            0.01,
+            # 0.01,
             0.1,
-            1,
+            # 1,
         ],
         "regressor__histgradientboostingregressor__max_iter": [
             10,
@@ -58,11 +58,11 @@ params: ParamGrid = [
             50,
         ],
         "regressor__histgradientboostingregressor__l2_regularization": [
-            0.0,
+            # 0.0,
             0.1,
             0.2,
             0.5,
-            1.0,
+            # 1.0,
         ],
         "regressor__histgradientboostingregressor__categorical_features": [
             categorical_features

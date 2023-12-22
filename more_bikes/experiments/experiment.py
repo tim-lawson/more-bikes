@@ -1,19 +1,29 @@
 """Experiment classes."""
 
 from abc import ABCMeta, abstractmethod
+from contextlib import redirect_stdout
 from dataclasses import dataclass, field
 from typing import Self
 
 from numpy import ndarray
 from pandas import DataFrame, Series
+
+# pylint: disable=unused-import
+from sklearn.experimental import enable_halving_search_cv
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import BaseCrossValidator, cross_val_score
+from sklearn.model_selection import (
+    BaseCrossValidator,
+    GridSearchCV,
+    HalvingGridSearchCV,
+    cross_val_score,
+)
 from sklearn.pipeline import Pipeline
 from sklearn.utils import Bunch
 
 from more_bikes.data.feature import BIKES, Feature
-from more_bikes.experiments.params.util import ParamGrid, ParamSpace
+from more_bikes.experiments.params.cv import time_series_split
+from more_bikes.experiments.params.util import ParamGrid, SearchStrategy
 from more_bikes.preprocessing.transformed_target_regressor import (
     TransformedTargetRegressor,
 )
@@ -22,6 +32,7 @@ from more_bikes.preprocessing.util import (
     PreProcessing,
     Submission,
     post_identity,
+    pre_chain,
     pre_dropna_row,
     submission,
 )
@@ -56,8 +67,8 @@ class Model:
     # The pipeline to evaluate.
     pipeline: Pipeline | TransformedTargetRegressor
 
-    # If the pipeline is parameterised, the grid or space to search.
-    params: ParamGrid | ParamSpace | None = None
+    # If the pipeline is parameterised, the grid to search.
+    params: ParamGrid | None = None
 
     # The strategy to evaluate the model.
     scoring: str = SCORING
@@ -75,16 +86,20 @@ class Experiment(metaclass=ABCMeta):
     def __init__(
         self,
         output_path: str,
-        processing: Processing,
         model: Model,
-        cv: BaseCrossValidator | None = None,
+        processing: Processing = Processing(),
+        cv: BaseCrossValidator = time_series_split,
+        search: SearchStrategy = "grid",
     ) -> None:
         self._output_path = output_path
         self._processing = processing
         self._model = model
         self._cv = cv
+        self._search = search
 
         self._logger = create_logger(self._model.name, self._output_path)
+
+        self.pre = pre_chain(self._processing.pre)
 
     @abstractmethod
     def run(self) -> Self:
@@ -117,6 +132,56 @@ class Experiment(metaclass=ABCMeta):
                 f"{self._output_path}/{self._model.name}_cv.csv",
                 index=False,
             )
+
+    def _run(
+        self, x_train: DataFrame, y_train: Series, x_test: DataFrame
+    ) -> tuple[DataFrame, float, DataFrame]:
+        # If there is a parameter grid, search it.
+        if self._cv is not None and self._model.params is not None:
+            outfile = f"{self._output_path}/{self._model.name}_cv.log"
+            with open(outfile, "w", encoding="utf-8") as out:
+                with redirect_stdout(out):
+                    # Halving grid search.
+                    if self._search == "halving":
+                        search = HalvingGridSearchCV(
+                            estimator=self._model.pipeline,
+                            param_grid=self._model.params,
+                            scoring=self._model.scoring,
+                            refit=True,
+                            cv=self._cv,
+                            verbose=3,
+                        )
+                    # Grid search.
+                    else:
+                        search = GridSearchCV(
+                            estimator=self._model.pipeline,
+                            param_grid=self._model.params,
+                            scoring=(self._model.scoring),
+                            refit=self._model.scoring,
+                            cv=self._cv,
+                            verbose=3,
+                        )
+                    search.fit(x_train, y_train)
+
+            self._logger.info("score %.3f", -search.best_score_)
+            self._logger.info("params %s", search.best_params_)
+            self._save_attrs(search.best_estimator_)  # type: ignore
+
+            best_scores: list[float] = []
+            for index in range(search.n_splits_):
+                best_score = -search.cv_results_[f"split{index}_test_score"][
+                    search.best_index_
+                ]
+                self._logger.info("split %s", index)
+                self._logger.info("split score %.3f", best_score)
+                best_scores.append(best_score)
+
+            y_pred = search.predict(x_test)
+
+            return self._output(x_test, y_pred, search.best_score_, best_scores)
+
+        # If there is no parameter grid, run the pipeline.
+        return self._run_pipeline(x_train, y_train, x_test)
 
     def _run_pipeline(
         self, x_train: DataFrame, y_train: Series, x_test: DataFrame
