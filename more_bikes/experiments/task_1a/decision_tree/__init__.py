@@ -45,12 +45,7 @@ def decision_tree():
             ),
             params=[
                 {
-                    "regressor__decisiontreeregressor__criterion": [
-                        # "squared_error",
-                        # "friedman_mse",
-                        "absolute_error",
-                        # "poisson",
-                    ],
+                    "regressor__decisiontreeregressor__criterion": ["absolute_error"],
                     "regressor__decisiontreeregressor__splitter": [
                         "best",
                         "random",
@@ -60,6 +55,7 @@ def decision_tree():
                         5,
                         10,
                         20,
+                        50,
                     ],
                     "regressor__decisiontreeregressor__min_samples_split": [
                         2,
@@ -70,18 +66,21 @@ def decision_tree():
                         1,
                         2,
                         5,
+                        10,
+                        20,
+                        50,
                     ],
                     "regressor__decisiontreeregressor__max_features": [
                         None,
                         # "auto",
-                        # "sqrt",
-                        # "log2",
+                        "sqrt",
+                        "log2",
                     ],
                     "regressor__decisiontreeregressor__max_leaf_nodes": [
                         None,
-                        # 15,
-                        # 31,
-                        # 63,
+                        15,
+                        31,
+                        63,
                     ],
                     "regressor__decisiontreeregressor__min_impurity_decrease": [
                         0.0,

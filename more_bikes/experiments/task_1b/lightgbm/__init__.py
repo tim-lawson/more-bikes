@@ -15,38 +15,6 @@ from more_bikes.preprocessing.transformed_target_regressor import (
     TransformedTargetRegressor,
 )
 
-params = [
-    {
-        "regressor__lgbmregressor__boosting_type": [
-            "gbdt",
-            # "dart",
-        ],
-        "regressor__lgbmregressor__num_leaves": [
-            # 15,
-            31,
-            # 63,
-            # 127,
-        ],
-        "regressor__lgbmregressor__max_depth": [
-            -1,
-            # 5,
-            # 10,
-            # 20,
-        ],
-        "regressor__lgbmregressor__learning_rate": [
-            # 1e-2,
-            1e-1,
-            # 1.0,
-        ],
-        "regressor__lgbmregressor__n_estimators": [
-            100,
-            # 200,
-            # 500,
-            # 1000,
-        ],
-    }
-]
-
 
 def lightgbm():
     """LightGBM."""
@@ -71,6 +39,40 @@ def lightgbm():
                 ),
                 BikesFractionTransformer(),
             ),
-            params=params,
+            params=[
+                {
+                    "regressor__lgbmregressor__boosting_type": [
+                        "gbdt",
+                        "dart",
+                    ],
+                    "regressor__lgbmregressor__num_leaves": [
+                        15,
+                        31,
+                        63,
+                        127,
+                    ],
+                    "regressor__lgbmregressor__max_depth": [
+                        -1,
+                        5,
+                        10,
+                        20,
+                    ],
+                    "regressor__lgbmregressor__learning_rate": [
+                        1e-2,
+                        1e-1,
+                        1.0,
+                    ],
+                    "regressor__lgbmregressor__n_estimators": [
+                        10,
+                        20,
+                        50,
+                        100,
+                        200,
+                        500,
+                        1000,
+                    ],
+                }
+            ],
         ),
+        search="halving",
     )

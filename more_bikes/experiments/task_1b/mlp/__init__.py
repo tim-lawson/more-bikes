@@ -18,26 +18,6 @@ from more_bikes.preprocessing.transformed_target_regressor import (
     TransformedTargetRegressor,
 )
 
-params = [
-    {
-        "regressor__mlpregressor__hidden_layer_sizes": [
-            # (16, 16, 16),
-            # (32, 32, 32),
-            (64, 64, 64),
-        ],
-        "regressor__mlpregressor__activation": [
-            "logistic",
-            # "tanh",
-            # "relu",
-        ],
-        "regressor__mlpregressor__learning_rate": [
-            # "constant",
-            # "invscaling",
-            "adaptive",
-        ],
-    }
-]
-
 
 def mlp():
     """Multi-layer perceptron."""
@@ -64,6 +44,25 @@ def mlp():
                 ),
                 transformer=BikesFractionTransformer(),
             ),
-            params=params,
+            params=[
+                {
+                    "regressor__mlpregressor__hidden_layer_sizes": [
+                        (16, 16, 16),
+                        (32, 32, 32),
+                        (64, 64, 64),
+                    ],
+                    "regressor__mlpregressor__activation": [
+                        "logistic",
+                        "tanh",
+                        "relu",
+                    ],
+                    "regressor__mlpregressor__learning_rate": [
+                        "constant",
+                        "invscaling",
+                        "adaptive",
+                    ],
+                }
+            ],
         ),
+        search="halving",
     )

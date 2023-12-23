@@ -201,8 +201,8 @@ cross-validation\footnote{See \sklearn{model\_selection.TimeSeriesSplit}.} with 
 was used to evaluate the models.
 This behaviour is illustrated in \cref{fig:chart-cross-validation}.
 Hyperparameter tuning was performed by grid
-search\footnote{See \sklearn{model\_selection.GridSearchCV}.} with the mean absolute
-error as the scoring function, following the task description.
+search\footnote{See \sklearn{model\_selection.GridSearchCV} and \sklearn{model\_selection.HalvingGridSearchCV}.}
+with the mean absolute error as the scoring function, following the task description.
 Finally, the statistical significance of the differences in performance between models
 was assessed by paired $t$-tests of the scores achieved on the cross-validation
 folds.
@@ -224,13 +224,13 @@ available bikes at preceding times, are not defined for the first week of instan
 each station.
 Hence, they are missing for approximately $\frac{1}{4}$ of the instances.
 The meteorological features are constant for all stations at a given timestamp.
-Naturally, the number of available bikes at a given station is bounded by zero and the
+Finally, the number of available bikes at a given station is bounded by zero and the
 number of docks at that station.
-
-\import{.}{table-feature-stats.tex}
 
 \subsection{Feature selection}
 \label{sec:feature-selection}
+
+\import{.}{table-feature-stats.tex}
 
 Intuitively, features that have zero variance are not informative for regression
 analysis and were automatically
@@ -271,14 +271,16 @@ transformation of the target variable.
 
 \import{.}{figure-weekday.tex}
 
-Initially, I considered the possibility of deriving temporal features, e.g.,
-discretising the hour of the day into `day' and `night' intervals.
+Initially, I investigated introducing derived temporal features, e.g., by discretising
+the hour of the day into `day' and `night' intervals.
 However, as shown in \cref{fig:chart-weekday}, the average fraction of available bikes
-at each hour of the day differs substantially between the training data (top)
-and the data from the first ten stations (bottom).
+at each hour of the day differs substantially between the training data and the data
+from the first ten stations.
+Hence, I considered that such a feature would be unlikely to generalise well to the
+test data.
 Additionally, having elected to investigate tree models for sub-task 1
-(\cref{sec:results-subtask-1}), discretisation is less appropriate because a tree
-naturally partitions the spaces of quantitative features \parencite[155]{Flach2012}.
+(\cref{sec:results-subtask-1}), discretisation may be unnecessary because a tree
+already partitions the spaces of quantitative features \parencite[155]{Flach2012}.
 
 \section{Results}
 \label{sec:results}
@@ -286,19 +288,18 @@ naturally partitions the spaces of quantitative features \parencite[155]{Flach20
 \subsection{Sub-task 1}
 \label{sec:results-subtask-1}
 
-Gradient-boosted decision trees are a popular choice for time-series forecasting
-problems
-\parencite{Bojer2021}.
+Gradient-boosted decision trees (GBDT) are a popular choice for time-series forecasting
+problems \parencite{Bojer2021}.
 In particular, the \texttt{HistGradientBoostingRegressor}
-estimator\footnote{See \sklearn{ensemble.HistGradientBoostingRegressor}.}, inspired by
-the \texttt{LightGBM} implementation of gradient-boosted decision trees
-\parencite{Ke2017}, supports missing values, which are evident in the data
-(\cref{tab:feature-stats}).
+estimator\footnote{See \sklearn{ensemble.HistGradientBoostingRegressor}.} supports
+missing values, which are evident in the data (see \cref{tab:feature-stats})
+This implementation of GBDT was inspired by LightGBM \parencite{Ke2017}.
 Hence, for sub-task 1, I elected to focus on this class of models and to compare their
 performance to individual decision trees.
 As a baseline, I predicted the arithmetic mean fraction of available bikes at each station.
+These results are summarised in \cref{tab:chart-subtask-1}.
 
-\begin{figure}
+\begin{table}
   \centering
   \begin{subfigure}{\textwidth}
     \centering
@@ -309,14 +310,14 @@ As a baseline, I predicted the arithmetic mean fraction of available bikes at ea
       \midrule
       Mean                                   & 4.43  & 3.82
       \\
-      \texttt{DecisionTreeRegressor}         & 3.49  & 2.57
+      \texttt{DecisionTreeRegressor}         & 3.22  & 2.28
       \\
-      \texttt{HistGradientBoostingRegressor} & 3.15  & 2.40
+      \texttt{HistGradientBoostingRegressor} & 3.23  & 2.54
       \\
       \bottomrule
     \end{tabular}
     \caption{Separate model for each station}
-    \label{fig:chart-subtask-1-1}
+    \label{tab:chart-subtask-1-1}
   \end{subfigure}
   \par\bigskip\bigskip
   \begin{subfigure}{\textwidth}
@@ -328,23 +329,25 @@ As a baseline, I predicted the arithmetic mean fraction of available bikes at ea
       \midrule
       Mean                                   & 5.45  & 0.06
       \\
+      \texttt{DecisionTreeRegressor}         & --    & --
+      \\
       \texttt{HistGradientBoostingRegressor} & 2.60  & 0.08
       \\
-      \texttt{LGBMRegressor}                 & 2.68  & 0.14
-      \\
-      \texttt{MLPRegressor}                  & 2.81  & 0.21
-      \\
+      % \texttt{LGBMRegressor}                 & 2.68  & 0.14
+      % \\
+      % \texttt{MLPRegressor}                  & 2.81  & 0.21
+      % \\
       \bottomrule
     \end{tabular}
     \caption{Single model for all stations}
-    \label{fig:chart-subtask-1-2}
+    \label{tab:chart-subtask-1-2}
   \end{subfigure}
   \caption{The mean average error achieved by the classes of model for the cases of sub-task~1.
-    In \cref{fig:chart-subtask-1-1}, $\mu$ is the average over stations and cross-validation folds.
-    In \cref{fig:chart-subtask-1-2}, $\mu$ is the average over cross-validation folds only.
+    In \cref{tab:chart-subtask-1-1}, $\mu$ is the average over stations and cross-validation folds.
+    In \cref{tab:chart-subtask-1-2}, $\mu$ is the average over cross-validation folds only.
   }
-  \label{fig:chart-subtask-1}
-\end{figure}
+  \label{tab:chart-subtask-1}
+\end{table}
 
 \printbibliography
 
