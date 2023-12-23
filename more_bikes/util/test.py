@@ -2,6 +2,8 @@
 
 # pylint: disable=redefined-outer-name
 
+from itertools import combinations
+
 from pandas import DataFrame, concat, read_csv
 from scipy.stats import ttest_rel
 
@@ -72,7 +74,7 @@ if __name__ == "__main__":
         print(f"{experiment}: {mean:.2f} ({variance:.2f})")
 
     print("\ntask 1b")
-    for experiment in ["baseline", "hgbr", "lightgbm", "mlp"]:
+    for experiment in ["baseline", "decision_tree", "hgbr", "lightgbm", "mlp"]:
         mean, variance = mean_score("task_1b", experiment)
         print(f"{experiment}: {mean:.2f} ({variance:.2f})")
 
@@ -92,11 +94,7 @@ if __name__ == "__main__":
         }
     )
 
-    for pair in [
-        ("baseline", "hgbr"),
-        ("baseline", "decision_tree"),
-        ("decision_tree", "hgbr"),
-    ]:
+    for pair in combinations(["baseline", "decision_tree", "hgbr"], 2):
         statistics, pvalues = test_task_1a(*pair)
 
         for station, statistic, pvalue in zip(range(201, 276), statistics, pvalues):
@@ -133,14 +131,9 @@ if __name__ == "__main__":
         }
     )
 
-    for pair in [
-        ("baseline", "hgbr"),
-        ("baseline", "lightgbm"),
-        ("baseline", "mlp"),
-        ("hgbr", "lightgbm"),
-        ("hgbr", "mlp"),
-        ("lightgbm", "mlp"),
-    ]:
+    for pair in combinations(
+        ["baseline", "decision_tree", "hgbr", "lightgbm", "mlp"], 2
+    ):
         statistic, pvalue = test_task_1b(*pair)
 
         results_1b = concat(

@@ -5,6 +5,7 @@ from typing import Callable
 from sklearn import set_config
 
 from more_bikes.experiments.task_1b.baseline import baseline
+from more_bikes.experiments.task_1b.decision_tree import decision_tree
 from more_bikes.experiments.task_1b.hgbr import hgbr
 from more_bikes.experiments.task_1b.lightgbm import lightgbm
 from more_bikes.experiments.task_1b.mlp import mlp
@@ -13,6 +14,7 @@ from more_bikes.util.args import get_task_args
 
 task_experiments: dict[str, Callable[[], Task1BExperiment]] = {
     "baseline": baseline,
+    "decision_tree": decision_tree,
     "hgbr": hgbr,
     "lightgbm": lightgbm,
     "mlp": mlp,
