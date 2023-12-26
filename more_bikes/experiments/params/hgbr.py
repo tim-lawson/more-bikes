@@ -10,7 +10,6 @@ best_params: ParamGrid = [
             categorical_features
         ],
         "regressor__histgradientboostingregressor__l2_regularization": [0.5],
-        "regressor__histgradientboostingregressor__learning_rate": [0.1],
         "regressor__histgradientboostingregressor__loss": ["absolute_error"],
         "regressor__histgradientboostingregressor__max_depth": [20],
         "regressor__histgradientboostingregressor__max_iter": [200],
@@ -25,11 +24,24 @@ best_params: ParamGrid = [
 
 params: ParamGrid = [
     {
+        # Fixed
+        "regressor__histgradientboostingregressor__categorical_features": [
+            categorical_features
+        ],
         "regressor__histgradientboostingregressor__loss": ["absolute_error"],
-        "regressor__histgradientboostingregressor__learning_rate": [
-            # 0.01,
+        "regressor__histgradientboostingregressor__scoring": [SCORING],
+        # Variable
+        "regressor__histgradientboostingregressor__l2_regularization": [
             0.1,
-            # 1,
+            0.2,
+            0.5,
+        ],
+        "regressor__histgradientboostingregressor__max_depth": [
+            None,
+            5,
+            10,
+            20,
+            50,
         ],
         "regressor__histgradientboostingregressor__max_iter": [
             10,
@@ -45,13 +57,6 @@ params: ParamGrid = [
             31,
             63,
         ],
-        "regressor__histgradientboostingregressor__max_depth": [
-            None,
-            5,
-            10,
-            20,
-            50,
-        ],
         "regressor__histgradientboostingregressor__min_samples_leaf": [
             1,
             2,
@@ -60,16 +65,5 @@ params: ParamGrid = [
             20,
             50,
         ],
-        "regressor__histgradientboostingregressor__l2_regularization": [
-            # 0.0,
-            0.1,
-            0.2,
-            0.5,
-            # 1.0,
-        ],
-        "regressor__histgradientboostingregressor__categorical_features": [
-            categorical_features
-        ],
-        "regressor__histgradientboostingregressor__scoring": [SCORING],
     }
 ]

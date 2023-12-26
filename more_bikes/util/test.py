@@ -4,6 +4,7 @@
 
 from itertools import combinations
 
+from numpy import greater
 from pandas import DataFrame, concat, read_csv
 from scipy.stats import ttest_rel
 
@@ -42,6 +43,14 @@ def test_task_1a(experiment1: str, experiment2: str):
 
         statistics.append(statistic)
         pvalues.append(pvalue)
+
+    avg_statistic = sum(statistics) / len(statistics)
+    num_positive = sum([statistic > 0 for statistic in statistics])
+    num_significant = sum([pvalue < 0.05 for pvalue in pvalues])
+
+    print(
+        f"{experiment1} vs {experiment2}: {avg_statistic:.3f} ({num_positive} positive, {num_significant} significant)"
+    )
 
     statistics = [round(statistic, 3) for statistic in statistics]
     pvalues = [round(pvalue, 3) for pvalue in pvalues]

@@ -1,143 +1,7 @@
 \documentclass[11pt]{extarticle}
+\usepackage{more-bikes}
 
-% Page layout
-\usepackage{geometry}
-\geometry{
-  a4paper,
-  margin={1in,1in},
-}
-\usepackage{setspace}
-
-% Typography
-% https://ctan.math.washington.edu/tex-archive/fonts/etbb/doc/ETbb-doc.pdf
-\usepackage[p]{ETbb}
-\usepackage[scaled=.95,type1]{cabin}
-\usepackage[varqu,varl]{zi4}
-\usepackage[T1]{fontenc}
-\usepackage[libertine,vvarbb]{newtxmath}
-\usepackage{microtype}
-\frenchspacing
-
-% Bibliography
-\usepackage[
-  style=authoryear-ibid,
-  maxcitenames=2,
-  doi=false,
-  isbn=false,
-  % Omit URL except for @online
-  url=false,
-]{biblatex}
-
-\addbibresource{~/library.bib}
-
-% Map @misc to @online
-\DeclareSourcemap{
-  \maps[datatype=bibtex, overwrite=true]{
-    \map{
-      \step[typesource=misc, typetarget=online]
-    }
-  }
-}
-
-\AtEveryBibitem{%
-  \clearlist{language}%
-  \clearfield{month}%
-  \clearfield{note}%
-  \clearfield{eprint}%
-  % Omit "Visited on <date>"
-  \iffieldundef{urlyear}
-    {}
-    {\clearfield{urlyear}}
-}
-
-% Quotations
-\usepackage{csquotes}
-
-% Input/include relative paths
-\usepackage{import}
-
-% References
-\usepackage{hyperref}
-\usepackage{cleveref}
-
-% Math
-\usepackage{amsmath}
-\usepackage{mathtools}
-
-% Tables and charts
-\usepackage{booktabs}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{array}
-\usepackage{makecell}
-\usepackage{multirow}
-\usepackage[draft]{graphicx}
-
-\def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}}
-\newcolumntype{R}[1]{>{\raggedleft\arraybackslash }b{#1}}
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash }b{#1}}
-\newcolumntype{C}[1]{>{\centering\arraybackslash }b{#1}}
-
-\usepackage{tikz}
-\usetikzlibrary{external}
-\tikzexternalize[prefix=figures/]
-
-\usepackage{pgfplots}
-\usepackage{pgfplotstable}
-\pgfplotsset{compat=1.17}
-\usepgfplotslibrary{colorbrewer}
-\usepgfplotslibrary{fillbetween}
-\usepgfplotslibrary{groupplots}
-
-% Exclusive filter
-\pgfplotsset{
-  discard if/.style 2 args={
-      x filter/.append code={
-          \readlist\mylist{#2}%
-          \foreachitem\z\in\mylist[]{%
-            \ifdim\thisrow{#1} pt=\z pt
-              \def\pgfmathresult{inf}
-            \fi
-          }
-        }
-    },
-}
-
-% Inclusive filter
-\pgfplotsset{
-  discard if not/.style 2 args={
-      x filter/.code={
-          \edef\tempa{\thisrow{#1}}
-          \edef\tempb{#2}
-          \ifx\tempa\tempb
-          \else
-            \def\pgfmathresult{inf}
-          \fi
-        }
-    }
-}
-
-% Comments
-\setlength{\marginparwidth}{1in}
-\usepackage{todonotes}
-\newcounter{todocounter}
-\newcommand{\todonum}[1]{%
-  \stepcounter{todocounter}%
-  \todo[color={red!100!green!33},inline,size=\small]{
-    \thetodocounter: #1
-  }%
-}
-
-\usepackage{siunitx}
-
-\usepackage{listings}
-\lstset{
-    basicstyle=\tt,
-}
-\newcommand{\sklearn}[1]{
-  \href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.html}{\lstinline|sklearn.#1|}
-}
-
+% Shortcuts
 \newcommand{\isholiday}{is\_holiday}
 \newcommand{\windspeedmax}{wind\_speed\_max}
 \newcommand{\windspeedavg}{wind\_speed\_avg}
@@ -147,6 +11,11 @@
 \newcommand{\bikesh}{bikes\_3h}
 \newcommand{\bikeshdiffavgfull}{bikes\_3h\_diff\_avg\_full}
 \newcommand{\bikeshdiffavgshort}{bikes\_3h\_diff\_avg\_short}
+
+\newcommand{\None}{\texttt{None}}
+
+\newcommand{\kaggle}{https://www.kaggle.com/c/morebikes2023/leaderboard}
+\newcommand{\sklearn}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|sklearn.#1.#2|}}
 
 \begin{document}
 
@@ -159,8 +28,8 @@
 \section{Task description}
 
 The assignment is to predict the number of available bikes at 75 rental stations in
-three hours' time for a period of three months beginning in November 2014, i.e., a
-supervised univariate regression problem.
+three hours' time for a period of three months from November 2014, i.e., a supervised
+univariate regression problem.
 It is divided into three sub-tasks, which differ in the information that is available:
 \begin{enumerate}
   \item The number of available bikes at each of the 75 stations for the month of October 2014.
@@ -170,18 +39,18 @@ It is divided into three sub-tasks, which differ in the information that is avai
         separate set of 200 stations for a year.
   \item Both of the above.
 \end{enumerate}
-Additionally, the number of available bikes at each of the first ten stations is
-available for the period from June 2012 to October 2014 for analysis.
+Additionally, the number of available bikes at each of ten stations between June 2012
+and October 2014 is provided for analysis (\cref{fig:chart-weekday}).
 The predictions are evaluated by the mean absolute error (MAE) between the predicted
 and true numbers of available bikes over the period of three months, beginning in
 November 2014.
 The evaluation data was not available to participants; however, the score achieved on a
 held-out test set is reported on the task
-leaderboard\footnote{\href{https://www.kaggle.com/competitions/morebikes2023/leaderboard}{\texttt{https://www.kaggle.com/competitions/morebikes2023/leaderboard}}}.
-
-This report begins with a description of the general approach taken to the assignment in \cref{sec:approach}.
-Then, \cref{sec:data-analysis} presents a preliminary analysis of the data.
-Finally, \cref{sec:results} details the results of the methods applied to each of the sub-tasks.
+leaderboard.\footnote{\href{\kaggle}{\texttt{\kaggle}}} This report begins with a
+description of the general approach taken to the assignment in \cref{sec:approach};
+\cref{sec:data-analysis} presents a preliminary analysis of the data.
+Finally, \cref{sec:results-subtask-1,sec:results-subtask-2} detail the results of the
+methods applied to each of the sub-tasks.
 
 \section{Approach}
 \label{sec:approach}
@@ -196,29 +65,33 @@ implemented the `predictor' interface; and estimators were composed into
 
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
 to the inherent correlation between successive folds \parencite{Bergmeir2018}.
-Instead, nested time-series
-cross-validation\footnote{See \sklearn{model\_selection.TimeSeriesSplit}.} with ten folds
+Instead, nested time-series cross-validation\footnote{See
+  \sklearn{model\_selection}{TimeSeriesSplit}.
+} with ten folds
 was used to evaluate the models.
 This behaviour is illustrated in \cref{fig:chart-cross-validation}.
-Hyperparameter tuning was performed by grid
-search\footnote{See \sklearn{model\_selection.GridSearchCV} and \sklearn{model\_selection.HalvingGridSearchCV}.}
+Hyperparameter tuning was performed by grid search\footnote{See
+  \sklearn{model\_selection}{GridSearchCV} and
+  \sklearn{model\_selection}{HalvingGridSearchCV}.
+}
 with the mean absolute error as the scoring function, following the task description.
 Finally, the statistical significance of the differences in performance between models
-was assessed by paired $t$-tests of the scores achieved on the cross-validation
-folds.
+was assessed by paired $t$-tests of the scores achieved on the cross-validation folds.
+These methods are described in more detail in
+\cref{sec:results-subtask-1,sec:results-subtask-2}.
 
-\import{.}{figure-cross-validation.tex}
+\import{}{figure-cross-validation.tex}
 
 \section{Data analysis}
 \label{sec:data-analysis}
 
-\import{.}{table-features.tex}
+\import{}{table-features.tex}
 
 The data is at hourly intervals with $n = 54385$ instances across 75 stations.
 A summary of its features and the distributional characteristics of the non-temporal
 quantitative features are given in \cref{tab:features,tab:feature-stats} respectively.
-This shows that many of the features, including the target variable
-\texttt{bikes}, are missing for $n = 73$ instances, which were excluded from the analysis.
+This shows that many of the features, including the target variable \texttt{bikes}, are
+missing for $n = 73$ instances, which were excluded from the analysis.
 Additionally, the `profile' features, i.e., the features derived from the numbers of
 available bikes at preceding times, are not defined for the first week of instances at
 each station.
@@ -230,74 +103,154 @@ number of docks at that station.
 \subsection{Feature selection}
 \label{sec:feature-selection}
 
-\import{.}{table-feature-stats.tex}
+\import{}{table-feature-stats.tex}
 
 Intuitively, features that have zero variance are not informative for regression
-analysis and were automatically
-excluded\footnote{See \sklearn{feature\_selection.VarianceThreshold}.}.
-In the case of sub-task~1, the available data is limited to the month of October 2014; therefore, these included the month and year.
+analysis and were automatically excluded\footnote{See
+  \sklearn{feature\_selection}{VarianceThreshold}.
+}.
+In the case of sub-task~1, the available data is limited to the month of October 2014;
+therefore, these included the month and year.
 Additionally, the `station' features (\cref{tab:features}) are constant for all
 instances at a given station; hence, for the first case of sub-task~1, these were
 excluded.
 Finally, the \texttt{precipitation} feature is zero for all instances.
 
-Correlations between features and, more generally, multicollinearity, are undesirable in regression analysis \parencite{Alin2010}.
+Correlations between features and, more generally, multicollinearity, are undesirable
+in regression analysis \parencite{Alin2010}.
 Therefore, I sought to identify and exclude redundant features.
-To determine these, I computed the Pearson correlation coefficients between pairs of quantitative features (\cref{fig:chart-correlations}).
+To determine these, I computed the Pearson correlation coefficients between pairs of
+quantitative features (\cref{fig:chart-correlations}).
 This analysis yielded the following observations:
 \begin{itemize}
   \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are fully correlated ($r = 1.00$);
-  \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are fully correlated ($r  = 1.00$); and
+  \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are fully correlated ($r  = 1.00$);
   \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
 \end{itemize}
 Hence, the second of each of these pairs of features was also excluded.
 
-\import{.}{figure-correlations.tex}
-% \import{.}{figure-weekday-separate.tex}
-% \import{.}{figure-distributions.tex}
+\import{}{figure-correlations.tex}
 
 \subsection{Feature engineering}
 \label{sec:feature-engineering}
 
-The bounds on the number of available bikes at a given station were enforced by
-predicting the \emph{fraction} of bikes, i.e., the number of bikes divided by the number
-of docks at the station.
-In each case, this was implemented by extending the \texttt{TransformedTargetRegressor}
-meta-estimator to permit data-dependent
-transforms\footnote{See \sklearn{compose.TransformedTargetRegressor}.}.
-I note that, while tree models are invariant to monotonic transformations of explanatory
-features \parencite[e.g.,][3184]{Death2000}, this does not apply to a data-dependent
-transformation of the target variable.
+The bounds on the number of available bikes at a given station were enforced throughout
+this report by predicting the \emph{fraction} of bikes, i.e., the number of bikes
+divided by the number of docks at the station.
+I implemented this by extending the \texttt{TransformedTargetRegressor} meta-estimator
+to permit data-dependent transforms\footnote{See
+  \sklearn{compose}{TransformedTargetRegressor}.
+}.
+Another possible transformation of the target variable would have been to predict the
+\emph{change} in the number of available bikes; I did not explore this option.
+I note that, while tree models are invariant to monotonic transformations of
+explanatory features \parencite[e.g.,][3184]{Death2000}, this does not apply to a
+data-dependent transformation of the target variable.
 
-\import{.}{figure-weekday.tex}
+\import{}{figure-weekday.tex}
 
-Initially, I investigated introducing derived temporal features, e.g., by discretising
+Initially, I investigated introducing derived temporal features, e.g., by discretizing
 the hour of the day into `day' and `night' intervals.
 However, as shown in \cref{fig:chart-weekday}, the average fraction of available bikes
 at each hour of the day differs substantially between the training data and the data
 from the first ten stations.
-Hence, I considered that such a feature would be unlikely to generalise well to the
-test data.
+Hence, I considered that a feature of this kind would be unlikely to generalize well to
+the test data.
 Additionally, having elected to investigate tree models for sub-task 1
-(\cref{sec:results-subtask-1}), discretisation may be unnecessary because a tree
-already partitions the spaces of quantitative features \parencite[155]{Flach2012}.
+(\cref{sec:results-subtask-1}), which partition the spaces of quantitative features
+\parencite[155]{Flach2012}, discretization may be unnecessary.
 
-\section{Results}
-\label{sec:results}
-
-\subsection{Sub-task 1}
+\section{Sub-task 1: Decision trees}
 \label{sec:results-subtask-1}
 
-Gradient-boosted decision trees (GBDT) are a popular choice for time-series forecasting
-problems \parencite{Bojer2021}.
-In particular, the \texttt{HistGradientBoostingRegressor}
-estimator\footnote{See \sklearn{ensemble.HistGradientBoostingRegressor}.} supports
-missing values, which are evident in the data (see \cref{tab:feature-stats})
-This implementation of GBDT was inspired by LightGBM \parencite{Ke2017}.
-Hence, for sub-task 1, I elected to focus on this class of models and to compare their
-performance to individual decision trees.
-As a baseline, I predicted the arithmetic mean fraction of available bikes at each station.
-These results are summarised in \cref{tab:chart-subtask-1}.
+Gradient-boosted decision trees (GBDTs) are a popular choice of model class for
+time-series forecasting problems \parencite{Bojer2021}.
+For both cases of sub-task 1, I chose to investigate the performance of decision trees
+and ensemble methods based on decision trees.
+In particular, \texttt{scikit-learn} provides an optimized implementation\footnote{See
+  \sklearn{ensemble}{HistGradientBoostingRegressor}.
+} of GBDTs,
+inspired by LightGBM \parencite{Ke2017}, that supports missing values (cf. \cref{tab:feature-stats}).
+I undertook to compare its performance to that of a single decision tree.
+Additionally, I predicted the arithmetic mean of the fraction of available bikes as a
+baseline.
+
+The best estimator for each model class was determined by grid search with ten-fold
+cross-validation (\cref{sec:approach}).
+However, with a separate model for each of 75 stations, I found that it was
+computationally expensive to perform grid search over a wide range of hyperparameters.
+Hence, I opted to constrain the search space.
+This was achieved by performing grid search for the case of a single model for all
+stations, then varying the parameters about the values of the best estimator.
+The resultant parameter grids for decision trees and gradient-boosted decision trees
+are given in \cref{tab:chart-parameters-subtask-1}.
+
+\begin{table}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \begin{tabular}{ll}
+      \toprule
+      Parameter                   & Values
+      \\
+      \midrule
+      \texttt{criterion}          & \texttt{absolute\_error}
+      \\
+      \midrule
+      \texttt{max\_depth}         & \None, 10, 20, 50
+      \\
+      \texttt{min\_samples\_leaf} & 5, 10, 20
+      \\
+      \texttt{max\_leaf\_nodes}   & \None, 7, 15, 31
+      \\
+      \bottomrule
+    \end{tabular}
+    \caption{Decision tree}
+    \label{tab:chart-parameters-subtask-1-1}
+  \end{subfigure}
+  \par\bigskip\bigskip
+  \begin{subfigure}{\textwidth}
+    \centering
+    \begin{tabular}{ll}
+      \toprule
+      Parameter                   & Values
+      \\
+      \midrule
+      \texttt{loss}               & \texttt{absolute\_error}
+      \\
+      \texttt{scoring}            & \texttt{neg\_mean\_absolute\_error}
+      \\
+      \midrule
+      \texttt{l2\_regularization} & 0.1, 0.2, \underline{0.5}
+      \\
+      \texttt{max\_depth}         & \None, 5, 10, \underline{20}, 50
+      \\
+      \texttt{max\_iter}          & 10, 20, 50, 100, \underline{200}, 500
+      \\
+      \texttt{max\_leaf\_nodes}   & \None, \underline{15}, 31, 63
+      \\
+      \texttt{min\_samples\_leaf} & 1, 2, 5, \underline{10}, 20, 50
+      \\
+      \bottomrule
+    \end{tabular}
+    \caption{Gradient-boosted decision tree}
+    \label{tab:chart-parameters-subtask-1-2}
+  \end{subfigure}
+  \caption{The parameter grids over which hyperparameter search was performed for sub-task~1.
+    Except where stated, the default values of the parameters were used.
+    Scoring criteria were fixed to the mean absolute error, following the task description.
+    The best parameters for the case of a single model for all stations are underlined.
+  }
+  \label{tab:chart-parameters-subtask-1}
+\end{table}
+
+The mean average errors achieved by the best estimator for each model class over the
+cross-validation folds and stations are given in \cref{tab:chart-subtask-1}.
+With a separate model for each station, there is greater variance in the mean average
+error because there were fewer instances per cross-validation fold.
+Intuitively, the baseline achieved a lower mean average error with a separate model for
+each station.
+In both cases, all model classes achieved a lower mean average error than the baseline.
 
 \begin{table}
   \centering
@@ -308,7 +261,7 @@ These results are summarised in \cref{tab:chart-subtask-1}.
       Model                                  & $\mu$ & $\sigma^2$
       \\
       \midrule
-      Mean                                   & 4.43  & 3.82
+      Baseline                               & 4.43  & 3.82
       \\
       \texttt{DecisionTreeRegressor}         & 3.38  & 3.05
       \\
@@ -327,7 +280,7 @@ These results are summarised in \cref{tab:chart-subtask-1}.
       Model                                  & $\mu$ & $\sigma^2$
       \\
       \midrule
-      Mean                                   & 5.45  & 0.06
+      Baseline                               & 5.45  & 0.06
       \\
       \texttt{DecisionTreeRegressor}         & 3.11  & 0.05
       \\
@@ -335,19 +288,95 @@ These results are summarised in \cref{tab:chart-subtask-1}.
       \\
       \texttt{LGBMRegressor}                 & 2.76  & 0.18
       \\
-      % \texttt{MLPRegressor}                  & 2.82  & 0.20
-      % \\
       \bottomrule
     \end{tabular}
     \caption{Single model for all stations}
     \label{tab:chart-subtask-1-2}
   \end{subfigure}
   \caption{The mean average error achieved by the classes of model for the cases of sub-task~1.
-    In \cref{tab:chart-subtask-1-1}, $\mu$ is the average over stations and cross-validation folds.
+    In \cref{tab:chart-subtask-1-1}, $\mu$ is the average over stations and
+    cross-validation folds.
     In \cref{tab:chart-subtask-1-2}, $\mu$ is the average over cross-validation folds only.
   }
   \label{tab:chart-subtask-1}
 \end{table}
+
+Paired $t$-tests of the scores achieved by the best estimators for each model class
+were used to determine whether the mean average error over cross-validation folds was
+significantly different.
+I did not compare the scores between the two cases of sub-task~1 because the samples
+are different.
+With a separate model for each station, both individual decision trees and GBDTs
+performed significantly better than the baseline for roughly $\frac{2}{3}$ of the
+stations (\cref{tab:chart-subtask-1-t-tests-1}).
+GBDTs performed significantly better than individual decision trees for $8$ stations
+only.
+With a single model for all stations, the results were more decisive.
+All three model classes performed significantly better than the baseline and a GBDT
+performed significantly better than a decision tree
+(\cref{tab:chart-subtask-1-t-tests-2}).
+
+\begin{table}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \begin{tabular}{llrrr}
+      \toprule
+      Model 1                        & Model 2                                & $\mu_t$ & $t > 0$ & $p < 0.05$
+      \\
+      \midrule
+      Baseline                       & \texttt{DecisionTreeRegressor}         & 2.957   & 71      & 47
+      \\
+      Baseline                       & \texttt{HistGradientBoostingRegressor} & 3.399   & 73      & 49
+      \\
+      \texttt{DecisionTreeRegressor} & \texttt{HistGradientBoostingRegressor} & 0.452   & 47      & 8
+      \\
+      \bottomrule
+    \end{tabular}
+    \caption{
+      Separate models for each station.
+      The average test statistic ($\mu_t$), number of positive test statistics ($t > 0$), and
+      number of significant $p$-values ($p < 0.05$) for paired $t$-tests of the scores
+      achieved by the best estimators for each model class.
+    }
+    \label{tab:chart-subtask-1-t-tests-1}
+  \end{subfigure}
+  \par\bigskip\bigskip
+  \begin{subfigure}{\textwidth}
+    \centering
+    \begin{tabular}{llrr}
+      \toprule
+      Model 1                        & Model 2                                & $t$  & $p$
+      \\
+      \midrule
+      Baseline                       & \texttt{DecisionTreeRegressor}         & 25.2 & \num{1.16e-9}
+      \\
+      Baseline                       & \texttt{HistGradientBoostingRegressor} & 29.4 & \num{2.99e-10}
+      \\
+      Baseline                       & \texttt{LGBMRegressor}                 & 23.8 & \num{1.97e-9}
+      \\
+      \texttt{DecisionTreeRegressor} & \texttt{HistGradientBoostingRegressor} & 13.2 & \num{3.43e-7}
+      \\
+      \texttt{DecisionTreeRegressor} & \texttt{LGBMRegressor}                 & 4.0  & \num{3.23e-3}
+      \\
+      \texttt{LGBMRegressor}         & \texttt{HistGradientBoostingRegressor} & 3.1  & \num{1.30e-2}
+      \\
+      \bottomrule
+    \end{tabular}
+    \caption{
+      Single model for all stations.
+      The test statistic $t$ and $p$-value for paired $t$-tests of the scores achieved by the
+      best estimators for each model class.
+    }
+    \label{tab:chart-subtask-1-t-tests-2}
+  \end{subfigure}
+  \caption{The results of paired $t$-tests of the scores achieved by the best
+    estimators for each model class for the cases of sub-task~1.
+  }
+\end{table}
+
+\section{Sub-task 2: Ensembles}
+\label{sec:results-subtask-2}
 
 \printbibliography
 
