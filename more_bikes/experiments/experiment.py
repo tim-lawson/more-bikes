@@ -11,7 +11,7 @@ from pandas import DataFrame, Series
 # pylint: disable=unused-import
 from sklearn.experimental import enable_halving_search_cv
 from sklearn.feature_selection import VarianceThreshold
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import make_scorer, mean_absolute_error
 from sklearn.model_selection import (
     BaseCrossValidator,
     GridSearchCV,
@@ -139,6 +139,7 @@ class Experiment(metaclass=ABCMeta):
         # If there is a parameter grid, search it.
         if self._cv is not None and self._model.params is not None:
             outfile = f"{self._output_path}/{self._model.name}_cv.log"
+            open(outfile, "a", encoding="utf-8").close()
             with open(outfile, "w", encoding="utf-8") as out:
                 with redirect_stdout(out):
                     # Halving grid search.
@@ -149,7 +150,7 @@ class Experiment(metaclass=ABCMeta):
                             scoring=self._model.scoring,
                             refit=True,
                             cv=self._cv,
-                            verbose=3,
+                            verbose=4,
                         )
                     # Grid search.
                     else:
@@ -159,7 +160,7 @@ class Experiment(metaclass=ABCMeta):
                             scoring=(self._model.scoring),
                             refit=self._model.scoring,
                             cv=self._cv,
-                            verbose=3,
+                            verbose=4,
                         )
                     search.fit(x_train, y_train)
 
@@ -196,7 +197,7 @@ class Experiment(metaclass=ABCMeta):
             x_train,
             y_train,
             cv=self._cv,
-            scoring=mean_absolute_error,
+            scoring=make_scorer(mean_absolute_error),
         )
 
         self._logger.info("score %.3f", scores.mean())
