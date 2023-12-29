@@ -1,43 +1,33 @@
 \begin{table}
   \centering
   \catcode`\_=12 % category other
-  \pgfplotstabletypeset[
-    col sep=comma,
+  \pgfplotstabletypeset[col sep=comma,
     column type={r},
     columns={
         feature,
         na,
         mean,
-        variance
-      },
+        variance},
     columns/feature/.style={
         column name=Feature,
         column type={l},
         string type,
         postproc cell content/.append style={
-            @cell content={\texttt{##1}}
-          }
-      },
+            @cell content={\texttt{##1}}}},
     columns/na/.style={
         column name=n/a,
-        int detect,
-      },
+        int detect},
     columns/mean/.style={
-        column name=Mean,
-      },
+        column name=Mean},
     columns/variance/.style={
-        column name=Variance,
-      },
+        column name=Variance},
     columns/skewness/.style={
-        column name=Skewness,
-      },
+        column name=Skewness},
     columns/kurtosis/.style={
-        column name=Kurtosis,
-      },
+        column name=Kurtosis},
     skip rows between index={0}{1},
     every head row/.style={before row=\toprule, after row=\midrule},
-    every last row/.style={after row=\bottomrule},
-  ]{../more_bikes/analysis/csv/stats.csv}
+    every last row/.style={after row=\bottomrule}]{../more_bikes/analysis/csv/stats.csv}
   \catcode`\_=8 % category subscript
   \caption{The numbers of missing values and distributional characteristics of the
     non-temporal quantitative features.
