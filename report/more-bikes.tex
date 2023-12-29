@@ -27,8 +27,10 @@
 \begin{document}
 
 \title{`More Bikes': Experiments in Univariate Regression}
-\author{Tim Lawson}
-\date{\today}
+\author[]{Tim Lawson}
+\affil[]{University of Bristol}
+\affil[]{\texttt{tim.lawson@bristol.ac.uk}}
+\date{}
 
 \maketitle
 
@@ -37,37 +39,46 @@
 The assignment is to predict the number of available bikes at 75 rental stations in
 three hours' time for a period of three months from November 2014, i.e., a supervised
 univariate regression problem.
-It is divided into three sub-tasks, which differ in the information that is available:
-\begin{enumerate}
-  \item The number of available bikes at each of the 75 stations for the month of October 2014.
-        This sub-task may be approached by building a separate model for each station or a
-        single model for all 75 stations.
-  \item A set of linear models that were trained on the number of available bikes at each of a
-        separate set of 200 stations for a year.
-  \item Both of the above.
-\end{enumerate}
+It is divided into three sub-tasks, which differ in the information that is available.
+For sub-task~1, the number of available bikes at each of the 75 stations for the month
+of October 2014 is provided (\cref{sec:results-subtask-1}).
+This sub-task may be approached by building a separate model for each station or a
+single model for all 75 stations.
+For sub-task~2, a set of linear models that were trained on the number of available
+bikes at each of a separate set of 200 stations for a year are provided
+(\cref{sec:results-subtask-2}).
+Finally, for sub-task~3, both sources of information may be used.
 Additionally, the number of available bikes at each of ten stations between June 2012
 and October 2014 is provided for analysis (\cref{fig:chart-weekday}).
-The predictions are evaluated by the mean absolute error (MAE) between the predicted
-and true numbers of available bikes over the period of three months, beginning in
-November 2014.
-The evaluation data was not available to participants; however, the score achieved on a
+
+The evaluation data was not available to participants, but the score achieved on a
 held-out test set is reported on the task
-leaderboard.\footnote{\href{\kaggle}{\texttt{\kaggle}}} This report begins with a
-description of the general approach taken to the assignment in \cref{sec:approach};
-\cref{sec:data-analysis} presents a preliminary analysis of the data.
+leaderboard.\footnote{\href{\kaggle}{\texttt{\kaggle}}} The predictions are evaluated
+by the mean absolute error (MAE) between the predicted and true numbers of available
+bikes over the period of three months, beginning in November 2014.
+Hereafter, the MAE is referred to as the `score'.
+\begin{equation}
+  \label{eq:mae}
+  \text{MAE} = \frac{1}{n} \sum_{i = 1}^n \lvert y_i - \hat{y}_i \rvert
+\end{equation}
+
+This report begins with a description of the general approach taken to the assignment
+in \cref{sec:approach}.
+\Cref{sec:data-analysis} presents a preliminary analysis of the data.
 Finally, \cref{sec:results-subtask-1,sec:results-subtask-2} detail the results of the
-methods applied to each of the sub-tasks.
+methods applied to each of the sub-tasks.\footnote{The code that produced these results
+  is available at \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.
+}
 
 \section{Approach}
 \label{sec:approach}
 
 The experiments described in this report were performed with the \texttt{scikit-learn}
 Python package \parencite{Pedregosa2011}.
-In each case, preprocessing and feature selection were performed by `estimators' that
-implemented the `transformer' interface; prediction was performed by estimators that
-implemented the `predictor' interface; and estimators were composed into
-\texttt{Pipeline} objects over which hyperparameter search could be performed
+In each case, preprocessing and feature selection were performed by \emph{estimators}
+that implemented the \emph{transformer} interface, prediction was performed by
+estimators that implemented the \emph{predictor} interface, and estimators were
+composed into \texttt{Pipeline} objects over which hyperparameter search was performed
 \parencite[4-9]{Buitinck2013}.
 
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
@@ -75,15 +86,15 @@ to the inherent correlation between successive folds \parencite{Bergmeir2018}.
 Instead, nested time-series cross-validation\footnote{See
   \sklearn{model\_selection}{TimeSeriesSplit}.
 } with ten folds
-was used to evaluate the models.
-This behaviour is illustrated in \cref{fig:chart-cross-validation}.
-Hyperparameter tuning was performed by grid search\footnote{See
+was used to evaluate the models, which is illustrated in \cref{fig:chart-cross-validation}.
+The best estimator for each model class was determined by grid search\footnote{See
   \sklearn{model\_selection}{GridSearchCV} and
   \sklearn{model\_selection}{HalvingGridSearchCV}.
-}
-with the mean absolute error as the scoring function, following the task description.
-Finally, the statistical significance of the differences in performance between models
-was assessed by paired $t$-tests of the scores achieved on the cross-validation folds.
+} with the mean absolute
+error as the scoring function, following the task description.
+Finally, the statistical significances of the differences between the mean scores of
+the best estimators were assessed by paired $t$-tests of the scores on the ten
+cross-validation folds.
 These methods are described in more detail in
 \cref{sec:results-subtask-1,sec:results-subtask-2}.
 
@@ -96,16 +107,18 @@ These methods are described in more detail in
 
 The data is at hourly intervals with $n = 54385$ instances across 75 stations.
 A summary of its features and the distributional characteristics of the non-temporal
-quantitative features are given in \cref{tab:features,tab:feature-stats} respectively.
-This shows that many of the features, including the target variable \texttt{bikes}, are
-missing for $n = 73$ instances, which were excluded from the analysis.
+quantitative features are given in \cref{tab:features,tab:feature-stats}.
+This analysis revealed that many of the features, including the target variable
+\texttt{bikes}, are missing for $n = 73$ instances, which were excluded in each of the
+pipelines.
 Additionally, the `profile' features, i.e., the features derived from the numbers of
 available bikes at preceding times, are not defined for the first week of instances at
 each station.
 Hence, they are missing for approximately $\frac{1}{4}$ of the instances.
-The meteorological features are constant for all stations at a given timestamp.
-Finally, the number of available bikes at a given station is bounded by zero and the
-number of docks at that station.
+The meteorological features are constant for all stations at a given timestamp. Some
+features have a natural range -- in particular, the number of available bikes at a
+given station is bounded by zero and the number of docks at that station
+(\cref{sec:feature-engineering}).
 
 \subsection{Feature selection}
 \label{sec:feature-selection}
@@ -118,25 +131,23 @@ analysis and were automatically excluded.\footnote{See
 }
 In the case of sub-task~1, the available data is limited to the month of October 2014;
 therefore, these included the month and year.
-Additionally, the `station' features (\cref{tab:features}) are constant for all
-instances at a given station; hence, for the first case of sub-task~1, these were
-excluded.
+The `station' features (\cref{tab:features}) are constant for all instances at a given
+station, so were likewise excluded in this case.
 Finally, the \texttt{precipitation} feature is zero for all instances.
 
 Correlations between features are undesirable in regression analysis
 \parencite{Alin2010}.
 Therefore, I sought to identify and exclude redundant features.
 To determine these, I computed the Pearson correlation coefficients between pairs of
-quantitative features (\cref{fig:chart-correlations}).
-This analysis yielded the following observations:
+quantitative features (\cref{fig:chart-correlations}), which yielded the following:
 \begin{itemize}
   \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are fully correlated ($r = 1.00$);
   \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are fully correlated ($r  = 1.00$);
   \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
 \end{itemize}
 Hence, the second of each of these pairs of features was also excluded for sub-task~1.
-For sub-task~2, the `profile' features were retained because they are required by the
-pre-trained linear models.
+For sub-task~2, the `profile' features were retained because they are inputs to the
+pre-trained linear models (\cref{tab:features-subtask-2}).
 
 \import{}{figure-correlations.tex}
 
@@ -152,9 +163,6 @@ to permit data-dependent transforms.\footnote{See
 }
 Another possible transformation of the target variable would have been to predict the
 \emph{change} in the number of available bikes, but I did not explore this option.
-I note that, while tree models are invariant to monotonic transformations of
-explanatory features \parencite[e.g.,][3184]{Death2000}, this does not apply to a
-data-dependent transformation of the target variable.
 
 \import{}{figure-weekday.tex}
 
@@ -169,18 +177,21 @@ Additionally, having elected to investigate tree models for sub-task 1
 (\cref{sec:results-subtask-1}), which partition the spaces of quantitative features
 \parencite[155]{Flach2012}, discretization may be unnecessary.
 
-\section{Sub-task 1: Decision trees}
+\section{Sub-task 1: Decision-tree regressors}
 \label{sec:results-subtask-1}
 
-Gradient-boosted decision trees (GBDTs) are a popular choice of model class for
-time-series forecasting problems \parencite{Bojer2021}.
+\subsection{Model classes}
+
+Gradient-boosted decision trees are a popular choice of model class for time-series
+forecasting problems \parencite{Bojer2021}.
+In particular, \texttt{scikit-learn} provides an optimized implementation inspired by
+LightGBM \parencite{Ke2017}.\footnote{See
+  \sklearn{ensemble}{HistGradientBoostingRegressor}.
+}
+An advantage of this model class is that it supports missing values, which are evident
+in the data (\cref{tab:feature-stats}).
 For both cases of sub-task 1, I chose to investigate the performance of decision trees
 and ensemble methods based on decision trees.
-In particular, \texttt{scikit-learn} provides an optimized implementation\footnote{See
-  \sklearn{ensemble}{HistGradientBoostingRegressor}.
-} of GBDTs,
-inspired by LightGBM \parencite{Ke2017}, that supports missing values (cf. \cref{tab:feature-stats}).
-I undertook to compare its performance to that of a single decision tree.
 Additionally, I predicted the arithmetic mean of the fraction of available bikes as a
 baseline.
 
@@ -188,9 +199,9 @@ The best estimator for each model class was determined by grid search with ten-f
 cross-validation (\cref{sec:approach}).
 However, with a separate model for each of 75 stations, I found that it was
 computationally expensive to perform grid search over a wide range of hyperparameters.
-Hence, I opted to constrain the search space.
-This was achieved by performing grid search for the case of a single model for all
-stations, then varying the parameters about the values of the best estimator.
+Hence, I constrained the search space for this case by first searching a wider range
+for the case of a single model for all stations, then varying the parameters about the
+values of the best estimator.
 The resultant parameter grids for decision trees and gradient-boosted decision trees
 are given in \cref{tab:chart-parameters-subtask-1}.
 
@@ -253,13 +264,16 @@ are given in \cref{tab:chart-parameters-subtask-1}.
   \label{tab:chart-parameters-subtask-1}
 \end{table}
 
-The mean average errors achieved by the best estimator for each model class over the
-cross-validation folds and stations are given in \cref{tab:chart-subtask-1}.
-With a separate model for each station, there is greater variance in the mean average
-error because there were fewer instances per cross-validation fold.
-Intuitively, the baseline achieved a lower mean average error with a separate model for
-each station.
-In both cases, all model classes achieved a lower mean average error than the baseline.
+\subsection{Results}
+
+The mean scores achieved by the best estimator for each model class over the
+cross-validation folds and stations are listed in \cref{tab:chart-subtask-1}.
+With a separate model for each station, there is greater variance in the mean score
+because there were fewer instances per cross-validation fold.
+Intuitively, the baseline achieved a lower score with a separate model for each
+station.
+In both cases of sub-task~1, all model classes achieved a lower score than the
+baseline.
 
 \begin{table}
   \centering
@@ -302,27 +316,28 @@ In both cases, all model classes achieved a lower mean average error than the ba
     \caption{Single model for all stations}
     \label{tab:chart-subtask-1-2}
   \end{subfigure}
-  \caption{The mean average error achieved by the classes of model for the cases of sub-task~1.
-    In \cref{tab:chart-subtask-1-1}, $\mu$ is the average over stations and
-    cross-validation folds.
-    In \cref{tab:chart-subtask-1-2}, $\mu$ is the average over cross-validation folds only.
+  \caption{The mean scores achieved by the model classes for each case of sub-task~1.
+    In \cref{tab:chart-subtask-1-1}, $\mu$ is the mean of the scores for the 75 stations
+    and ten cross-validation folds.
+    In \cref{tab:chart-subtask-1-2}, $\mu$ is the mean of the scores for the ten
+    cross-validation folds only.
   }
   \label{tab:chart-subtask-1}
 \end{table}
 
-Paired $t$-tests of the scores achieved by the best estimators for each model class
-were used to determine whether the mean average error over cross-validation folds was
-significantly different.
-I did not compare the scores between the two cases of sub-task~1 because the samples
-are different.
-With a separate model for each station, both individual decision trees and GBDTs
-performed significantly better than the baseline for roughly $\frac{2}{3}$ of the
-stations (\cref{tab:chart-subtask-1-t-tests-1}).
-GBDTs performed significantly better than individual decision trees for $8$ stations
-only.
-With a single model for all stations, the results were more decisive -- a GBDT
-performed significantly better than a decision tree
-(\cref{tab:chart-subtask-1-t-tests-2}).
+To determine whether the differences between the mean scores achieved by the best
+estimators for each model class were statistically significant, I performed paired
+$t$-tests of the scores on the ten cross-validation folds.
+I did not compare the scores between estimators for the different cases of the sub-task
+because the samples are different, i.e., not paired.
+With a separate model for each station, both individual decision trees and
+gradient-boosted decision trees performed significantly better than the baseline for
+roughly $\frac{2}{3}$ of the stations (\cref{tab:chart-subtask-1-t-tests-1}).
+However, gradient-boosted decision trees performed significantly better than individual
+decision trees for $8$ stations only.
+With a single model for all stations, the results were more decisive -- the best
+gradient-boosted decision tree performed significantly better than the best individual
+decision tree (\cref{tab:chart-subtask-1-t-tests-2}).
 
 \begin{table}
   \centering
@@ -344,8 +359,8 @@ performed significantly better than a decision tree
     \caption{
       Separate models for each station.
       The average $t$-statistic ($\mu_t$), number of positive $t$-statistics ($t > 0$), and
-      number of significant $p$-values ($< 0.05$) for paired $t$-tests of the scores achieved
-      by the best estimators for each model class.
+      number of significant $p$-values ($p < 0.05$) for paired $t$-tests of the scores
+      achieved by the best estimators for each model class on the ten cross-validation folds.
     }
     \label{tab:chart-subtask-1-t-tests-1}
   \end{subfigure}
@@ -372,13 +387,15 @@ performed significantly better than a decision tree
       \bottomrule
     \end{tabular}
     \caption{ Single model for all stations.
-      The test statistic $t$ and $p$-value for paired $t$-tests of the scores achieved by the
-      best estimators for each model class.
+      The $t$-statistic and $p$-value for paired $t$-tests of the scores achieved by the best
+      estimators for each model class on the ten cross-validation folds.
     }
     \label{tab:chart-subtask-1-t-tests-2}
   \end{subfigure}
   \caption{The results of paired $t$-tests of the scores achieved by the best
     estimators for each model class for the cases of sub-task~1.
+    A positive $t$-statistic indicates that `Model 2' achieved a lower mean score than
+    `Model 1'.
   }
 \end{table}
 

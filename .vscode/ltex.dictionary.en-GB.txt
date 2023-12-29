@@ -12,6 +12,8 @@ HistGradientBoostingRegressor
 int
 LGBMRegressor
 LightGBM
+MAE
+MAEs
 maxdepth
 minsamplesleaf
 MLPRegressor
@@ -27,3 +29,4 @@ TimeSeriesSplit
 TransformedTargetRegressor
 VarianceThreshold
 weekhour
+tslwn
