@@ -14,3 +14,4 @@
 {"rule":"WHITESPACE_RULE","sentence":"^\\Qfloat\\E$"}
 {"rule":"WHITESPACE_RULE","sentence":"^\\Qint\\E$"}
 {"rule":"WHITESPACE_RULE","sentence":"^\\QMeteorological  float\\E$"}
+{"rule":"WHITESPACE_RULE","sentence":"^\\QModel      temperature\\E$"}

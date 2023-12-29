@@ -191,6 +191,18 @@ class ModelLoaderShortTemp(ModelLoader):
         ).to_numpy()
 
 
+def get_station_estimator_ids(station_id: int) -> list[tuple[str, int, ModelLoader]]:
+    """Get all estimators and IDs for a station."""
+    return [
+        ("full", station_id, ModelLoaderFull(station_id)),
+        ("full_temp", station_id, ModelLoaderFullTemp(station_id)),
+        ("short_full", station_id, ModelLoaderShortFull(station_id)),
+        ("short", station_id, ModelLoaderShort(station_id)),
+        ("short_full_temp", station_id, ModelLoaderShortFullTemp(station_id)),
+        ("short_temp", station_id, ModelLoaderShortTemp(station_id)),
+    ]
+
+
 def get_station_estimators(station_id: int) -> list[tuple[str, ModelLoader]]:
     """Get all estimators for a station."""
     return [
@@ -209,6 +221,13 @@ T = TypeVar("T")
 def concat(list_of_lists: list[list[T]]) -> list[T]:
     """Concatenate a list of lists into a single list."""
     return reduce(lambda x, y: x + y, list_of_lists)
+
+
+def get_estimator_ids() -> Sequence[tuple[str, int, ModelLoader]]:
+    """Get all estimators and IDs."""
+    return concat(
+        [get_station_estimator_ids(station_id) for station_id in range(1, 201)]
+    )
 
 
 def get_estimators() -> Sequence[tuple[str, ModelLoader]]:

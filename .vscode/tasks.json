@@ -181,6 +181,15 @@
       "type": "shell"
     },
     {
+      "args": ["-m", "more_bikes.analysis.rlm.rlm"],
+      "command": "${command:python.interpreterPath}",
+      "label": "[task 2] rlm",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "type": "shell"
+    },
+    {
       "args": ["-m", "more_bikes.analysis.viz"],
       "command": "${command:python.interpreterPath}",
       "label": "[analysis] visualisations",
