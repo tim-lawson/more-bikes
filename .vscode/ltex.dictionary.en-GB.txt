@@ -18,6 +18,7 @@ MLPRegressor
 modelselection
 na
 postproc
+rlm
 scikit-learn
 sep
 str

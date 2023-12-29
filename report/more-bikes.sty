@@ -65,13 +65,20 @@
 \usepackage{mathtools}
 
 % Tables and charts
+\usepackage{adjustbox}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{caption}
-\usepackage{subcaption}
-\usepackage{array}
 \usepackage{makecell}
 \usepackage{multirow}
-\usepackage[draft]{graphicx}
+\usepackage{subcaption}
+
+\newcolumntype{D}[2]{
+  >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}
+  l
+  <{\egroup}
+}
+\newcommand*\rot{\multicolumn{1}{D{45}{1em}}}
 
 \def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}}
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash }b{#1}}

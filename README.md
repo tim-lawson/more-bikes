@@ -1,4 +1,4 @@
-# more-bikes
+# `More Bikes': Experiments in Univariate Regression
 
 This repository holds the code and report written to fulfil the coursework
 requirements for the unit
@@ -27,10 +27,8 @@ It is divided into three tasks, which differ in the available data:
 Analysis and experiments:
 
 - Complete tasks 2 and 3
-- Experiment with imputation methods
 - Experiment with learning algorithms, e.g., kernel regression, Gaussian processes,
   ensemble methods, etc.
-- Improve evaluation of learning algorithms and models
 
 Documentation:
 

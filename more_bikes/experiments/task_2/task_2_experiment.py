@@ -26,7 +26,7 @@ class Task2Experiment(Experiment):
         super().__init__(self._output_path, model, processing, cv, search)
 
     def run(self) -> Self:
-        """Run the task 1B experiment."""
+        """Run the task 2 experiment."""
         super().run()
 
         results, _best_score, scores = self.__run()

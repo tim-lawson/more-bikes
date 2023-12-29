@@ -2,15 +2,22 @@
 \usepackage{more-bikes}
 
 % Shortcuts
-\newcommand{\isholiday}{is\_holiday}
-\newcommand{\windspeedmax}{wind\_speed\_max}
-\newcommand{\windspeedavg}{wind\_speed\_avg}
-\newcommand{\winddirection}{wind\_direction}
-\newcommand{\bikesavgfull}{bikes\_avg\_full}
-\newcommand{\bikesavgshort}{bikes\_avg\_short}
-\newcommand{\bikesh}{bikes\_3h}
-\newcommand{\bikeshdiffavgfull}{bikes\_3h\_diff\_avg\_full}
-\newcommand{\bikeshdiffavgshort}{bikes\_3h\_diff\_avg\_short}
+\newcommand{\isholiday}{\texttt{is\_holiday}}
+\newcommand{\windspeedmax}{\texttt{wind\_speed\_max}}
+\newcommand{\windspeedavg}{\texttt{wind\_speed\_avg}}
+\newcommand{\winddirection}{\texttt{wind\_direction}}
+\newcommand{\bikesavgfull}{\texttt{bikes\_avg\_full}}
+\newcommand{\bikesavgshort}{\texttt{bikes\_avg\_short}}
+\newcommand{\bikesh}{\texttt{bikes\_3h}}
+\newcommand{\bikeshdiffavgfull}{\texttt{bikes\_3h\_diff\_avg\_full}}
+\newcommand{\bikeshdiffavgshort}{\texttt{bikes\_3h\_diff\_avg\_short}}
+
+\newcommand{\rlmfull}{\texttt{rlm\_full}}
+\newcommand{\rlmfulltemp}{\texttt{rlm\_full\_temp}}
+\newcommand{\rlmshort}{\texttt{rlm\_short}}
+\newcommand{\rlmshortfull}{\texttt{rlm\_short\_full}}
+\newcommand{\rlmshortfulltemp}{\texttt{rlm\_short\_full\_temp}}
+\newcommand{\rlmshorttemp}{\texttt{rlm\_short\_temp}}
 
 \newcommand{\None}{\texttt{None}}
 
@@ -19,7 +26,7 @@
 
 \begin{document}
 
-\title{More Bikes: Experiments in Univariate Regression}
+\title{`More Bikes': Experiments in Univariate Regression}
 \author{Tim Lawson}
 \date{\today}
 
@@ -106,9 +113,9 @@ number of docks at that station.
 \import{}{table-feature-stats.tex}
 
 Intuitively, features that have zero variance are not informative for regression
-analysis and were automatically excluded\footnote{See
+analysis and were automatically excluded.\footnote{See
   \sklearn{feature\_selection}{VarianceThreshold}.
-}.
+}
 In the case of sub-task~1, the available data is limited to the month of October 2014;
 therefore, these included the month and year.
 Additionally, the `station' features (\cref{tab:features}) are constant for all
@@ -116,8 +123,8 @@ instances at a given station; hence, for the first case of sub-task~1, these wer
 excluded.
 Finally, the \texttt{precipitation} feature is zero for all instances.
 
-Correlations between features and, more generally, multicollinearity, are undesirable
-in regression analysis \parencite{Alin2010}.
+Correlations between features are undesirable in regression analysis
+\parencite{Alin2010}.
 Therefore, I sought to identify and exclude redundant features.
 To determine these, I computed the Pearson correlation coefficients between pairs of
 quantitative features (\cref{fig:chart-correlations}).
@@ -127,22 +134,24 @@ This analysis yielded the following observations:
   \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are fully correlated ($r  = 1.00$);
   \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
 \end{itemize}
-Hence, the second of each of these pairs of features was also excluded.
+Hence, the second of each of these pairs of features was also excluded for sub-task~1.
+For sub-task~2, the `profile' features were retained because they are required by the
+pre-trained linear models.
 
 \import{}{figure-correlations.tex}
 
 \subsection{Feature engineering}
 \label{sec:feature-engineering}
 
-The bounds on the number of available bikes at a given station were enforced throughout
-this report by predicting the \emph{fraction} of bikes, i.e., the number of bikes
+The bounds on the number of available bikes at a given station were enforced for
+sub-task~1 by predicting the \emph{fraction} of bikes, i.e., the number of bikes
 divided by the number of docks at the station.
 I implemented this by extending the \texttt{TransformedTargetRegressor} meta-estimator
-to permit data-dependent transforms\footnote{See
+to permit data-dependent transforms.\footnote{See
   \sklearn{compose}{TransformedTargetRegressor}.
-}.
+}
 Another possible transformation of the target variable would have been to predict the
-\emph{change} in the number of available bikes; I did not explore this option.
+\emph{change} in the number of available bikes, but I did not explore this option.
 I note that, while tree models are invariant to monotonic transformations of
 explanatory features \parencite[e.g.,][3184]{Death2000}, this does not apply to a
 data-dependent transformation of the target variable.
@@ -254,40 +263,40 @@ In both cases, all model classes achieved a lower mean average error than the ba
 
 \begin{table}
   \centering
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}{0.49\textwidth}
     \centering
     \begin{tabular}{lrr}
       \toprule
-      Model                                  & $\mu$ & $\sigma^2$
+      Model                          & $\mu$ & $\sigma^2$
       \\
       \midrule
-      Baseline                               & 4.43  & 3.82
+      Baseline                       & 4.43  & 3.82
       \\
-      \texttt{DecisionTreeRegressor}         & 3.38  & 3.05
+      Decision tree                  & 3.38  & 3.05
       \\
-      \texttt{HistGradientBoostingRegressor} & 3.23  & 2.54
+      Gradient-boosted decision tree & 3.23  & 2.54
       \\
       \bottomrule
     \end{tabular}
     \caption{Separate model for each station}
     \label{tab:chart-subtask-1-1}
   \end{subfigure}
-  \par\bigskip\bigskip
-  \begin{subfigure}{\textwidth}
+  % \par\bigskip\bigskip
+  \begin{subfigure}{0.49\textwidth}
     \centering
     \begin{tabular}{lrr}
       \toprule
-      Model                                  & $\mu$ & $\sigma^2$
+      Model                          & $\mu$ & $\sigma^2$
       \\
       \midrule
-      Baseline                               & 5.45  & 0.06
+      Baseline                       & 5.45  & 0.06
       \\
-      \texttt{DecisionTreeRegressor}         & 3.11  & 0.05
+      Decision tree                  & 3.11  & 0.05
       \\
-      \texttt{HistGradientBoostingRegressor} & 2.60  & 0.08
+      Gradient-boosted decision tree & 2.60  & 0.08
       \\
-      \texttt{LGBMRegressor}                 & 2.76  & 0.18
-      \\
+      % \texttt{LGBMRegressor}                 & 2.76  & 0.18
+      % \\
       \bottomrule
     \end{tabular}
     \caption{Single model for all stations}
@@ -311,8 +320,7 @@ performed significantly better than the baseline for roughly $\frac{2}{3}$ of th
 stations (\cref{tab:chart-subtask-1-t-tests-1}).
 GBDTs performed significantly better than individual decision trees for $8$ stations
 only.
-With a single model for all stations, the results were more decisive.
-All three model classes performed significantly better than the baseline and a GBDT
+With a single model for all stations, the results were more decisive -- a GBDT
 performed significantly better than a decision tree
 (\cref{tab:chart-subtask-1-t-tests-2}).
 
@@ -322,22 +330,22 @@ performed significantly better than a decision tree
     \centering
     \begin{tabular}{llrrr}
       \toprule
-      Model 1                        & Model 2                                & $\mu_t$ & $t > 0$ & $p < 0.05$
+      Model 1       & Model 2                        & $\mu_t$ & $t > 0$ & $p < 0.05$
       \\
       \midrule
-      Baseline                       & \texttt{DecisionTreeRegressor}         & 2.957   & 71      & 47
+      Baseline      & Decision tree                  & 2.957   & 71      & 47
       \\
-      Baseline                       & \texttt{HistGradientBoostingRegressor} & 3.399   & 73      & 49
+      Baseline      & Gradient-boosted decision tree & 3.399   & 73      & 49
       \\
-      \texttt{DecisionTreeRegressor} & \texttt{HistGradientBoostingRegressor} & 0.452   & 47      & 8
+      Decision tree & Gradient-boosted decision tree & 0.452   & 47      & 8
       \\
       \bottomrule
     \end{tabular}
     \caption{
       Separate models for each station.
-      The average test statistic ($\mu_t$), number of positive test statistics ($t > 0$), and
-      number of significant $p$-values ($p < 0.05$) for paired $t$-tests of the scores
-      achieved by the best estimators for each model class.
+      The average $t$-statistic ($\mu_t$), number of positive $t$-statistics ($t > 0$), and
+      number of significant $p$-values ($< 0.05$) for paired $t$-tests of the scores achieved
+      by the best estimators for each model class.
     }
     \label{tab:chart-subtask-1-t-tests-1}
   \end{subfigure}
@@ -346,25 +354,24 @@ performed significantly better than a decision tree
     \centering
     \begin{tabular}{llrr}
       \toprule
-      Model 1                        & Model 2                                & $t$  & $p$
+      Model 1       & Model 2                        & $t$-statistic & $p$-value
       \\
       \midrule
-      Baseline                       & \texttt{DecisionTreeRegressor}         & 25.2 & \num{1.16e-9}
+      Baseline      & Decision tree                  & 25.2          & \num{1.16e-9}
       \\
-      Baseline                       & \texttt{HistGradientBoostingRegressor} & 29.4 & \num{2.99e-10}
+      Baseline      & Gradient-boosted decision tree & 29.4          & \num{2.99e-10}
       \\
-      Baseline                       & \texttt{LGBMRegressor}                 & 23.8 & \num{1.97e-9}
-      \\
-      \texttt{DecisionTreeRegressor} & \texttt{HistGradientBoostingRegressor} & 13.2 & \num{3.43e-7}
-      \\
-      \texttt{DecisionTreeRegressor} & \texttt{LGBMRegressor}                 & 4.0  & \num{3.23e-3}
-      \\
-      \texttt{LGBMRegressor}         & \texttt{HistGradientBoostingRegressor} & 3.1  & \num{1.30e-2}
+      % Baseline      & LightGBM                       & 23.8 & \num{1.97e-9}
+      % \\
+      % Decision tree & LightGBM                       & 4.0  & \num{3.23e-3}
+      % \\
+      % LightGBM      & Gradient-boosted decision tree & 3.1  & \num{1.30e-2}
+      % \\
+      Decision tree & Gradient-boosted decision tree & 13.2          & \num{3.43e-7}
       \\
       \bottomrule
     \end{tabular}
-    \caption{
-      Single model for all stations.
+    \caption{ Single model for all stations.
       The test statistic $t$ and $p$-value for paired $t$-tests of the scores achieved by the
       best estimators for each model class.
     }
@@ -377,6 +384,49 @@ performed significantly better than a decision tree
 
 \section{Sub-task 2: Ensembles}
 \label{sec:results-subtask-2}
+
+The available information for sub-task 2 is a set of linear models that were trained on
+the data for a separate set of 200 stations for a year.
+For each station, there are six models that were generated by the \texttt{rlm} function
+from the R package MASS.\footnote{See
+  \href{https://www.rdocumentation.org/packages/MASS/versions/7.3-54/topics/rlm}{\texttt{https://www.rdocumentation.org/packages/MASS/versions/7.3-54/topics/rlm}}.
+}
+Each of the models uses a different set of features, which are listed in
+\cref{tab:features-subtask-2}.
+As discussed in \cref{sec:feature-selection}, the `full' and `short' features are fully
+correlated.
+
+\begin{table}
+  \centering
+  \begin{tabular}{lllllll}
+    Model                      & \rot{\bikesh{}}             & \rot{\bikesavgfull{}}      & \rot{\bikesavgshort{}} &
+    \rot{\bikeshdiffavgfull{}} & \rot{\bikeshdiffavgshort{}} & \rot{\texttt{temperature}}
+    \\
+    \midrule \rlmfull          & \checkmark                  & \checkmark                 &                        & \checkmark &            &
+    \\
+    \rlmfulltemp               &
+    \checkmark                 & \checkmark                  &                            & \checkmark             &            & \checkmark
+    \\
+    \rlmshort                  & \checkmark                  &                            &
+    \checkmark                 &                             & \checkmark                 &
+    \\
+    \rlmshortfull              & \checkmark                  & \checkmark                 & \checkmark             &
+    \checkmark                 & \checkmark                  &
+    \\
+    \rlmshortfulltemp          & \checkmark                  & \checkmark                 & \checkmark             &
+    \checkmark                 & \checkmark                  & \checkmark
+    \\
+    \rlmshorttemp              & \checkmark                  &                            & \checkmark             &            &
+    \checkmark                 & \checkmark
+    \\
+    \bottomrule
+  \end{tabular}
+  \caption{The features used by the
+    linear models for sub-task~2.
+    The features are defined in \cref{tab:features}.
+  }
+  \label{tab:features-subtask-2}
+\end{table}
 
 \printbibliography
 
