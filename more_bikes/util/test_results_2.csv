@@ -1,0 +1,16 @@
+task1,model1,task2,model2,statistic,pvalue,model,significant
+task_1b,baseline,task_1b,decision_tree,25.225640294990214,1.1623485589168304e-09,decision_tree,True
+task_1b,baseline,task_1b,hgbr,29.381650922384065,2.990593283888173e-10,hgbr,True
+task_1b,baseline,task_1b,lightgbm,23.77064645037298,1.969804892671202e-09,lightgbm,True
+task_1b,baseline,task_1b,mlp,20.385356506024372,7.672436025280172e-09,mlp,True
+task_1b,baseline,task_2,stacking,28.693816435496128,3.69367746242465e-10,stacking,True
+task_1b,decision_tree,task_1b,hgbr,13.189042821748574,3.430017836429934e-07,hgbr,True
+task_1b,decision_tree,task_1b,lightgbm,3.9753476993520382,0.003228424763302309,lightgbm,True
+task_1b,decision_tree,task_1b,mlp,3.502574985920492,0.006696340551555949,mlp,True
+task_1b,decision_tree,task_2,stacking,6.307412382229743,0.0001397486841272379,stacking,True
+task_1b,hgbr,task_1b,lightgbm,-3.0859070344899973,0.013015202508535955,hgbr,True
+task_1b,hgbr,task_1b,mlp,-3.909098691221487,0.003569644421581306,hgbr,True
+task_1b,hgbr,task_2,stacking,-2.4990988260616587,0.03391193412641919,hgbr,True
+task_1b,lightgbm,task_1b,mlp,-1.6348617760078537,0.13650845744128695,lightgbm,False
+task_1b,lightgbm,task_2,stacking,1.521799815949138,0.16238692850938646,stacking,False
+task_1b,mlp,task_2,stacking,2.8319254501763003,0.019660524554054,stacking,True

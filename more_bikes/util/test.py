@@ -4,7 +4,6 @@
 
 from itertools import combinations
 
-from numpy import greater
 from pandas import DataFrame, concat, read_csv
 from scipy.stats import ttest_rel
 
@@ -30,6 +29,7 @@ def test_task_1a(experiment1: str, experiment2: str):
     )
 
     statistics: list[float] = []
+
     pvalues: list[float] = []
 
     for station in range(201, 276):
@@ -45,27 +45,30 @@ def test_task_1a(experiment1: str, experiment2: str):
         pvalues.append(pvalue)
 
     avg_statistic = sum(statistics) / len(statistics)
-    num_positive = sum([statistic > 0 for statistic in statistics])
-    num_significant = sum([pvalue < 0.05 for pvalue in pvalues])
+
+    num_positive = sum(statistic > 0 for statistic in statistics)
+
+    num_significant = sum(pvalue < 0.05 for pvalue in pvalues)
 
     print(
         f"{experiment1} vs {experiment2}: {avg_statistic:.3f} ({num_positive} positive, {num_significant} significant)"
     )
 
     statistics = [round(statistic, 3) for statistic in statistics]
+
     pvalues = [round(pvalue, 3) for pvalue in pvalues]
 
     return statistics, pvalues
 
 
-def test_task_1b(experiment1: str, experiment2: str):
+def test_task(task1: str, task2: str, experiment1: str, experiment2: str):
     """Dependent t-test for paired samples."""
 
     dataframe1 = read_csv(
-        f"more_bikes/experiments/task_1b/{experiment1}/{experiment1}_cv.csv"
+        f"more_bikes/experiments/{task1}/{experiment1}/{experiment1}_cv.csv"
     )
     dataframe2 = read_csv(
-        f"more_bikes/experiments/task_1b/{experiment2}/{experiment2}_cv.csv"
+        f"more_bikes/experiments/{task2}/{experiment2}/{experiment2}_cv.csv"
     )
 
     scores1 = dataframe1["score"].values
@@ -78,13 +81,24 @@ def test_task_1b(experiment1: str, experiment2: str):
 
 if __name__ == "__main__":
     print("task 1a")
+
     for experiment in ["baseline", "decision_tree", "hgbr"]:
         mean, variance = mean_score("task_1a", experiment)
+
         print(f"{experiment}: {mean:.2f} ({variance:.2f})")
 
     print("\ntask 1b")
+
     for experiment in ["baseline", "decision_tree", "hgbr", "lightgbm", "mlp"]:
         mean, variance = mean_score("task_1b", experiment)
+
+        print(f"{experiment}: {mean:.2f} ({variance:.2f})")
+
+    print("\ntask 2")
+
+    for experiment in ["stacking"]:
+        mean, variance = mean_score("task_2", experiment)
+
         print(f"{experiment}: {mean:.2f} ({variance:.2f})")
 
     pair: tuple[str, str]
@@ -126,7 +140,9 @@ if __name__ == "__main__":
             )
 
     results_1a["station"] = results_1a["station"].astype(int)
+
     results_1a["significant"] = results_1a["significant"].astype(bool)
+
     results_1a.to_csv("more_bikes/util/test_results_1a.csv", index=False)
 
     results_1b = DataFrame(
@@ -143,7 +159,7 @@ if __name__ == "__main__":
     for pair in combinations(
         ["baseline", "decision_tree", "hgbr", "lightgbm", "mlp"], 2
     ):
-        statistic, pvalue = test_task_1b(*pair)
+        statistic, pvalue = test_task("task_1b", "task_1b", *pair)
 
         results_1b = concat(
             [
@@ -163,4 +179,59 @@ if __name__ == "__main__":
         )
 
     results_1b["significant"] = results_1b["significant"].astype(bool)
+
     results_1b.to_csv("more_bikes/util/test_results_1b.csv", index=False)
+
+    results_2 = DataFrame(
+        {
+            "task1": [],
+            "model1": [],
+            "task2": [],
+            "model2": [],
+            "statistic": [],
+            "pvalue": [],
+            "model": [],
+            "significant": [],
+        }
+    )
+
+    for pair2 in combinations(
+        [
+            ("task_1b", "baseline"),
+            ("task_1b", "decision_tree"),
+            ("task_1b", "hgbr"),
+            ("task_1b", "lightgbm"),
+            ("task_1b", "mlp"),
+            ("task_2", "stacking"),
+        ],
+        2,
+    ):
+        statistic, pvalue = test_task(
+            pair2[0][0],
+            pair2[1][0],
+            pair2[0][1],
+            pair2[1][1],
+        )
+
+        results_2 = concat(
+            [
+                results_2,
+                DataFrame(
+                    {
+                        "task1": [pair2[0][0]],
+                        "model1": [pair2[0][1]],
+                        "task2": [pair2[1][0]],
+                        "model2": [pair2[1][1]],
+                        "statistic": [statistic],
+                        "pvalue": [pvalue],
+                        "model": [pair2[0][1] if statistic < 0 else pair2[1][1]],
+                        "significant": [pvalue < P],
+                    }
+                ),
+            ],
+            ignore_index=True,
+        )
+
+    results_2["significant"] = results_2["significant"].astype(bool)
+
+    results_2.to_csv("more_bikes/util/test_results_2.csv", index=False)

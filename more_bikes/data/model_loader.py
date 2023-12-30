@@ -191,28 +191,144 @@ class ModelLoaderShortTemp(ModelLoader):
         ).to_numpy()
 
 
-def get_station_estimator_ids(station_id: int) -> list[tuple[str, int, ModelLoader]]:
+def get_station_estimator_ids(
+    station_id: int, models: list[str] | None = None
+) -> list[tuple[str, int, ModelLoader]]:
     """Get all estimators and IDs for a station."""
-    return [
-        ("full", station_id, ModelLoaderFull(station_id)),
-        ("full_temp", station_id, ModelLoaderFullTemp(station_id)),
-        ("short_full", station_id, ModelLoaderShortFull(station_id)),
-        ("short", station_id, ModelLoaderShort(station_id)),
-        ("short_full_temp", station_id, ModelLoaderShortFullTemp(station_id)),
-        ("short_temp", station_id, ModelLoaderShortTemp(station_id)),
+
+    models = models or [
+        "full",
+        "full_temp",
+        "short",
+        "short_full",
+        "short_full_temp",
+        "short_temp",
     ]
 
+    estimators: list[tuple[str, int, ModelLoader]] = []
 
-def get_station_estimators(station_id: int) -> list[tuple[str, ModelLoader]]:
+    if "full" in models:
+        estimators.append(
+            (
+                f"full_{station_id}",
+                station_id,
+                ModelLoaderFull(station_id),
+            )
+        )
+
+    if "full_temp" in models:
+        estimators.append(
+            (
+                f"full_temp_{station_id}",
+                station_id,
+                ModelLoaderFullTemp(station_id),
+            )
+        )
+
+    if "short" in models:
+        estimators.append(
+            (
+                f"short_{station_id}",
+                station_id,
+                ModelLoaderShort(station_id),
+            )
+        )
+
+    if "short_full" in models:
+        estimators.append(
+            (
+                f"short_full_{station_id}",
+                station_id,
+                ModelLoaderShortFull(station_id),
+            )
+        )
+
+    if "short_full_temp" in models:
+        estimators.append(
+            (
+                f"short_full_temp_{station_id}",
+                station_id,
+                ModelLoaderShortFullTemp(station_id),
+            )
+        )
+
+    if "short_temp" in models:
+        estimators.append(
+            (
+                f"short_temp_{station_id}",
+                station_id,
+                ModelLoaderShortTemp(station_id),
+            )
+        )
+
+    return estimators
+
+
+def get_station_estimators(
+    station_id: int, models: list[str] | None = None
+) -> list[tuple[str, ModelLoader]]:
     """Get all estimators for a station."""
-    return [
-        (f"full_{station_id}", ModelLoaderFull(station_id)),
-        (f"full_temp_{station_id}", ModelLoaderFullTemp(station_id)),
-        (f"short_full_{station_id}", ModelLoaderShortFull(station_id)),
-        (f"short_{station_id}", ModelLoaderShort(station_id)),
-        (f"short_full_temp_{station_id}", ModelLoaderShortFullTemp(station_id)),
-        (f"short_temp_{station_id}", ModelLoaderShortTemp(station_id)),
+
+    models = models or [
+        "full",
+        "full_temp",
+        "short",
+        "short_full",
+        "short_full_temp",
+        "short_temp",
     ]
+
+    estimators: list[tuple[str, ModelLoader]] = []
+
+    if "full" in models:
+        estimators.append(
+            (
+                f"full_{station_id}",
+                ModelLoaderFull(station_id),
+            )
+        )
+
+    if "full_temp" in models:
+        estimators.append(
+            (
+                f"full_temp_{station_id}",
+                ModelLoaderFullTemp(station_id),
+            )
+        )
+
+    if "short" in models:
+        estimators.append(
+            (
+                f"short_{station_id}",
+                ModelLoaderShort(station_id),
+            )
+        )
+
+    if "short_full" in models:
+        estimators.append(
+            (
+                f"short_full_{station_id}",
+                ModelLoaderShortFull(station_id),
+            )
+        )
+
+    if "short_full_temp" in models:
+        estimators.append(
+            (
+                f"short_full_temp_{station_id}",
+                ModelLoaderShortFullTemp(station_id),
+            )
+        )
+
+    if "short_temp" in models:
+        estimators.append(
+            (
+                f"short_temp_{station_id}",
+                ModelLoaderShortTemp(station_id),
+            )
+        )
+
+    return estimators
 
 
 T = TypeVar("T")
@@ -223,13 +339,19 @@ def concat(list_of_lists: list[list[T]]) -> list[T]:
     return reduce(lambda x, y: x + y, list_of_lists)
 
 
-def get_estimator_ids() -> Sequence[tuple[str, int, ModelLoader]]:
+def get_estimator_ids(
+    models: list[str] | None = None,
+) -> Sequence[tuple[str, int, ModelLoader]]:
     """Get all estimators and IDs."""
     return concat(
-        [get_station_estimator_ids(station_id) for station_id in range(1, 201)]
+        [get_station_estimator_ids(station_id, models) for station_id in range(1, 201)]
     )
 
 
-def get_estimators() -> Sequence[tuple[str, ModelLoader]]:
+def get_estimators(
+    models: list[str] | None = None,
+) -> Sequence[tuple[str, ModelLoader]]:
     """Get all estimators."""
-    return concat([get_station_estimators(station_id) for station_id in range(1, 201)])
+    return concat(
+        [get_station_estimators(station_id, models) for station_id in range(1, 201)]
+    )

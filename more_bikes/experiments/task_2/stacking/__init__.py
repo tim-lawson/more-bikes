@@ -1,6 +1,7 @@
 """Stacking regressor."""
 
-from sklearn.ensemble import HistGradientBoostingRegressor, StackingRegressor
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.ensemble import StackingRegressor as StackingRegressor_
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 
@@ -12,6 +13,24 @@ from more_bikes.feature_selection.variance_threshold import (
     feature_selection_variance_threshold,
 )
 from more_bikes.preprocessing.ordinal_transformer import preprocessing_ordinal
+
+
+class StackingRegressor(StackingRegressor_):
+    def __init__(self, models: list[str] | None, **kwargs):
+        super().__init__(estimators=get_estimators(models), **kwargs)
+
+        self.models = models
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+        self._param_names = ["models"] + list(kwargs.keys())
+
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+
+        return self
 
 
 def stacking():
@@ -28,12 +47,24 @@ def stacking():
                 feature_selection_drop(["wind_speed_avg"]),
                 # regression
                 StackingRegressor(
-                    estimators=get_estimators(),
+                    models=None,
                     final_estimator=HistGradientBoostingRegressor(),
                 ),
+                # StackingRegressor(
+                #     estimators=get_estimators(["short", "short_temp"]),
+                #     final_estimator=HistGradientBoostingRegressor(),
+                # ),
             ),
             params=[
                 {
+                    "stackingregressor__models": [
+                        ["full"],
+                        ["full_temp"],
+                        ["short"],
+                        ["short_full"],
+                        ["short_full_temp"],
+                        ["short_temp"],
+                    ],
                     "stackingregressor__final_estimator__l2_regularization": [
                         # 0.1,
                         # 0.2,

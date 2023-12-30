@@ -30,3 +30,5 @@ TransformedTargetRegressor
 VarianceThreshold
 weekhour
 tslwn
+StackingRegressor
+SimpleImputer
