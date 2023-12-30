@@ -32,3 +32,8 @@ weekhour
 tslwn
 StackingRegressor
 SimpleImputer
+linearmodel
+RidgeCV
+maxiter
+maxleafnodes
+negmeanabsoluteerror

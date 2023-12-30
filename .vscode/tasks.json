@@ -171,10 +171,57 @@
         "more_bikes.experiments.task_2.task_2_experiments",
         "-f",
         "-e",
+        "stacking",
+        "stacking_decision_tree",
+        "stacking_hgbr"
+      ],
+      "command": "${command:python.interpreterPath}",
+      "label": "[task 2]",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "type": "shell"
+    },
+    {
+      "args": [
+        "-m",
+        "more_bikes.experiments.task_2.task_2_experiments",
+        "-f",
+        "-e",
         "stacking"
       ],
       "command": "${command:python.interpreterPath}",
       "label": "[task 2] stacking",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "type": "shell"
+    },
+    {
+      "args": [
+        "-m",
+        "more_bikes.experiments.task_2.task_2_experiments",
+        "-f",
+        "-e",
+        "stacking_decision_tree"
+      ],
+      "command": "${command:python.interpreterPath}",
+      "label": "[task 2] stacking decision tree",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "type": "shell"
+    },
+    {
+      "args": [
+        "-m",
+        "more_bikes.experiments.task_2.task_2_experiments",
+        "-f",
+        "-e",
+        "stacking_hgbr"
+      ],
+      "command": "${command:python.interpreterPath}",
+      "label": "[task 2] stacking hgbr",
       "options": {
         "cwd": "${workspaceFolder}"
       },

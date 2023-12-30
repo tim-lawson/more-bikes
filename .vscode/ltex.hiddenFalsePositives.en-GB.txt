@@ -15,3 +15,5 @@
 {"rule":"WHITESPACE_RULE","sentence":"^\\Qint\\E$"}
 {"rule":"WHITESPACE_RULE","sentence":"^\\QMeteorological  float\\E$"}
 {"rule":"WHITESPACE_RULE","sentence":"^\\QModel      temperature\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qand are perfectly correlated (\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q).\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qand are highly correlated (\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q).\\E$"}

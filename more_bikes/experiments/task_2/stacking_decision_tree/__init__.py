@@ -2,6 +2,7 @@
 
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
+from sklearn.tree import DecisionTreeRegressor
 
 from more_bikes.experiments.experiment import Model
 from more_bikes.experiments.task_2.stacking_regressor import StackingRegressor
@@ -13,11 +14,13 @@ from more_bikes.feature_selection.variance_threshold import (
 from more_bikes.preprocessing.ordinal_transformer import preprocessing_ordinal
 
 
-def stacking():
-    """Stacking regressor with the default final estimator."""
+def stacking_decision_tree():
+    """
+    Stacking regressor with a decision tree as the final estimator.
+    """
     return Task2Experiment(
         model=Model(
-            name="stacking",
+            name="stacking_decision_tree",
             pipeline=make_pipeline(
                 # preprocessing
                 preprocessing_ordinal,
@@ -26,7 +29,7 @@ def stacking():
                 feature_selection_variance_threshold,
                 feature_selection_drop(["wind_speed_avg"]),
                 # regression
-                StackingRegressor(),
+                StackingRegressor(final_estimator=DecisionTreeRegressor()),
             ),
             params=[
                 {
@@ -39,12 +42,6 @@ def stacking():
                             "short_full_temp",
                             "short_temp",
                         ],
-                        ["full"],
-                        ["full_temp"],
-                        ["short"],
-                        ["short_full"],
-                        ["short_full_temp"],
-                        ["short_temp"],
                     ],
                 }
             ],

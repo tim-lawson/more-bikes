@@ -4,7 +4,6 @@
 
 from pandas import DataFrame, concat, read_csv
 from sklearn import set_config
-from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import make_scorer, mean_absolute_error
 from sklearn.model_selection import cross_val_score
@@ -14,7 +13,7 @@ from more_bikes.data.data_loader import DataLoaderTrainN
 from more_bikes.data.model_loader import get_estimator_ids
 from more_bikes.experiments.experiment import Model, Processing
 from more_bikes.experiments.params.cv import time_series_split
-from more_bikes.experiments.task_2.stacking import StackingRegressor
+from more_bikes.experiments.task_2.stacking_regressor import StackingRegressor
 from more_bikes.feature_selection.drop import feature_selection_drop
 from more_bikes.feature_selection.variance_threshold import (
     feature_selection_variance_threshold,
