@@ -4,7 +4,7 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.pipeline import make_pipeline
 
 from more_bikes.experiments.experiment import Model
-from more_bikes.experiments.params.hgbr import best_params
+from more_bikes.experiments.params.hgbr import best_params, params
 from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
 from more_bikes.feature_selection.drop import feature_selection_drop
 from more_bikes.feature_selection.variance_threshold import (
@@ -40,7 +40,7 @@ def hgbr():
                 ),
                 BikesFractionTransformer(),
             ),
-            params=best_params,
+            params=params,
         ),
         search="halving",
     )

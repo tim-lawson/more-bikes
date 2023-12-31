@@ -203,6 +203,8 @@ if __name__ == "__main__":
             ("task_1b", "lightgbm"),
             ("task_1b", "mlp"),
             ("task_2", "stacking"),
+            ("task_2", "stacking_decision_tree"),
+            ("task_2", "stacking_hgbr"),
         ],
         2,
     ):

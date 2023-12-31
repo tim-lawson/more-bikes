@@ -186,10 +186,7 @@ discretization may be irrelevant.
 Gradient-boosted decision trees are a popular choice of model class for time-series
 forecasting problems \parencite{Bojer2021}.
 In particular, \texttt{scikit-learn} provides an optimized implementation of
-gradient-boosted decision trees\footnote{See
-  \sklearn{ensemble}{HistGradientBoostingRegressor}.
-} inspired by
-LightGBM \parencite{Ke2017}.
+gradient-boosted decision trees inspired by LightGBM \parencite{Ke2017}.
 An advantage of this model class is that it supports missing values, which are evident
 in the data (\cref{tab:feature-stats}).
 For both cases of sub-task~1, I elected to compare the performance of individual
@@ -197,13 +194,14 @@ decision trees and gradient-boosted decision trees.
 As a baseline, I predicted the arithmetic mean of the fraction of available bikes.
 
 The best estimator for each model class was determined by grid search with ten-fold
-cross-validation (\cref{sec:approach}).
-However, with a separate model for each of the 75 stations, I found that it was
+cross-validation.
+With a separate model for each of the 75 stations, I found that it was too
 computationally expensive to perform grid search over a wide range of hyperparameters.
-Hence, I constrained the search space by first searching a wider range for the case of
-a single model for all stations, then varying the parameters about the values of the
-best estimator for the case of a separate model for each station.
-The resultant parameter grids are given in \cref{tab:chart-parameters-subtask-1}.
+Hence, I performed grid search for the case of a single model for all stations, then
+chose the values of the best estimator for the case of a separate model for each
+station.
+I fixed the scoring criteria to the mean absolute error, as per \cref{sec:approach}.
+The resultant parameter values are listed in \cref{tab:chart-parameters-subtask-1}.
 
 \begin{table}
   \centering
@@ -217,18 +215,18 @@ The resultant parameter grids are given in \cref{tab:chart-parameters-subtask-1}
       \texttt{criterion}          & \texttt{absolute\_error}
       \\
       \midrule
-      \texttt{max\_depth}         & \None, 10, 20, 50
+      \texttt{max\_depth}         & \None, 1, 2, 5, 10, 20, 50
       \\
-      \texttt{min\_samples\_leaf} & 5, 10, 20
+      \texttt{max\_leaf\_nodes}   & \None, 7, 15, 31, 63
       \\
-      \texttt{max\_leaf\_nodes}   & \None, 7, 15, 31
+      \texttt{min\_samples\_leaf} & 1, 2, 5, 10, 20, 50, 100
       \\
       \bottomrule
     \end{tabular}
     \caption{Decision tree}
     \label{tab:chart-parameters-subtask-1-1}
   \end{subfigure}
-  \par\bigskip\bigskip
+  \par\bigskip
   \begin{subfigure}{\textwidth}
     \centering
     \begin{tabular}{ll}
@@ -241,15 +239,17 @@ The resultant parameter grids are given in \cref{tab:chart-parameters-subtask-1}
       \texttt{scoring}            & \texttt{neg\_mean\_absolute\_error}
       \\
       \midrule
-      \texttt{l2\_regularization} & 0.1, 0.2, \underline{0.5}
+      \texttt{l2\_regularization} & 0.1, \underline{0.2}, 0.5, 1.0
       \\
-      \texttt{max\_depth}         & \None, 5, 10, \underline{20}, 50
+      \texttt{learning\_rate}     & 0.02, 0.05, \underline{0.1}, 0.2, 0.5
       \\
-      \texttt{max\_iter}          & 10, 20, 50, 100, \underline{200}, 500
+      \texttt{max\_depth}         & \None, 1, 2, 5, 10, 20, \underline{50}, 100
       \\
-      \texttt{max\_leaf\_nodes}   & \None, \underline{15}, 31, 63
+      \texttt{max\_iter}          & 20, 50, \underline{100}, 200, 500
       \\
-      \texttt{min\_samples\_leaf} & 1, 2, 5, \underline{10}, 20, 50
+      \texttt{max\_leaf\_nodes}   & \None, 7, \underline{15}, 31, 63
+      \\
+      \texttt{min\_samples\_leaf} & 1, \underline{2}, 5, 10, 20, 50, 100
       \\
       \bottomrule
     \end{tabular}
@@ -257,10 +257,11 @@ The resultant parameter grids are given in \cref{tab:chart-parameters-subtask-1}
     \label{tab:chart-parameters-subtask-1-2}
   \end{subfigure}
   \caption{The parameter grids over which I performed hyperparameter search for sub-task~1.
-    Except where stated, the default values of the parameters were used.
-    I fixed the scoring criteria to the mean absolute error, following the task
-    description.
-    The best parameters for the case of a single model for all stations are underlined.
+    Except where stated, the default values were used, and the parameters of the best
+    estimator are underlined.
+    For a description of the parameters and their default values, see
+    \sklearn{tree}{DecisionTreeRegressor} and
+    \sklearn{ensemble}{HistGradientBoostingRegressor}.
   }
   \label{tab:chart-parameters-subtask-1}
 \end{table}
@@ -291,7 +292,7 @@ baseline.
       \\
       Decision tree                  & 3.38  & 3.05
       \\
-      Gradient-boosted decision tree & 3.23  & 2.54
+      Gradient-boosted decision tree & 3.37  & 2.61
       \\
       \bottomrule
     \end{tabular}
@@ -312,8 +313,6 @@ baseline.
       \\
       Gradient-boosted decision tree & 2.60  & 0.08
       \\
-      % \texttt{LGBMRegressor}                 & 2.76  & 0.18
-      % \\
       \bottomrule
     \end{tabular}
     \caption{Single model for all stations}
@@ -344,7 +343,7 @@ With a single model for all stations, the results were more decisive -- the best
 gradient-boosted decision tree performed significantly better than the best decision
 tree (\cref{tab:subtask-1:results-t-tests-2}).
 
-\begin{table}
+\begin{table}[h]
   \centering
   \begin{subfigure}{\textwidth}
     \centering
@@ -369,7 +368,7 @@ tree (\cref{tab:subtask-1:results-t-tests-2}).
     }
     \label{tab:subtask-1:results-t-tests-1}
   \end{subfigure}
-  \par\bigskip\bigskip
+  \par\bigskip
   \begin{subfigure}{\textwidth}
     \centering
     \begin{tabular}{llrr}
@@ -379,9 +378,9 @@ tree (\cref{tab:subtask-1:results-t-tests-2}).
       \midrule
       Baseline      & Decision tree                  & 25.2          & \num{1.16e-9}
       \\
-      Baseline      & Gradient-boosted decision tree & 29.4          & \num{2.99e-10}
+      Baseline      & Gradient-boosted decision tree & 31.6          & \num{1.55e-10}
       \\
-      Decision tree & Gradient-boosted decision tree & 13.2          & \num{3.43e-7}
+      Decision tree & Gradient-boosted decision tree & 13.5          & \num{2.72e-7}
       \\
       \bottomrule
     \end{tabular}

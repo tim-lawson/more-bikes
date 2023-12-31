@@ -151,6 +151,7 @@ class Experiment(metaclass=ABCMeta):
                             refit=True,
                             cv=self._cv,
                             verbose=4,
+                            aggressive_elimination=True,
                         )
                     # Grid search.
                     else:
