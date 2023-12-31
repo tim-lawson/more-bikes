@@ -215,11 +215,11 @@ The resultant parameter values are listed in \cref{tab:chart-parameters-subtask-
       \texttt{criterion}          & \texttt{absolute\_error}
       \\
       \midrule
-      \texttt{max\_depth}         & \None, 1, 2, 5, 10, 20, 50
+      \texttt{max\_depth}         & \underline{\None}, 1, 2, 5, 10, 20, 50
       \\
-      \texttt{max\_leaf\_nodes}   & \None, 7, 15, 31, 63
+      \texttt{max\_leaf\_nodes}   & \None, \underline{7}, 15, 31, 63
       \\
-      \texttt{min\_samples\_leaf} & 1, 2, 5, 10, 20, 50, 100
+      \texttt{min\_samples\_leaf} & 1, 2, 5, 10, \underline{20}, 50, 100
       \\
       \bottomrule
     \end{tabular}
@@ -290,7 +290,7 @@ baseline.
       \midrule
       Baseline                       & 4.43  & 3.82
       \\
-      Decision tree                  & 3.38  & 3.05
+      Decision tree                  & 3.53  & 3.52
       \\
       Gradient-boosted decision tree & 3.37  & 2.61
       \\
@@ -309,7 +309,7 @@ baseline.
       \midrule
       Baseline                       & 5.45  & 0.06
       \\
-      Decision tree                  & 3.11  & 0.05
+      Decision tree                  & 3.51  & 0.08
       \\
       Gradient-boosted decision tree & 2.60  & 0.08
       \\
@@ -335,10 +335,10 @@ that the differences between them were due to chance.
 I did not compare the scores between estimators for the different cases of this
 sub-task because the samples are not paired.
 With a separate model for each station, both decision trees and gradient-boosted
-decision trees performed significantly better than the baseline for roughly
-$\frac{2}{3}$ of the stations (\cref{tab:subtask-1:results-t-tests-1}).
+decision trees performed significantly better than the baseline for more than half of
+the stations (\cref{tab:subtask-1:results-t-tests-1}).
 However, gradient-boosted decision trees only performed significantly better than
-decision trees for eight stations.
+decision trees for seven stations.
 With a single model for all stations, the results were more decisive -- the best
 gradient-boosted decision tree performed significantly better than the best decision
 tree (\cref{tab:subtask-1:results-t-tests-2}).
@@ -352,11 +352,11 @@ tree (\cref{tab:subtask-1:results-t-tests-2}).
       Model 1       & Model 2                        & $t > 0$ & $p < 0.05$
       \\
       \midrule
-      Baseline      & Decision tree                  & 71      & 47
+      Baseline      & Decision tree                  & 70      & 39
       \\
-      Baseline      & Gradient-boosted decision tree & 73      & 49
+      Baseline      & Gradient-boosted decision tree & 70      & 44
       \\
-      Decision tree & Gradient-boosted decision tree & 47      & 8
+      Decision tree & Gradient-boosted decision tree & 44      & 7
       \\
       \bottomrule
     \end{tabular}
@@ -376,11 +376,11 @@ tree (\cref{tab:subtask-1:results-t-tests-2}).
       Model 1       & Model 2                        & $t$-statistic & $p$-value
       \\
       \midrule
-      Baseline      & Decision tree                  & 25.2          & \num{1.16e-9}
+      Baseline      & Decision tree                  & 18.6          & \num{1.70e-9}
       \\
       Baseline      & Gradient-boosted decision tree & 31.6          & \num{1.55e-10}
       \\
-      Decision tree & Gradient-boosted decision tree & 13.5          & \num{2.72e-7}
+      Decision tree & Gradient-boosted decision tree & 8.2           & \num{1.83e-5}
       \\
       \bottomrule
     \end{tabular}

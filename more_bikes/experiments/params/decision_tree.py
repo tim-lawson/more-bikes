@@ -10,6 +10,15 @@ fixed = {
     "regressor__decisiontreeregressor__criterion": ["absolute_error"],
 }
 
+best_params: ParamGrid = [
+    {
+        **fixed,
+        "regressor__decisiontreeregressor__max_depth": [None],
+        "regressor__decisiontreeregressor__max_leaf_nodes": [7],
+        "regressor__decisiontreeregressor__min_samples_leaf": [20],
+    }
+]
+
 params: ParamGrid = [
     {
         **fixed,

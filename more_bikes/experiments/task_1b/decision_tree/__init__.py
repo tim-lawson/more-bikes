@@ -46,4 +46,5 @@ def decision_tree():
             ),
             params=params,
         ),
+        search="halving",
     )

@@ -5,7 +5,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.tree import DecisionTreeRegressor
 
 from more_bikes.experiments.experiment import Model
-from more_bikes.experiments.params.decision_tree import params
+from more_bikes.experiments.params.decision_tree import best_params
 from more_bikes.experiments.task_1a.task_1a_experiment import Task1AExperiment
 from more_bikes.feature_selection.drop import feature_selection_drop
 from more_bikes.feature_selection.variance_threshold import (
@@ -44,6 +44,6 @@ def decision_tree():
                 ),
                 BikesFractionTransformer(),
             ),
-            params=params,
+            params=best_params,
         ),
     )
