@@ -67,9 +67,9 @@ Finally, \cref{sec:subtask-1,sec:subtask-2} detail the results of the model clas
 that I applied to each of the sub-tasks.\footnote{The code that produced these results
   is available at \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.
 }
-I give the score achieved on this test set by the best estimators for each model class
-alongside the mean scores on cross-validation folds of the data provided for sub-task~1
-in \cref{tab:subtask-1:results}.
+I give the score achieved on the held-out test set by the best estimators for each
+model class alongside the mean scores on cross-validation folds of the data provided
+for sub-task~1 in \cref{tab:subtask-1:results}.
 
 \section{Approach}
 \label{sec:approach}
@@ -109,15 +109,15 @@ The data provided for sub-task~1 is recorded at hourly intervals with $n = 54385
 instances across the 75 stations.
 A summary of its features and the distributional characteristics of the non-temporal
 quantitative features are given in \cref{tab:features,tab:feature-stats}.
-This analysis revealed that many of the features, including the target variable
-\texttt{bikes}, are missing for $n = 73$ instances, which were henceforth excluded.
+This analysis revealed that many of the features and the target variable \texttt{bikes}
+are missing for $n = 73$ instances, which were henceforth excluded.
 Additionally, the `profile' features, i.e., the features derived from the numbers of
 available bikes at preceding times, are not defined for the first week of instances at
 each station.
 Hence, they are missing for approximately $\frac{1}{4}$ of the instances.
 The meteorological features are constant for all stations at a given timestamp.
 Finally, some features have a natural range -- in particular, the number of available
-bikes at a given station is bounded by zero and the number of docks at that station
+bikes at a station is bounded by zero and its number of docks
 (\cref{sec:feature-engineering}).
 
 \subsection{Feature selection}
@@ -125,8 +125,8 @@ bikes at a given station is bounded by zero and the number of docks at that stat
 
 \import{}{table-feature-stats.tex}
 
-Intuitively, features that have zero variance are not informative for regression
-analysis, so I automatically excluded them.\footnote{See
+Intuitively, features that have zero variance are not informative for regression, so I
+automatically excluded them.\footnote{See
   \sklearn{feature\_selection}{VarianceThreshold}.
 }
 In the case of sub-task~1, the available data is limited to the month of October 2014,
@@ -136,7 +136,7 @@ station, so were likewise excluded in this case.
 Finally, the \texttt{precipitation} feature is zero for all instances.
 Correlations between features are undesirable in regression analysis
 \parencite{Alin2010}, so I also sought to identify and exclude redundant features.
-To determine these, I computed the Pearson correlation coefficients between pairs of
+Therefore, I computed the Pearson correlation coefficients between pairs of
 quantitative features (\cref{fig:correlations}), which yielded the following:
 \begin{itemize}
   \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are perfectly correlated ($r = 1.00$).
@@ -152,9 +152,9 @@ pre-trained linear models (\cref{tab:2:features}).
 \subsection{Feature engineering}
 \label{sec:feature-engineering}
 
-For sub-task~1, the bounds on the number of available bikes at a given station were
+For sub-task~1, the bounds on the number of available bikes at each station were
 enforced by predicting the \emph{fraction} of bikes, i.e., the number of bikes divided
-by the number of docks at the station.
+by the number of docks.
 I implemented this by extending the \texttt{TransformedTargetRegressor} meta-estimator
 to permit data-dependent transforms.\footnote{See
   \sklearn{compose}{TransformedTargetRegressor}.
@@ -501,8 +501,8 @@ cross-validation folds to determine whether the differences between the mean sco
 achieved by the best estimators were statistically significant.
 The results are listed in \cref{tab:subtask-2:t-tests}.
 Stacked generalization with both ridge regression and gradient-boosted decision trees
-as the second-level regressor achieved a lower score than decision trees, but they did
-not perform significantly better than each other.
+as the second-level regressor achieved a lower score than with decision trees, but they
+did not perform significantly better than each other.
 
 \begin{table}
   \centering
