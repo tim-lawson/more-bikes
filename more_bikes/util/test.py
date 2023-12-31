@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
     print("\ntask 2")
 
-    for experiment in ["stacking"]:
+    for experiment in ["stacking", "stacking_decision_tree", "stacking_hgbr"]:
         mean, variance = mean_score("task_2", experiment)
 
         print(f"{experiment}: {mean:.2f} ({variance:.2f})")

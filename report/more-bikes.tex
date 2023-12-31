@@ -60,18 +60,16 @@ Hereafter, the MAE is referred to as the `score'.
 \end{equation}
 The evaluation data was not available to participants, but the score achieved on a
 held-out test set is reported on the task
-leaderboard.\footnote{\href{\kaggle}{\texttt{\kaggle}}} I give the score achieved on
-this test set by the best estimators for each model class and sub-task alongside the
-mean scores achieved on cross-validation folds of the data provided for sub-task~1 in
-TODO.
-
-This report begins with a description of the general approach taken to the assignment
-in \cref{sec:approach}.
-\Cref{sec:data-analysis} presents a preliminary analysis of the data.
-Finally, \cref{sec:subtask-1,sec:subtask-2} detail the results of the methods applied
-to each of the sub-tasks.\footnote{The code that produced these results is available at
-  \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.
+leaderboard.\footnote{\href{\kaggle}{\texttt{\kaggle}}} This report begins with a
+description of the general approach taken to the assignment in \cref{sec:approach}, and
+\cref{sec:data-analysis} presents preliminary data analysis.
+Finally, \cref{sec:subtask-1,sec:subtask-2} detail the results of the model classes
+that I applied to each of the sub-tasks.\footnote{The code that produced these results
+  is available at \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.
 }
+I give the score achieved on this test set by the best estimators for each model class
+alongside the mean scores on cross-validation folds of the data provided for sub-task~1
+in \cref{tab:subtask-1:results}.
 
 \section{Approach}
 \label{sec:approach}
@@ -226,7 +224,7 @@ The resultant parameter values are listed in \cref{tab:chart-parameters-subtask-
     \caption{Decision tree}
     \label{tab:chart-parameters-subtask-1-1}
   \end{subfigure}
-  \par\bigskip
+  \par\bigskip\bigskip
   \begin{subfigure}{\textwidth}
     \centering
     \begin{tabular}{ll}
@@ -281,48 +279,48 @@ baseline.
 
 \begin{table}
   \centering
-  \begin{subfigure}{0.49\textwidth}
+  \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{lrr}
+    \begin{tabular}{lrrr}
       \toprule
-      Model                          & $\mu$ & $\sigma^2$
+      Model                          & $\mu$ & $\sigma^2$ & Test
       \\
       \midrule
-      Baseline                       & 4.43  & 3.82
+      Baseline                       & 4.43  & 3.82       & 4.47
       \\
-      Decision tree                  & 3.53  & 3.52
+      Decision tree                  & 3.53  & 3.52       & 3.01
       \\
-      Gradient-boosted decision tree & 3.37  & 2.61
+      Gradient-boosted decision tree & 3.37  & 2.61       & TODO
       \\
       \bottomrule
     \end{tabular}
-    \caption{Separate model for each station}
+    \caption{Separate models for each station. $\mu$ is the mean of the scores for the 75 stations
+      and ten cross-validation folds.}
     \label{tab:subtask-1:results-1}
   \end{subfigure}
-  % \par\bigskip\bigskip
-  \begin{subfigure}{0.49\textwidth}
+  \par\bigskip\bigskip
+  \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{lrr}
+    \begin{tabular}{lrrr}
       \toprule
-      Model                          & $\mu$ & $\sigma^2$
+      Model                          & $\mu$ & $\sigma^2$ & Test
       \\
       \midrule
-      Baseline                       & 5.45  & 0.06
+      Baseline                       & 5.45  & 0.06       & TODO
       \\
-      Decision tree                  & 3.51  & 0.08
+      Decision tree                  & 3.51  & 0.08       & TODO
       \\
-      Gradient-boosted decision tree & 2.60  & 0.08
+      Gradient-boosted decision tree & 2.60  & 0.08       & TODO
       \\
       \bottomrule
     \end{tabular}
-    \caption{Single model for all stations}
+    \caption{Single model for all stations. $\mu$ is the mean of the scores for the ten
+      cross-validation folds only.}
     \label{tab:subtask-1:results-2}
   \end{subfigure}
-  \caption{The mean scores achieved by the model classes for each case of sub-task~1.
-    In \cref{tab:subtask-1:results-1}, $\mu$ is the mean of the scores for the 75 stations
-    and ten cross-validation folds.
-    In \cref{tab:subtask-1:results-2}, $\mu$ is the mean of the scores for the ten
-    cross-validation folds only.
+  \caption{The mean scores and variances achieved by the best estimators for each model
+    class for each case of sub-task~1 on the training data, and the corresponding score
+    on the held-out test set (\cref{sec:task-description}).
   }
   \label{tab:subtask-1:results}
 \end{table}
@@ -330,20 +328,19 @@ baseline.
 To determine whether the differences between the mean scores achieved by the best
 estimators were statistically significant, I performed paired $t$-tests of the scores
 on the cross-validation folds.
-The null hypothesis was that the mean scores of the best estimators were equal, i.e.,
-that the differences between them were due to chance.
+The null hypothesis was that the differences between the mean scores achieved by the
+best estimators were due to chance.
 I did not compare the scores between estimators for the different cases of this
 sub-task because the samples are not paired.
-With a separate model for each station, both decision trees and gradient-boosted
+With separate models for each station, the best decision trees and gradient-boosted
 decision trees performed significantly better than the baseline for more than half of
-the stations (\cref{tab:subtask-1:results-t-tests-1}).
-However, gradient-boosted decision trees only performed significantly better than
-decision trees for seven stations.
-With a single model for all stations, the results were more decisive -- the best
-gradient-boosted decision tree performed significantly better than the best decision
-tree (\cref{tab:subtask-1:results-t-tests-2}).
+the stations (\cref{tab:subtask-1:t-tests-1}).
+The best gradient-boosted decision trees only performed significantly better than the
+best decision trees for seven stations.
+With a single model for all stations, the best gradient-boosted decision tree performed
+significantly better than the best decision tree (\cref{tab:subtask-1:t-tests-2}).
 
-\begin{table}[h]
+\begin{table}
   \centering
   \begin{subfigure}{\textwidth}
     \centering
@@ -360,15 +357,14 @@ tree (\cref{tab:subtask-1:results-t-tests-2}).
       \\
       \bottomrule
     \end{tabular}
-    \caption{
-      Separate models for each station.
+    \caption{Separate models for each station.
       The numbers of positive $t$-statistics and significant $p$-values of the mean scores of
       the best estimators for each model class on the ten cross-validation folds for each of
       the 75 stations.
     }
-    \label{tab:subtask-1:results-t-tests-1}
+    \label{tab:subtask-1:t-tests-1}
   \end{subfigure}
-  \par\bigskip
+  \par\bigskip\bigskip
   \begin{subfigure}{\textwidth}
     \centering
     \begin{tabular}{llrr}
@@ -384,17 +380,18 @@ tree (\cref{tab:subtask-1:results-t-tests-2}).
       \\
       \bottomrule
     \end{tabular}
-    \caption{ Single model for all stations.
+    \caption{Single model for all stations.
       The $t$-statistics and $p$-values for paired $t$-tests of the mean scores of the best
       estimators for each model class on the ten cross-validation folds for all 75 stations.
     }
-    \label{tab:subtask-1:results-t-tests-2}
+    \label{tab:subtask-1:t-tests-2}
   \end{subfigure}
   \caption{The results of paired $t$-tests of the scores achieved by the best
-    estimators for each model class for the cases of sub-task~1.
+    estimators for each model class for each case of sub-task~1.
     A positive $t$-statistic indicates that `Model 2' achieved a lower mean score than
     `Model 1'.
   }
+  \label{tab:subtask-1:t-tests}
 \end{table}
 
 \section{Sub-task 2}
@@ -406,20 +403,15 @@ tree (\cref{tab:subtask-1:results-t-tests-2}).
 The available information for sub-task 2 is a set of linear models that were trained on
 the number of available bikes at each of a separate set of 200 stations
 (\cref{sec:task-description}).
-For each station, there are six models generated by the \texttt{rlm} function from the
-R package MASS.\footnote{See
-  \href{https://www.rdocumentation.org/packages/MASS/versions/7.3-54/topics/rlm}{\texttt{https://www.rdocumentation.org/packages/MASS/versions/7.3-54/topics/rlm}}.
-}
-Each of the models uses a different set of features, which are listed in
+Each of the six kinds of model uses a different set of features, which are listed in
 \cref{tab:2:features}.
-Unlike the gradient-boosted decision tree implementation in \texttt{scikit-learn}, the
-pre-trained models do not support missing values, so I imputed these\footnote{See
-  \sklearn{impute}{SimpleImputer}.
-} with the mean value of the feature over the training data.
-I used stacked generalization\footnote{See \sklearn{ensemble}{StackingRegressor}.
-} to combine the predictions of the models \parencite{Wolpert1992}.
+Unlike the gradient-boosted decision tree implementation in \texttt{scikit-learn},
+these models do not support missing values, so I imputed them with the mean value of
+the feature over the data provided for sub-task~1.
+I used \sklearn{ensemble}{StackingRegressor} to combine the predictions of the models
+by stacked generalization \parencite{Wolpert1992}.
 This model class is a meta-estimator that trains a second-level regressor on the
-predictions of a set of first-level regressors (the pre-trained models).
+predictions of a set of first-level regressors -- in this case, the pre-trained models.
 
 \begin{table}
   \centering
@@ -451,21 +443,21 @@ predictions of a set of first-level regressors (the pre-trained models).
   \label{tab:2:features}
 \end{table}
 
-For this sub-task, I also excluded zero-variance and highly correlated features but
+For this sub-task, I also excluded zero-variance and highly correlated features, but
 retained the `profile' features (\cref{sec:feature-selection}).
 However, the \texttt{full} and \texttt{short} features are perfectly correlated, and
 the latter were excluded for sub-task~1.
 Therefore, I first assessed the performance of the different kinds of pre-trained
 models.
-A box plot of the mean scores achieved on the data for all 75 stations is shown in
+A box plot of the mean scores achieved on the data provided for sub-task~1 is shown in
 \cref{fig:2:box-plot}.
-This shows that individual \rlmshort{} and \rlmshorttemp{} models generally achieved
-lower scores.
+It indicates that individual \rlmshort{} and \rlmshorttemp{} models generally achieved
+the lowest mean scores.
 However, with the default second-level regressor (ridge regression), the results of
 stacked generalization with each kind of model were very similar, so I elected to
-include all the models in the following analysis.
-For the second-level regressor, I opted to compare ridge regression, decision trees,
-and gradient-boosted decision trees, as in \cref{sec:subtask-1:model-classes}.
+include all the models in the final analysis.
+For the second-level regressor, I compared ridge regression, decision trees, and
+gradient-boosted decision trees, as in \cref{sec:subtask-1:model-classes}.
 The best second-level regressor was likewise determined by grid search with ten-fold
 cross-validation (\cref{sec:approach}).
 
@@ -500,6 +492,62 @@ cross-validation (\cref{sec:approach}).
 
 \subsection{Results}
 \label{sec:subtask-2:results}
+
+The mean scores achieved by the best estimator for each model class over the
+cross-validation folds are listed in \cref{tab:subtask-2:results}.
+All the model classes achieved a lower score than the baselines in sub-task~1.
+As in \cref{sec:subtask-1}, I performed paired $t$-tests of the scores on the
+cross-validation folds to determine whether the differences between the mean scores
+achieved by the best estimators were statistically significant.
+The results are listed in \cref{tab:subtask-2:t-tests}.
+Stacked generalization with both ridge regression and gradient-boosted decision trees
+as the second-level regressor achieved a lower score than decision trees, but they did
+not perform significantly better than each other.
+
+\begin{table}
+  \centering
+  \begin{tabular}{lrrr}
+    \toprule
+    Model                          & $\mu$ & $\sigma^2$ & Test
+    \\
+    \midrule
+    Ridge                          & 2.85  & 0.13       & TODO
+    \\
+    Decision tree                  & 3.79  & 0.10       & TODO
+    \\
+    Gradient-boosted decision tree & 2.84  & 0.19       & TODO
+    \\
+    \bottomrule
+  \end{tabular}
+  \caption{The mean scores and variances achieved by the best estimators for each model
+    class for sub-task~2 on the training data, and the corresponding score
+    on the held-out test set (\cref{sec:task-description}).
+  }
+  \label{tab:subtask-2:results}
+\end{table}
+
+\begin{table}
+  \centering
+  \begin{tabular}{llrr}
+    \toprule
+    Model 1       & Model 2                        & $t$-statistic & $p$-value
+    \\
+    \midrule
+    Ridge         & Decision tree                  & -20.7         & \num{6.70e-9}
+    \\
+    Ridge         & Gradient-boosted decision tree & 0.46          & \num{6.55e-1}
+    \\
+    Decision tree & Gradient-boosted decision tree & 17.2          & \num{3.46e-8}
+    \\
+    \bottomrule
+  \end{tabular}
+  \caption{The results of paired $t$-tests of the scores achieved by the best
+    estimators for each model class for sub-task~2.
+    As in \cref{tab:subtask-1:t-tests}, a positive $t$-statistic indicates that `Model 2'
+    achieved a lower mean score than `Model 1'.
+  }
+  \label{tab:subtask-2:t-tests}
+\end{table}
 
 \printbibliography
 
