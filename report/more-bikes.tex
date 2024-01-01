@@ -24,6 +24,8 @@
 \newcommand{\kaggle}{https://www.kaggle.com/c/morebikes2023/leaderboard}
 \newcommand{\sklearn}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|sklearn.#1.#2|}}
 
+\newcommand{\subfigurespace}{\par\bigskip}
+
 \begin{document}
 
 \title{`More Bikes': Experiments in Univariate Regression}
@@ -224,7 +226,7 @@ The resultant parameter values are listed in \cref{tab:chart-parameters-subtask-
     \caption{Decision tree}
     \label{tab:chart-parameters-subtask-1-1}
   \end{subfigure}
-  \par\bigskip\bigskip
+  \subfigurespace
   \begin{subfigure}{\textwidth}
     \centering
     \begin{tabular}{ll}
@@ -290,7 +292,7 @@ baseline.
       \\
       Decision tree                  & 3.53  & 3.52       & 3.01
       \\
-      Gradient-boosted decision tree & 3.37  & 2.61       & TODO
+      Gradient-boosted decision tree & 3.37  & 2.61       & 3.23
       \\
       \bottomrule
     \end{tabular}
@@ -298,7 +300,7 @@ baseline.
       and ten cross-validation folds.}
     \label{tab:subtask-1:results-1}
   \end{subfigure}
-  \par\bigskip\bigskip
+  \subfigurespace
   \begin{subfigure}{\textwidth}
     \centering
     \begin{tabular}{lrrr}
@@ -306,7 +308,7 @@ baseline.
       Model                          & $\mu$ & $\sigma^2$ & Test
       \\
       \midrule
-      Baseline                       & 5.45  & 0.06       & TODO
+      Baseline                       & 5.45  & 0.06       & 5.38
       \\
       Decision tree                  & 3.51  & 0.08       & TODO
       \\
@@ -364,7 +366,7 @@ significantly better than the best decision tree (\cref{tab:subtask-1:t-tests-2}
     }
     \label{tab:subtask-1:t-tests-1}
   \end{subfigure}
-  \par\bigskip\bigskip
+  \subfigurespace
   \begin{subfigure}{\textwidth}
     \centering
     \begin{tabular}{llrr}
