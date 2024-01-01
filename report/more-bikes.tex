@@ -21,8 +21,9 @@
 
 \newcommand{\None}{\texttt{None}}
 
-\newcommand{\kaggle}{https://www.kaggle.com/c/morebikes2023/leaderboard}
+\newcommand{\kaggle}[1]{\href{https://www.kaggle.com/c/morebikes2023/#1}{\lstinline|https://www.kaggle.com/c/morebikes2023/#1|}}
 \newcommand{\sklearn}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|sklearn.#1.#2|}}
+\newcommand{\skl}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|#2|}}
 
 \newcommand{\subfigurespace}{\par\bigskip}
 
@@ -36,65 +37,76 @@
 
 \maketitle
 
+\begin{abstract}
+  This report describes my approach to the `More Bikes' Kaggle competition, which
+  involved predicting the number of available bikes at a set of rental stations in
+  Valencia, Spain.
+  I investigated the performance of decision trees, gradient-boosted decision trees, and
+  stacked generalization with pre-trained linear models.
+  Generally, I found that gradient-boosted decision trees performed significantly better
+  than decision trees, and both performed significantly better than the baseline of
+  predicting the arithmetic mean of the fraction of available bikes.
+  Stacked generalization with pre-trained linear models performed competitively with
+  gradient-boosted decision trees.
+\end{abstract}
+
 \section{Task description}
 \label{sec:task-description}
 
-The assignment is to predict the number of available bikes at 75 rental stations in
-three hours' time for a period of three months from November 2014, i.e., a supervised
-univariate regression problem.
-It is divided into three sub-tasks, which differ in the information that is available.
-For sub-task~1, the number of available bikes at each of the 75 stations for the month
-of October 2014 is provided (\cref{sec:subtask-1}).
+The assignment was organized as a Kaggle competition.\footnote{See \kaggle{overview}.
+}
+The task is to predict the number of available bikes at 75 rental stations in three
+hours' time between November 2014 and January 2015, i.e., a supervised univariate
+regression problem.
+It is divided into three sub-tasks, which differ in the available information.
+For sub-task~1, the data from the 75 stations for the month of October 2014 is provided
+(\cref{sec:subtask-1}).
 This sub-task may be approached by building a separate model for each station or a
-single model for all 75 stations.
-For sub-task~2, a set of linear models that were trained on the number of available
-bikes at each of a separate set of 200 stations are provided (\cref{sec:subtask-2}).
+single model for all stations.
+For sub-task~2, a set of linear models that were trained on the data from a separate
+set of 200 stations is provided (\cref{sec:subtask-2}).
 Finally, for sub-task~3, both sources of information may be used.
-Additionally, the number of available bikes at the first ten stations between June 2012
-and October 2014 is provided for analysis (see \cref{fig:weekday}).
+Additionally, the data from the first ten stations between June 2012 and October 2014
+is provided for analysis (\cref{sec:data-analysis}).
 
-The predictions are evaluated by the mean absolute error (MAE) between the predicted
+The predictions were evaluated by the mean absolute error (MAE) between the predicted
 and true numbers of available bikes.
 Hereafter, the MAE is referred to as the `score'.
 \begin{equation}
   \label{eq:mae}
   \text{MAE} = \frac{1}{n} \sum_{i = 1}^n \lvert y_i - \hat{y}_i \rvert
 \end{equation}
-The evaluation data was not available to participants, but the score achieved on a
-held-out test set is reported on the task
-leaderboard.\footnote{\href{\kaggle}{\texttt{\kaggle}}} This report begins with a
-description of the general approach taken to the assignment in \cref{sec:approach}, and
-\cref{sec:data-analysis} presents preliminary data analysis.
-Finally, \cref{sec:subtask-1,sec:subtask-2} detail the results of the model classes
-that I applied to each of the sub-tasks.\footnote{The code that produced these results
-  is available at \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.
+The evaluation data was not made available to the competition participants, but the
+score achieved on a held-out test set was reported on the task
+leaderboard.\footnote{See \kaggle{leaderboard}.
 }
-I give the score achieved on the held-out test set by the best estimators for each
-model class alongside the mean scores on cross-validation folds of the data provided
-for sub-task~1 in \cref{tab:subtask-1:results}.
+I give the score achieved on this test set by the best estimators for each model class
+alongside the mean scores on cross-validation folds of the data provided for sub-task~1
+in \cref{tab:subtask-1:results,tab:subtask-2:results}.
 
 \section{Approach}
 \label{sec:approach}
 
 I used the \texttt{scikit-learn} Python package \parencite{Pedregosa2011} throughout
-this report.
-In each case, preprocessing and feature selection were performed by \emph{estimators}
-that implemented the \emph{transformer} interface, prediction was performed by
-estimators that implemented the \emph{predictor} interface, and estimators were
-composed into \texttt{Pipeline} objects over which hyperparameter search was performed
+this report.\footnote{The underlying code is available at
+  \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.
+}
+Preprocessing and feature selection were performed by \emph{estimators} that
+implemented the \emph{transformer} interface, prediction was performed by estimators
+that implemented the \emph{predictor} interface, and estimators were composed into
+\texttt{Pipeline} objects over which hyperparameter search was performed
 \parencite[4-9]{Buitinck2013}.
 
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
 to the inherent correlation between successive folds \parencite{Bergmeir2018}.
 Instead, I used nested time-series cross-validation\footnote{See
   \sklearn{model\_selection}{TimeSeriesSplit}.
-} with ten folds to evaluate the models, which is illustrated in
+} with ten folds, which is illustrated in
 \cref{fig:cross-validation}.
 I determined the best estimator for each model class by grid search\footnote{See
   \sklearn{model\_selection}{GridSearchCV} and
-  \sklearn{model\_selection}{HalvingGridSearchCV}.
-} with the mean absolute
-error as the scoring function, following the task description (\cref{sec:task-description}).
+  \skl{model\_selection}{HalvingGridSearchCV}.
+} with the mean absolute error as the scoring function, following the task description.
 Finally, I assessed the statistical significances of the differences between the mean
 scores of the best estimators by paired $t$-tests of the scores on the cross-validation
 folds.
@@ -114,8 +126,8 @@ quantitative features are given in \cref{tab:features,tab:feature-stats}.
 This analysis revealed that many of the features and the target variable \texttt{bikes}
 are missing for $n = 73$ instances, which were henceforth excluded.
 Additionally, the `profile' features, i.e., the features derived from the numbers of
-available bikes at preceding times, are not defined for the first week of instances at
-each station.
+available bikes at preceding times, are not defined for the first week of October 2014
+at each station.
 Hence, they are missing for approximately $\frac{1}{4}$ of the instances.
 The meteorological features are constant for all stations at a given timestamp.
 Finally, some features have a natural range -- in particular, the number of available
@@ -127,24 +139,27 @@ bikes at a station is bounded by zero and its number of docks
 
 \import{}{table-feature-stats.tex}
 
-Intuitively, features that have zero variance are not informative for regression, so I
-automatically excluded them.\footnote{See
-  \sklearn{feature\_selection}{VarianceThreshold}.
+Intuitively, features that have zero variance are not informative, so I automatically
+excluded them.\footnote{See \sklearn{feature\_selection}{VarianceThreshold}.
 }
-In the case of sub-task~1, the available data is limited to the month of October 2014,
-so these included the month and year.
-The `station' features (\cref{tab:features}) are constant for all instances at a given
-station, so were likewise excluded in this case.
-Finally, the \texttt{precipitation} feature is zero for all instances.
-Correlations between features are undesirable in regression analysis
-\parencite{Alin2010}, so I also sought to identify and exclude redundant features.
-Therefore, I computed the Pearson correlation coefficients between pairs of
-quantitative features (\cref{fig:correlations}), which yielded the following:
-\begin{itemize}
-  \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are perfectly correlated ($r = 1.00$).
-  \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are perfectly correlated ($r  = 1.00$).
-  \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
-\end{itemize}
+For sub-task~1, the available data is limited to the month of October 2014, so these
+included the month and year.
+For the first case of sub-task~1, the `station' features (\cref{tab:features}) were
+also included, which are constant for all instances at a given station.
+The \texttt{precipitation} feature is zero for all instances.
+
+Correlations between explanatory variables can result in unreliable predictions by a
+regression model \parencite{Alin2010}.
+\begin{samepage}
+  I identified these by computing the Pearson correlation
+  coefficients between pairs of quantitative features (\cref{fig:correlations}), which
+  yielded the following observations:
+  \begin{itemize}
+    \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are perfectly correlated ($r = 1.00$).
+    \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are perfectly correlated ($r  = 1.00$).
+    \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
+  \end{itemize}
+\end{samepage}
 Hence, for sub-task~1, the second of each of these pairs of features was also excluded.
 For sub-task~2, the `profile' features were retained because they are inputs to the
 pre-trained linear models (\cref{tab:2:features}).
@@ -158,22 +173,23 @@ For sub-task~1, the bounds on the number of available bikes at each station were
 enforced by predicting the \emph{fraction} of bikes, i.e., the number of bikes divided
 by the number of docks.
 I implemented this by extending the \texttt{TransformedTargetRegressor} meta-estimator
-to permit data-dependent transforms.\footnote{See
+to allow data-dependent transformations of the target variable.\footnote{See
   \sklearn{compose}{TransformedTargetRegressor}.
 }
-Another possible transformation of the target variable would have been to predict the
+Another potential transformation of the target variable would have been to predict the
 \emph{change} in the number of available bikes, but I did not explore this option.
 
 \import{}{figure-weekday.tex}
 
 Initially, I investigated introducing derived temporal features, e.g., by discretizing
-the hour of the day into `day' and `night' intervals.
+the hour of the day into intervals.
 However, as shown in \cref{fig:weekday}, the average fraction of available bikes
-throughout the day differs substantially between the training data and the data from
-the first ten stations (\cref{sec:task-description}).
+throughout the day differs substantially between the data from the 75 stations for
+October 2014 and the data from the first ten stations between June 2012 and October
+2014 (\cref{sec:task-description}).
 Hence, I considered that a feature of this kind would be unlikely to generalize well to
 the test data.
-Additionally, having elected to investigate tree models (\cref{sec:subtask-1}), which
+Additionally, because I chose to investigate tree models (\cref{sec:subtask-1}), which
 partition the spaces of quantitative features \parencite[155]{Flach2012},
 discretization may be irrelevant.
 
@@ -321,8 +337,8 @@ baseline.
     \label{tab:subtask-1:results-2}
   \end{subfigure}
   \caption{The mean scores and variances achieved by the best estimators for each model
-    class for each case of sub-task~1 on the training data, and the corresponding score
-    on the held-out test set (\cref{sec:task-description}).
+    class on the data provided for sub-task~1, and the corresponding score on the
+    held-out test set (\cref{sec:task-description}).
   }
   \label{tab:subtask-1:results}
 \end{table}
@@ -330,8 +346,8 @@ baseline.
 To determine whether the differences between the mean scores achieved by the best
 estimators were statistically significant, I performed paired $t$-tests of the scores
 on the cross-validation folds.
-The null hypothesis was that the differences between the mean scores achieved by the
-best estimators were due to chance.
+The null hypothesis was that the differences between the mean scores were due to
+chance.
 I did not compare the scores between estimators for the different cases of this
 sub-task because the samples are not paired.
 With separate models for each station, the best decision trees and gradient-boosted
@@ -389,7 +405,7 @@ significantly better than the best decision tree (\cref{tab:subtask-1:t-tests-2}
     \label{tab:subtask-1:t-tests-2}
   \end{subfigure}
   \caption{The results of paired $t$-tests of the scores achieved by the best
-    estimators for each model class for each case of sub-task~1.
+    estimators for each model class.
     A positive $t$-statistic indicates that `Model 2' achieved a lower mean score than
     `Model 1'.
   }
@@ -402,11 +418,10 @@ significantly better than the best decision tree (\cref{tab:subtask-1:t-tests-2}
 \subsection{Model classes}
 \label{sec:subtask-2:model-classes}
 
-The available information for sub-task 2 is a set of linear models that were trained on
-the number of available bikes at each of a separate set of 200 stations
-(\cref{sec:task-description}).
-Each of the six kinds of model uses a different set of features, which are listed in
-\cref{tab:2:features}.
+The information provided for sub-task~2 is a set of linear models that were trained on
+the data from a separate set of 200 stations.
+There are six models for each station, each of which uses a different set of features,
+listed in \cref{tab:2:features}.
 Unlike the gradient-boosted decision tree implementation in \texttt{scikit-learn},
 these models do not support missing values, so I imputed them with the mean value of
 the feature over the data provided for sub-task~1.
@@ -454,7 +469,7 @@ models.
 A box plot of the mean scores achieved on the data provided for sub-task~1 is shown in
 \cref{fig:2:box-plot}.
 It indicates that individual \rlmshort{} and \rlmshorttemp{} models generally achieved
-the lowest mean scores.
+lower mean scores.
 However, with the default second-level regressor (ridge regression), the results of
 stacked generalization with each kind of model were very similar, so I elected to
 include all the models in the final analysis.
