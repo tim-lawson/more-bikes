@@ -1,75 +1,80 @@
 
 \begin{table}
-  \newcommand{\tablefeaturesrow}[4]{#1 & #2 & #3 & #4 \\}
+  \newcommand{\tablefeaturesrow}[6]{#1 & #2 & #3 & #4 & #5 & #6 \\}
   \centering
-  \begin{tabular}{llll}
+  \begin{tabular}{llllcc}
     \toprule
 
-    \tablefeaturesrow{Category}{Feature}{Data type}{Kind}
+     &  &  &  & \multicolumn{2}{c}{Zero-variance}
+    \\
+
+    \tablefeaturesrow{Category}{Feature}{Data type}{Kind}{(a)}{(b)}
 
     \midrule
 
-    \tablefeaturesrow{\multirow{4}{*}{Station}}{\texttt{station}}{\texttt{int}}{ordinal}
+    \tablefeaturesrow{\multirow{4}{*}{Station}}{\texttt{station}}{\texttt{int}}{ordinal}{\checkmark}{}
 
-    \tablefeaturesrow{}{\texttt{latitude}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{latitude}}{\texttt{float}}{}{\checkmark}{}
 
-    \tablefeaturesrow{}{\texttt{longitude}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{longitude}}{\texttt{float}}{}{\checkmark}{}
 
-    \tablefeaturesrow{}{\texttt{docks}}{\texttt{int}}{}
-
-    \midrule
-
-    \tablefeaturesrow{\multirow{8}{*}{Temporal}}{\texttt{timestamp}}{\texttt{int}}{}
-
-    \tablefeaturesrow{}{\texttt{year}}{\texttt{int}}{}
-
-    \tablefeaturesrow{}{\texttt{month}}{\texttt{int}}{}
-
-    \tablefeaturesrow{}{\texttt{day}}{\texttt{int}}{}
-
-    \tablefeaturesrow{}{\texttt{hour}}{\texttt{int}}{}
-
-    \tablefeaturesrow{}{\texttt{weekday}}{\texttt{str}}{ordinal}
-
-    \tablefeaturesrow{}{\texttt{weekhour}}{\texttt{int}}{}
-
-    \tablefeaturesrow{}{\texttt{\isholiday}}{\texttt{bool}}{categorical}
+    \tablefeaturesrow{}{\texttt{docks}}{\texttt{int}}{}{\checkmark}{}
 
     \midrule
 
-    \tablefeaturesrow{\multirow{7}{*}{Meteorological}}{\texttt{\windspeedmax}}{\texttt{float}}{}
+    \tablefeaturesrow{\multirow{8}{*}{Temporal}}{\texttt{timestamp}}{\texttt{int}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{\windspeedavg}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{year}}{\texttt{int}}{}{\checkmark}{\checkmark}
 
-    \tablefeaturesrow{}{\texttt{\winddirection}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{month}}{\texttt{int}}{}{\checkmark}{\checkmark}
 
-    \tablefeaturesrow{}{\texttt{temperature}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{day}}{\texttt{int}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{humidity}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{hour}}{\texttt{int}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{pressure}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{weekday}}{\texttt{str}}{ordinal}{}{}
 
-    \tablefeaturesrow{}{\texttt{precipitation}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{weekhour}}{\texttt{int}}{}{}{}
+
+    \tablefeaturesrow{}{\texttt{\isholiday}}{\texttt{bool}}{categorical}{}{}
 
     \midrule
 
-    \tablefeaturesrow{\multirow{6}{*}{Bikes}}{\texttt{bikes}}{\texttt{int}}{}
+    \tablefeaturesrow{\multirow{7}{*}{Meteorological}}{\texttt{\windspeedmax}}{\texttt{float}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{\bikesavgfull}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{\windspeedavg}}{\texttt{float}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{\bikesavgshort}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{\winddirection}}{\texttt{float}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{\bikesh}}{\texttt{int}}{}
+    \tablefeaturesrow{}{\texttt{temperature}}{\texttt{float}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{\bikeshdiffavgfull}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{humidity}}{\texttt{float}}{}{}{}
 
-    \tablefeaturesrow{}{\texttt{\bikeshdiffavgshort}}{\texttt{float}}{}
+    \tablefeaturesrow{}{\texttt{pressure}}{\texttt{float}}{}{}{}
+
+    \tablefeaturesrow{}{\texttt{precipitation}}{\texttt{float}}{}{\checkmark}{\checkmark}
+
+    \midrule
+
+    \tablefeaturesrow{\multirow{6}{*}{Bikes}}{\texttt{bikes}}{\texttt{int}}{}{}{}
+
+    \tablefeaturesrow{}{\texttt{\bikesavgfull}}{\texttt{float}}{}{}{}
+
+    \tablefeaturesrow{}{\texttt{\bikesavgshort}}{\texttt{float}}{}{}{}
+
+    \tablefeaturesrow{}{\texttt{\bikesh}}{\texttt{int}}{}{}{}
+
+    \tablefeaturesrow{}{\texttt{\bikeshdiffavgfull}}{\texttt{float}}{}{}{}
+
+    \tablefeaturesrow{}{\texttt{\bikeshdiffavgshort}}{\texttt{float}}{}{}{}
 
     \bottomrule
   \end{tabular}
-  \caption{A summary of the features and the target variable (\texttt{bikes}).
+  \caption{A summary of the features and the target variable (\texttt{bikes}), which
+    have been renamed to be easier to read.
     Except where indicated, the features are quantitative.
-    The features have been renamed to be easier to read.
+    The zero-variance columns indicate whether the feature has zero variance for the cases
+    of (a) separate models for each station; and (b) a single model for all stations.
   }
   \label{tab:features}
 \end{table}

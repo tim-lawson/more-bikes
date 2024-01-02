@@ -25,7 +25,7 @@
 \newcommand{\sklearn}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|sklearn.#1.#2|}}
 \newcommand{\skl}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|#2|}}
 
-\newcommand{\subfigurespace}{\par\bigskip}
+\newcommand{\subfigurespace}{\par\bigskip\bigskip}
 
 \begin{document}
 
@@ -38,14 +38,14 @@
 \maketitle
 
 \begin{abstract}
-  This report describes my approach to the `More Bikes' Kaggle competition, for which the
-  task is to predict the number of available bikes at a set of rental stations in
-  Valencia, Spain.
-  I investigated the performance of decision trees, gradient-boosted decision trees, and
+  This report describes my approach to the `More Bikes' Kaggle competition, whose task is
+  to predict the number of available bikes at a set of rental stations in Valencia,
+  Spain.
+  I evaluated the performance of decision trees, gradient-boosted decision trees, and
   stacked generalization with pre-trained linear models.
   Generally, I found that gradient-boosted decision trees performed significantly better
-  than decision trees, and both performed significantly better than the baseline of
-  predicting the arithmetic mean of the fraction of available bikes.
+  than decision trees, and both performed significantly better than a baseline model that
+  predicted the arithmetic mean of the fraction of available bikes.
   Stacked generalization with pre-trained linear models performed competitively with
   gradient-boosted decision trees.
 \end{abstract}
@@ -61,8 +61,8 @@ regression problem.
 It is divided into three sub-tasks, which differ in the available information.
 For sub-task~1, the data from the 75 stations for the month of October 2014 is provided
 (\cref{sec:subtask-1}).
-This sub-task may be approached by building a separate model for each station or a
-single model for all stations.
+This sub-task may be approached by building (a) separate models for each station; and
+(b) a single model for all stations.
 For sub-task~2, a set of linear models that were trained on the data from a separate
 set of 200 stations is provided (\cref{sec:subtask-2}).
 Finally, for sub-task~3, both sources of information may be used.
@@ -121,7 +121,7 @@ I describe these methods in more detail in \cref{sec:subtask-1,sec:subtask-2}.
 
 The data provided for sub-task~1 is recorded at hourly intervals with $n = 54385$
 instances across the 75 stations.
-A summary of its features and the distributional characteristics of the non-temporal
+A summary of its features and the numbers of missing values for the non-temporal
 quantitative features are given in \cref{tab:features,tab:feature-stats}.
 This analysis revealed that many of the features and the target variable \texttt{bikes}
 are missing for $n = 73$ instances, which were henceforth excluded.
@@ -142,14 +142,12 @@ bikes at a station is bounded by zero and its number of docks
 Intuitively, features that have zero variance are not informative, so I automatically
 excluded them.\footnote{See \sklearn{feature\_selection}{VarianceThreshold}.
 }
-For sub-task~1, the available data is limited to the month of October 2014, so these
-included the month and year.
-For the first case of sub-task~1, the `station' features (\cref{tab:features}) were
-also included, which are constant for all instances at a given station.
-The \texttt{precipitation} feature is zero for all instances.
+For the two cases of sub-task~1, the zero-variance features are indicated in
+\cref{tab:features}.
+Notably, the \texttt{precipitation} feature is zero for all instances.
 
-Correlations between explanatory variables can result in unreliable predictions by a
-regression model \parencite{Alin2010}.
+Correlations between explanatory variables can cause a regression model to make
+unreliable predictions \parencite{Alin2010}.
 \begin{samepage}
   I identified these by computing the Pearson correlation
   coefficients between pairs of quantitative features (\cref{fig:correlations}), which
@@ -272,7 +270,7 @@ The resultant parameter values are listed in \cref{tab:chart-parameters-subtask-
     \caption{Gradient-boosted decision tree}
     \label{tab:chart-parameters-subtask-1-2}
   \end{subfigure}
-  \caption{The parameter grids over which I performed hyperparameter search for sub-task~1.
+  \caption{The parameter values over which I performed grid search.
     Except where stated, the default values were used, and the parameters of the best
     estimator are underlined.
     For a description of the parameters and their default values, see
