@@ -451,30 +451,12 @@ predictions of a set of first-level regressors -- in this case, the pre-trained 
 
     \bottomrule
   \end{tabular}
-  \caption{The features used by the different kinds of linear
+  \caption{The features used by the different kinds of pre-trained linear
     models for sub-task~2.
-    The features are listed in \cref{tab:features} and follow the same ordering.
+    The features are described in \cref{tab:features} and follow the same ordering.
   }
   \label{tab:2:features}
 \end{table}
-
-For this sub-task, I also excluded zero-variance and highly correlated features, but
-retained the `profile' features (\cref{sec:feature-selection}).
-However, the \texttt{full} and \texttt{short} features are perfectly correlated, and
-the latter were excluded for sub-task~1.
-Therefore, I first assessed the performance of the different kinds of pre-trained
-models.
-A box plot of the mean scores achieved on the data provided for sub-task~1 is shown in
-\cref{fig:2:box-plot}.
-It indicates that individual \rlmshort{} and \rlmshorttemp{} models generally achieved
-lower mean scores.
-However, with the default second-level regressor (ridge regression), the results of
-stacked generalization with each kind of model were very similar, so I elected to
-include all the models in the final analysis.
-For the second-level regressor, I compared ridge regression, decision trees, and
-gradient-boosted decision trees, as in \cref{sec:subtask-1:model-classes}.
-The best second-level regressor was likewise determined by grid search with ten-fold
-cross-validation (\cref{sec:approach}).
 
 \begin{figure}
   \centering
@@ -504,6 +486,21 @@ cross-validation (\cref{sec:approach}).
   }
   \label{fig:2:box-plot}
 \end{figure}
+
+For this sub-task, I excluded zero-variance and highly correlated features, but
+retained the `profile' features (\cref{sec:feature-selection}).
+The \texttt{full} and \texttt{short} features are perfectly correlated, and the latter
+were excluded for sub-task~1, so I first compared the different kinds of pre-trained
+models.
+\Cref{fig:2:box-plot} indicates that individual \rlmshort{} and \rlmshorttemp{} models
+generally achieved lower mean scores.
+However, with the default second-level regressor (ridge regression), stacked
+generalization performed very similarly with each kind of model, so I included all the
+models in the final analysis.
+For the second-level regressor, I evaluated the default, decision trees, and
+gradient-boosted decision trees, as in \cref{sec:subtask-1:model-classes}.
+The best estimators were again determined by grid search with ten-fold cross-validation
+(\cref{sec:approach}).
 
 \subsection{Results}
 \label{sec:subtask-2:results}
@@ -562,6 +559,49 @@ did not perform significantly better than each other.
     achieved a lower mean score than `Model 1'.
   }
   \label{tab:subtask-2:t-tests}
+\end{table}
+
+In comparison to the best estimators for sub-task~1 (b), i.e., the case of a single
+model for all stations, all the model classes were significantly better than the
+baseline but were significantly worse than gradient-boosted decision trees
+(\cref{tab:subtasks:t-tests}).
+Hence, the gradient-boosted decision tree of sub-task~1 (b) is the model that performed
+the best overall.
+
+\begin{table}
+  \centering
+  \begin{tabular}{llrr}
+    \toprule
+    Sub-task 1 (b) model           & Sub-task 2 model               & $t$-statistic & $p$-value
+    \\
+    \midrule
+    Baseline                       & Ridge                          & 25.8          & \num{9.42e-10}
+    \\
+    Baseline                       & Decision tree                  & 21.1          & \num{5.63e-9}
+    \\
+    Baseline                       & Gradient-boosted decision tree & 21.4          & \num{5.04e-9}
+    \\
+    Decision tree                  & Ridge                          & 5.41          & \num{4.25e-4}
+    \\
+    Decision tree                  & Decision tree                  & -2.14         & \num{6.15e-2}
+    \\
+    Decision tree                  & Gradient-boosted decision tree & 4.54          & \num{1.41e-3}
+    \\
+    Gradient-boosted decision tree & Ridge                          & -7.29         & \num{4.63e-5}
+    \\
+    Gradient-boosted decision tree & Decision tree                  & -25.0         & \num{1.25e-9}
+    \\
+    Gradient-boosted decision tree & Gradient-boosted decision tree & -4.40         & \num{1.72e-3}
+    \\
+    \bottomrule
+  \end{tabular}
+  \caption{The results of paired $t$-tests of the scores achieved by the best
+    estimators for each model class for sub-tasks~1 (b) and 2.
+    As in \cref{tab:subtask-1:t-tests,tab:subtask-2:t-tests}, a positive $t$-statistic
+    indicates that `Sub-task~2 model' achieved a lower mean score than `Sub-task~1 (b)
+    model'.
+  }
+  \label{tab:subtasks:t-tests}
 \end{table}
 
 \printbibliography
