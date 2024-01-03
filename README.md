@@ -24,14 +24,6 @@ It is divided into three tasks, which differ in the available data:
 
 # TODO
 
-Analysis and experiments:
-
-- Complete tasks 2 and 3
-- Experiment with learning algorithms, e.g., kernel regression, Gaussian processes,
-  ensemble methods, etc.
-
-Documentation:
-
 - Instructions to install/set up the project
 - Instructions to run experiments and tests
 - Description of the project structure
