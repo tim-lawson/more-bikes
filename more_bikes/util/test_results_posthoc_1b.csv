@@ -1,0 +1,4 @@
+experiment1,experiment2,tstatistic,pvalue,significant
+Baseline,Decision tree,18.629759951604612,0.06530290689073925,False
+Baseline,Gradient-boosted decision tree,31.634201651531786,0.001,True
+Decision tree,Gradient-boosted decision tree,8.189784556118159,0.06530290689073925,False

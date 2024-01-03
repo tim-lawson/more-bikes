@@ -25,9 +25,14 @@ MLPRegressor
 modelselection
 na
 negmeanabsoluteerror
+Nemenyi
+pgfplots
+posthoc
 postproc
+pvalue
 RidgeCV
 rlm
+sci
 scikit-learn
 sep
 SimpleImputer
@@ -37,5 +42,8 @@ tex
 TimeSeriesSplit
 TransformedTargetRegressor
 tslwn
+tstatistic
+util
 VarianceThreshold
 weekhour
+zerofill

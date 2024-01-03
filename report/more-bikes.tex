@@ -46,9 +46,9 @@
   Generally, I found that gradient-boosted decision trees performed significantly better
   than decision trees, and both performed significantly better than a baseline model that
   predicted the arithmetic mean of the fraction of available bikes.
-  Stacked generalization with pre-trained linear models achieved good results but was
-  significantly worse than the case of a single gradient-boosted decision tree for all
-  stations.
+  Stacked generalization with pre-trained linear models achieved comparable results to a
+  single gradient-boosted decision tree for all stations, but the latter achieved the
+  best result on the held-out test set.
 \end{abstract}
 
 \section{Task description}
@@ -109,8 +109,8 @@ I determined the best estimator for each model class by grid search\footnote{See
   \skl{model\_selection}{HalvingGridSearchCV}.
 } with the mean absolute error as the scoring function, following the task description.
 Finally, I assessed the statistical significances of the differences between the mean
-scores of the best estimators by paired $t$-tests of the scores on the cross-validation
-folds.
+scores of the best estimators by paired $t$-tests and Nemenyi tests on the scores on
+the cross-validation folds \parencite[353-354]{Flach2012}.
 I describe these methods in more detail in \cref{sec:subtask-1,sec:subtask-2}.
 
 \import{}{figure-cross-validation.tex}
@@ -210,13 +210,15 @@ As a baseline, I predicted the arithmetic mean of the fraction of available bike
 
 The best estimator for each model class was determined by grid search with ten-fold
 cross-validation.
+I fixed scoring criteria to the mean absolute error, as per \cref{sec:approach}.
 With a separate model for each of the 75 stations, I found that it was too
 computationally expensive to perform grid search over a wide range of hyperparameters.
-Hence, I performed grid search for the case of a single model for all stations, then
-chose the values of the best estimator for the case of a separate model for each
-station.
-I fixed the scoring criteria to the mean absolute error, as per \cref{sec:approach}.
-The resultant parameter values are listed in \cref{tab:chart-parameters-subtask-1}.
+Hence, I performed grid search for the case of (b) a single model for all stations,
+then chose the values of the best estimator for the case of (a) a separate model for
+each station.
+I note that this approach biased the results in favour of case (b), because I did not
+optimize the hyperparameters for each station individually.
+The parameter values are listed in \cref{tab:chart-parameters-subtask-1}.
 
 \begin{table}
   \centering
@@ -335,7 +337,7 @@ baseline.
       cross-validation folds only.}
     \label{tab:subtask-1:results-2}
   \end{subfigure}
-  \caption{The mean scores and variances achieved by the best estimators for each model
+  \caption{The mean scores and variances of the best estimators for each model
     class on the data provided for sub-task~1, and the corresponding score on the
     held-out test set (\cref{sec:task-description}).
     The best scores on each dataset are underlined.
@@ -344,19 +346,69 @@ baseline.
 \end{table}
 
 To determine whether the differences between the mean scores achieved by the best
-estimators were statistically significant, I performed paired $t$-tests of the scores
-on the cross-validation folds.
+estimators were statistically significant, I performed paired $t$-tests and the Nemenyi
+test on the scores on the cross-validation folds.
 The null hypothesis was that the differences between the mean scores were due to
 chance.
 I did not compare the scores between estimators for the different cases of this
-sub-task because the samples are not paired.
-With separate models for each station, the best decision trees and gradient-boosted
-decision trees performed significantly better than the baseline for more than half of
-the stations (\cref{tab:subtask-1:t-tests-1}).
-The best gradient-boosted decision trees only performed significantly better than the
-best decision trees for seven stations.
-With a single model for all stations, the best gradient-boosted decision tree performed
-significantly better than the best decision tree (\cref{tab:subtask-1:t-tests-2}).
+sub-task because the samples are different \parencite[354]{Flach2012}.
+With separate models for each station, I only performed paired $t$-tests on the scores,
+so the $p$-values are not corrected for multiple comparisons
+(\cref{tab:subtask-1:t-tests-1}).
+Regardless, this indicated that the best decision trees and gradient-boosted decision
+trees performed better than the baseline for more than half of the stations.
+The best gradient-boosted decision trees only performed better than the best decision
+trees for seven stations.
+With a single model for all stations, I also performed the Nemenyi test to correct for
+multiple comparisons (\cref{tab:subtask-1:t-tests-2}).
+This indicated that only the best gradient-boosted decision tree performed
+significantly better than the baseline, but it did not perform significantly better
+than the best decision tree.
+
+\pgfplotstableset{
+  columns/task1/.style={
+      column name={Sub-task A},
+      string type,
+      column type={l},
+    },
+  columns/task2/.style={
+      column name={Sub-task B},
+      string type,
+      column type={l},
+    },
+  columns/experiment1/.style={
+      column name={Model A},
+      string type,
+      column type={l},
+    },
+  columns/experiment2/.style={
+      column name={Model B},
+      string type,
+      column type={l},
+    },
+  columns/tstatistic/.style={
+      column name={$t$-statistic},
+      precision=2,
+      column type={r},
+    },
+  columns/pvalue/.style={
+      column name={$p$-value},
+      sci,
+      sci zerofill,
+      precision=2,
+      column type={r},
+    },
+  columns/significant/.style={
+      column name={$p$ < 0.05},
+      assign cell content/.code={%
+          \ifnum\pdfstrcmp{##1}{True}=0
+          \pgfkeyssetvalue{/pgfplots/table/@cell content}{\checkmark}
+          \else
+          \pgfkeyssetvalue{/pgfplots/table/@cell content}{}
+          \fi
+        },
+    },
+}
 
 \begin{table}
   \centering
@@ -364,7 +416,7 @@ significantly better than the best decision tree (\cref{tab:subtask-1:t-tests-2}
     \centering
     \begin{tabular}{llrr}
       \toprule
-      Model 1       & Model 2                        & $t > 0$ & $p < 0.05$
+      Model A       & Model B                        & $t > 0$ & $p < 0.05$
       \\
       \midrule
       Baseline      & Decision tree                  & 70      & 39
@@ -376,38 +428,44 @@ significantly better than the best decision tree (\cref{tab:subtask-1:t-tests-2}
       \bottomrule
     \end{tabular}
     \caption{Separate models for each station.
-      The numbers of positive $t$-statistics and significant $p$-values of the mean scores of
-      the best estimators for each model class on the ten cross-validation folds for each of
-      the 75 stations.
+      The numbers of positive $t$-statistics and `significant' $p$-values from paired
+      $t$-tests on the mean scores of the best estimators for each model class on the ten
+      cross-validation folds for each of the 75 stations.
+      The $p$-values are not corrected for multiple comparisons, unlike in
+      \cref{tab:subtask-1:t-tests-2}.
     }
     \label{tab:subtask-1:t-tests-1}
   \end{subfigure}
   \subfigurespace
   \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{llrr}
-      \toprule
-      Model 1       & Model 2                        & $t$-statistic & $p$-value
-      \\
-      \midrule
-      Baseline      & Decision tree                  & 18.6          & \num{1.70e-9}
-      \\
-      Baseline      & Gradient-boosted decision tree & 31.6          & \num{1.55e-10}
-      \\
-      Decision tree & Gradient-boosted decision tree & 8.2           & \num{1.83e-5}
-      \\
-      \bottomrule
-    \end{tabular}
+    \pgfplotstabletypeset[col sep=comma,
+      columns={
+          experiment1,
+          experiment2,
+          tstatistic,
+          pvalue,
+          significant
+        },
+      every head row/.style={
+          before row={\toprule},
+          after row={\midrule},
+        },
+      every last row/.style={
+          after row={\bottomrule},
+        }
+    ]{../more_bikes/util/test_results_posthoc_1b.csv}
     \caption{Single model for all stations.
-      The $t$-statistics and $p$-values for paired $t$-tests of the mean scores of the best
-      estimators for each model class on the ten cross-validation folds for all 75 stations.
+      The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
+      mean scores of the best estimators for each model class on the ten cross-validation
+      folds for all 75 stations.
     }
     \label{tab:subtask-1:t-tests-2}
   \end{subfigure}
-  \caption{The results of paired $t$-tests of the scores achieved by the best
+  \caption{The results of statistical tests on the scores achieved by the best
     estimators for each model class.
-    A positive $t$-statistic indicates that `Model 2' achieved a lower mean score than
-    `Model 1'.
+    A positive $t$-statistic indicates that `Model B' achieved a lower mean score than
+    `Model A' and vice versa.
   }
   \label{tab:subtask-1:t-tests}
 \end{table}
@@ -435,7 +493,7 @@ predictions of a set of first-level regressors -- in this case, the pre-trained 
   \newcommand{\rlmtablerow}[7]{#1 & #7 & #2 & #3 & #4 & #5 & #6 \\}
   \begin{tabular}{lllllll}
 
-    \rlmtablerow{Model}{\rot{\bikesh{}}}{\rot{\bikesavgfull{}}}{\rot{\bikesavgshort{}}}{\rot{\bikeshdiffavgfull{}}}{\rot{\bikeshdiffavgshort{}}}{\rot{\texttt{temperature}}}
+    \rlmtablerow{Model}{\coldiag{\bikesh{}}}{\coldiag{\bikesavgfull{}}}{\coldiag{\bikesavgshort{}}}{\coldiag{\bikeshdiffavgfull{}}}{\coldiag{\bikeshdiffavgshort{}}}{\coldiag{\texttt{temperature}}}
 
     \midrule
 
@@ -501,8 +559,8 @@ generalization performed very similarly with each kind of model, so I included a
 models in the final analysis.
 For the second-level regressor, I evaluated the default, decision trees, and
 gradient-boosted decision trees, as in \cref{sec:subtask-1:model-classes}.
-The best estimators were again determined by grid search with ten-fold cross-validation
-(\cref{sec:approach}).
+The best estimators were again determined by grid search with ten-fold
+cross-validation.
 
 \subsection{Results}
 \label{sec:subtask-2:results}
@@ -510,13 +568,13 @@ The best estimators were again determined by grid search with ten-fold cross-val
 The mean scores achieved by the best estimator for each model class over the
 cross-validation folds are listed in \cref{tab:subtask-2:results}.
 All the model classes achieved a lower score than the baselines in sub-task~1.
-As in \cref{sec:subtask-1}, I performed paired $t$-tests of the scores on the
-cross-validation folds to determine whether the differences between the mean scores
-achieved by the best estimators were statistically significant.
-The results are listed in \cref{tab:subtask-2:t-tests}.
+As in \cref{sec:subtask-1}, I performed paired $t$-tests and the Nemenyi test on the
+scores on the cross-validation folds to determine whether the differences between the
+mean scores achieved by the best estimators were statistically significant
+(\cref{tab:subtask-2:t-tests}).
 Stacked generalization with both ridge regression and gradient-boosted decision trees
-as the second-level regressor achieved a lower score than with decision trees, but they
-did not perform significantly better than each other.
+as the second-level regressor performed significantly better than with decision trees,
+but they did not perform significantly better than each other.
 
 \begin{table}
   \centering
@@ -525,9 +583,9 @@ did not perform significantly better than each other.
     Model                          & $\mu$            & $\sigma^2$ & Test
     \\
     \midrule
-    Ridge                          & 2.85             & 0.13       & TODO
+    Ridge                          & 2.85             & 0.13       & 2.35
     \\
-    Decision tree                  & 3.79             & 0.10       & TODO
+    Decision tree                  & 3.79             & 0.10       & 4.53
     \\
     Gradient-boosted decision tree & \underline{2.84} & 0.19       & TODO
     \\
@@ -543,69 +601,73 @@ did not perform significantly better than each other.
 
 \begin{table}
   \centering
-  \begin{tabular}{llrr}
-    \toprule
-    Model 1       & Model 2                        & $t$-statistic & $p$-value
-    \\
-    \midrule
-    Ridge         & Decision tree                  & -20.7         & \num{6.70e-9}
-    \\
-    Ridge         & Gradient-boosted decision tree & 0.46          & \num{6.55e-1}
-    \\
-    Decision tree & Gradient-boosted decision tree & 17.2          & \num{3.46e-8}
-    \\
-    \bottomrule
-  \end{tabular}
-  \caption{The results of paired $t$-tests of the scores achieved by the best
-    estimators for each model class for sub-task~2.
-    As in \cref{tab:subtask-1:t-tests}, a positive $t$-statistic indicates that `Model 2'
-    achieved a lower mean score than `Model 1'.
+  \pgfplotstabletypeset[col sep=comma,
+    columns={
+        experiment1,
+        experiment2,
+        tstatistic,
+        pvalue,
+        significant
+      },
+    every head row/.style={
+        before row={\toprule},
+        after row={\midrule},
+      },
+    every last row/.style={
+        after row={\bottomrule},
+      }
+  ]{../more_bikes/util/test_results_posthoc_2.csv}
+  \caption{The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
+    mean scores of the best estimators for sub-task~2.
+    As in \cref{tab:subtask-1:t-tests}, a positive $t$-statistic indicates that `Model B'
+    achieved a lower mean score than `Model A' and vice versa.
   }
   \label{tab:subtask-2:t-tests}
 \end{table}
 
-In comparison to the best estimators for sub-task~1 (b), i.e., the case of a single
-model for all stations, all the model classes were significantly better than the
-baseline but were significantly worse than gradient-boosted decision trees
-(\cref{tab:subtasks:t-tests}).
-Hence, the gradient-boosted decision tree of sub-task~1 (b) is the model that performed
-the best overall.
+Finally, I performed the same statistical tests for the best estimators for
+sub-task~1~(b) and sub-task~2 (\cref{tab:subtasks:friedman}).
+The results were consistent with those in
+\cref{tab:subtask-1:t-tests-2,tab:subtask-2:t-tests}, i.e., the following model classes
+performed significantly better than the baseline but not significantly better than
+each other:
+\begin{itemize}
+  \item sub-task~1~(b), gradient-boosted decision tree;
+  \item sub-task~2, ridge regression; and
+  \item sub-task~2, gradient-boosted decision tree.
+\end{itemize}
+Among these, the first performed best on the held-out test set
+(\cref{tab:subtask-1:results-2,tab:subtask-2:results}).
 
-\begin{table}
-  \centering
-  \begin{tabular}{llrr}
-    \toprule
-    Sub-task 1 (b) model           & Sub-task 2 model               & $t$-statistic & $p$-value
-    \\
-    \midrule
-    Baseline                       & Ridge                          & 25.8          & \num{9.42e-10}
-    \\
-    Baseline                       & Decision tree                  & 21.1          & \num{5.63e-9}
-    \\
-    Baseline                       & Gradient-boosted decision tree & 21.4          & \num{5.04e-9}
-    \\
-    Decision tree                  & Ridge                          & 5.41          & \num{4.25e-4}
-    \\
-    Decision tree                  & Decision tree                  & -2.14         & \num{6.15e-2}
-    \\
-    Decision tree                  & Gradient-boosted decision tree & 4.54          & \num{1.41e-3}
-    \\
-    Gradient-boosted decision tree & Ridge                          & -7.29         & \num{4.63e-5}
-    \\
-    Gradient-boosted decision tree & Decision tree                  & -25.0         & \num{1.25e-9}
-    \\
-    Gradient-boosted decision tree & Gradient-boosted decision tree & -4.40         & \num{1.72e-3}
-    \\
-    \bottomrule
-  \end{tabular}
-  \caption{The results of paired $t$-tests of the scores achieved by the best
-    estimators for each model class for sub-tasks~1 (b) and 2.
-    As in \cref{tab:subtask-1:t-tests,tab:subtask-2:t-tests}, a positive $t$-statistic
-    indicates that `Sub-task~2 model' achieved a lower mean score than `Sub-task~1 (b)
-    model'.
-  }
-  \label{tab:subtasks:t-tests}
-\end{table}
+\begin{landscape}
+  \begin{table}
+    \centering
+    \pgfplotstabletypeset[col sep=comma,
+      columns={
+          task1,
+          experiment1,
+          task2,
+          experiment2,
+          tstatistic,
+          pvalue,
+          significant
+        },
+      every head row/.style={
+          before row={\toprule},
+          after row={\midrule},
+        },
+      every last row/.style={
+          after row={\bottomrule},
+        }
+    ]{../more_bikes/util/test_results_posthoc_all.csv}
+    \caption{The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
+      mean scores of the best estimators for sub-tasks~1~(b) and 2.
+      As elsewhere, a positive $t$-statistic indicates that `Model B' achieved a lower mean
+      score than `Model A' and vice versa.
+    }
+    \label{tab:subtasks:friedman}
+  \end{table}
+\end{landscape}
 
 \printbibliography
 

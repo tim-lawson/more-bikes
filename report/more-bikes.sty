@@ -78,7 +78,8 @@
   l
   <{\egroup}
 }
-\newcommand*\rot{\multicolumn{1}{D{45}{1em}}}
+\newcommand*\coldiag{\multicolumn{1}{D{45}{1em}}}
+\newcommand*\colvert{\multicolumn{1}{D{90}{1em}}}
 
 \def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}}
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash }b{#1}}
@@ -153,3 +154,5 @@
   \href{#1}{\faGithub\ \texttt{#2}}%
 }
 \makeatother
+
+\usepackage{pdflscape}

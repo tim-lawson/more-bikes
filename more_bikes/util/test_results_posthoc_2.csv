@@ -1,0 +1,4 @@
+experiment1,experiment2,tstatistic,pvalue,significant
+ Ridge, Decision tree,-20.701573777764356,0.010209676870122308,True
+ Ridge, Gradient-boosted decision tree,0.4619131888669345,0.6318555248340325,False
+ Decision tree, Gradient-boosted decision tree,17.179059598430385,0.001,True
