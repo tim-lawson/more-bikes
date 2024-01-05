@@ -29,6 +29,12 @@
 
 \begin{document}
 
+\fancyhf{}
+\fancyhead[L]{`More Bikes': Experiments in Univariate Regression}
+\fancyhead[R]{Tim Lawson}
+\fancyfoot[C]{\thepage}
+% \fancyfoot[R]{\wordcount{}words}
+
 \title{`More Bikes': Experiments in Univariate Regression}
 \author[]{Tim Lawson}
 \affil[]{University of Bristol}
@@ -465,7 +471,7 @@ than the best decision tree.
   \caption{The results of statistical tests on the scores achieved by the best
     estimators for each model class.
     A positive $t$-statistic indicates that `Model B' achieved a lower mean score than
-    `Model A' and vice versa.
+    `Model A'.
   }
   \label{tab:subtask-1:t-tests}
 \end{table}
@@ -587,7 +593,7 @@ but they did not perform significantly better than each other.
     \\
     Decision tree                  & 3.79             & 0.10       & 4.53
     \\
-    Gradient-boosted decision tree & \underline{2.84} & 0.19       & TODO
+    Gradient-boosted decision tree & \underline{2.84} & 0.19       & \underline{2.25}
     \\
     \bottomrule
   \end{tabular}
@@ -620,7 +626,7 @@ but they did not perform significantly better than each other.
   \caption{The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
     mean scores of the best estimators for sub-task~2.
     As in \cref{tab:subtask-1:t-tests}, a positive $t$-statistic indicates that `Model B'
-    achieved a lower mean score than `Model A' and vice versa.
+    achieved a lower mean score than `Model A'.
   }
   \label{tab:subtask-2:t-tests}
 \end{table}
@@ -663,7 +669,7 @@ Among these, the first performed best on the held-out test set
     \caption{The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
       mean scores of the best estimators for sub-tasks~1~(b) and 2.
       As elsewhere, a positive $t$-statistic indicates that `Model B' achieved a lower mean
-      score than `Model A' and vice versa.
+      score than `Model A'.
     }
     \label{tab:subtasks:friedman}
   \end{table}
