@@ -1,0 +1,12 @@
+\newcommand{\rlmtablerow}[7]{#1 & #7 & #2 & #3 & #4 & #5 & #6 \\}
+\begin{tabular}{lllllll}
+  \rlmtablerow{Model}{\coldiag{\bikesh{}}}{\coldiag{\bikesavgfull{}}}{\coldiag{\bikesavgshort{}}}{\coldiag{\bikeshdiffavgfull{}}}{\coldiag{\bikeshdiffavgshort{}}}{\coldiag{\texttt{temperature}}}
+  \midrule
+  \rlmtablerow{\rlmfull{}}{\checkmark}{\checkmark}{}{\checkmark}{}{}
+  \rlmtablerow{\rlmfulltemp{}}{\checkmark}{\checkmark}{}{\checkmark}{}{\checkmark}
+  \rlmtablerow{\rlmshort{}}{\checkmark}{}{\checkmark}{}{\checkmark}{}
+  \rlmtablerow{\rlmshortfull{}}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{}
+  \rlmtablerow{\rlmshortfulltemp{}}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{\checkmark}
+  \rlmtablerow{\rlmshorttemp{}}{\checkmark}{}{\checkmark}{}{\checkmark}{\checkmark}
+  \bottomrule
+\end{tabular}

@@ -1,0 +1,16 @@
+\pgfplotstabletypeset[col sep=comma,
+  columns={
+      experiment1,
+      experiment2,
+      tstatistic,
+      pvalue,
+      significant
+    },
+  every head row/.style={
+      before row={\toprule},
+      after row={\midrule},
+    },
+  every last row/.style={
+      after row={\bottomrule},
+    }
+]{../more_bikes/util/test_results_posthoc_2.csv}

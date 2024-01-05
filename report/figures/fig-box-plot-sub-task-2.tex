@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+  \begin{axis}[
+      width=5in,
+      height=2in,
+      cycle list/Paired,
+      xlabel={Mean score},
+      y dir=reverse,
+      ytick pos=right,
+      ytick={1,2,3,4,5,6},
+      yticklabels={\rlmfull{}, \rlmfulltemp{}, \rlmshort{}, \rlmshortfull{}, \rlmshortfulltemp{}, \rlmshorttemp{}},
+    ]
+    \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_full.csv};
+    \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_full_temp.csv};
+    \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short.csv};
+    \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short_full.csv};
+    \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short_full_temp.csv};
+    \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short_temp.csv};
+  \end{axis}
+\end{tikzpicture}
