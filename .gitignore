@@ -5,6 +5,7 @@ data/**/*.csv
 **/*.aux
 **/*.auxlock
 **/*.bbl
+**/*-blx.bib
 **/*.bcf
 **/*.blg
 **/*.dep

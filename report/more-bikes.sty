@@ -24,8 +24,7 @@
   maxcitenames=2,
   doi=false,
   isbn=false,
-  % Omit URL except for @online
-  url=false,
+  backend=bibtex,
 ]{biblatex}
 
 \addbibresource{~/library.bib}
@@ -155,4 +154,12 @@
 }
 \makeatother
 
+% Landscape
 \usepackage{pdflscape}
+
+% Word count
+\newcommand{\wordcount}{\input{|"texcount -brief -merge -sum -total more-bikes.tex"}}
+
+% Headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
