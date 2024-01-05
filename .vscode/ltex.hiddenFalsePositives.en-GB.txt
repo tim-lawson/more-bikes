@@ -21,3 +21,5 @@
 {"rule":"WHITESPACE_RULE","sentence":"^\\Qint\\E$"}
 {"rule":"WHITESPACE_RULE","sentence":"^\\QMeteorological  float\\E$"}
 {"rule":"WHITESPACE_RULE","sentence":"^\\QModel      temperature\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qsections task-description sections approach\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\Qsections task-description sections approach sections/data-analysis data-analysis\\E$"}

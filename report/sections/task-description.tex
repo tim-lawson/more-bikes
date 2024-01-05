@@ -1,0 +1,32 @@
+\section{Task description}
+\label{sec:task-description}
+
+The assignment was organized as a Kaggle competition.\footnote{See \kaggle{overview}.
+}
+The task is to predict the number of available bikes at 75 rental stations in three
+hours' time between November 2014 and January 2015, i.e., a supervised univariate
+regression problem.
+It is divided into three sub-tasks, which differ in the available information.
+For sub-task~1, the data from the 75 stations for the month of October 2014 is provided
+(\cref{sec:st1}).
+This sub-task may be approached by building (a) separate models for each station; and
+(b) a single model for all stations.
+For sub-task~2, a set of linear models that were trained on the data from a separate
+set of 200 stations is provided (\cref{sec:st2}).
+Finally, for sub-task~3, both sources of information may be used.
+Additionally, the data from the first ten stations between June 2012 and October 2014
+is provided for analysis (\cref{sec:data-analysis}).
+
+The predictions were evaluated by the mean absolute error (MAE) between the predicted
+and true numbers of available bikes.
+Hereafter, the MAE is referred to as the `score'.
+\begin{equation}
+  \text{MAE} = \frac{1}{n} \sum_{i = 1}^n \lvert y_i - \hat{y}_i \rvert
+\end{equation}
+The evaluation data was not made available to the competition participants, but the
+score achieved on a held-out test set was reported on the task
+leaderboard.\footnote{See \kaggle{leaderboard}.
+}
+I give the score achieved on this test set by the best estimators for each model class
+alongside the mean scores on cross-validation folds of the data provided for sub-task~1
+in \cref{tab:st1:results,tab:st2:results}.
