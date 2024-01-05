@@ -157,9 +157,36 @@
 % Landscape
 \usepackage{pdflscape}
 
-% Word count
-\newcommand{\wordcount}{\input{|"texcount -brief -merge -sum -total more-bikes.tex"}}
-
 % Headers and footers
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+
+% Shortcuts
+
+% Features
+\newcommand{\isholiday}{\texttt{is\_holiday}}
+\newcommand{\windspeedmax}{\texttt{wind\_speed\_max}}
+\newcommand{\windspeedavg}{\texttt{wind\_speed\_avg}}
+\newcommand{\winddirection}{\texttt{wind\_direction}}
+\newcommand{\bikesavgfull}{\texttt{bikes\_avg\_full}}
+\newcommand{\bikesavgshort}{\texttt{bikes\_avg\_short}}
+\newcommand{\bikesh}{\texttt{bikes\_3h}}
+\newcommand{\bikeshdiffavgfull}{\texttt{bikes\_3h\_diff\_avg\_full}}
+\newcommand{\bikeshdiffavgshort}{\texttt{bikes\_3h\_diff\_avg\_short}}
+
+% Models
+\newcommand{\rlmfull}{\texttt{rlm\_full}}
+\newcommand{\rlmfulltemp}{\texttt{rlm\_full\_temp}}
+\newcommand{\rlmshort}{\texttt{rlm\_short}}
+\newcommand{\rlmshortfull}{\texttt{rlm\_short\_full}}
+\newcommand{\rlmshortfulltemp}{\texttt{rlm\_short\_full\_temp}}
+\newcommand{\rlmshorttemp}{\texttt{rlm\_short\_temp}}
+
+\newcommand{\None}{\texttt{None}}
+
+% URLs
+\newcommand{\kaggle}[1]{\href{https://www.kaggle.com/c/morebikes2023/#1}{\lstinline|https://www.kaggle.com/c/morebikes2023/#1|}}
+\newcommand{\sklearn}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|sklearn.#1.#2|}}
+\newcommand{\skl}[2]{\href{https://scikit-learn.org/stable/modules/generated/sklearn.#1.#2.html}{\lstinline|#2|}}
+
+\newcommand{\subfigurespace}{\par\bigskip\bigskip}
