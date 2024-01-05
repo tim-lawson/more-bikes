@@ -1,46 +1,40 @@
-\begin{figure}
-  \pgfplotstableread[col sep=comma,
-    header=true]{
-    cv,train,test
-    0,20,20
-    1,40,20
-    2,60,20
-    3,80,20
-  }\data
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-        xbar stacked,
-        width = 4in,
-        height = 2.5in,
-        ylabel = {Cross-validation iteration},
-        xlabel = {Sample index},
-        xmin = 0,
-        xmax = 100,
-        symbolic y coords = {3,2,1,0},
-        enlarge y limits = 0.2,
-        xtick pos = lower,
-        xtick align = outside,
-        ytick pos = left,
-        legend style = {
-            draw = none,
-            font = \small,
-          },
-        legend cell align={left},
-      ]
-      \addplot table [
-          x = train,
-          y = cv
-        ] {\data};
-      \addplot table [
-          x = test,
-          y = cv
-        ] {\data};
-      \legend{Train,Test}
-    \end{axis}
-  \end{tikzpicture}
-  \caption{A visualization of the nested time-series cross-validation behaviour that I
-    used, after the documentation for \sklearn{model\_selection}{TimeSeriesSplit}.
-  }
-  \label{fig-cv}
-\end{figure}
+\pgfplotstableread[col sep=comma,
+  header=true]{
+  cv,train,test
+  0,20,20
+  1,40,20
+  2,60,20
+  3,80,20
+}\data
+\centering
+\begin{tikzpicture}
+  \begin{axis}[
+      xbar stacked,
+      width = 4in,
+      height = 2.5in,
+      ylabel = {Cross-validation iteration},
+      xlabel = {Sample index},
+      xmin = 0,
+      xmax = 100,
+      symbolic y coords = {3,2,1,0},
+      enlarge y limits = 0.2,
+      xtick pos = lower,
+      xtick align = outside,
+      ytick pos = left,
+      legend style = {
+          draw = none,
+          font = \small,
+        },
+      legend cell align={left},
+    ]
+    \addplot table [
+        x = train,
+        y = cv
+      ] {\data};
+    \addplot table [
+        x = test,
+        y = cv
+      ] {\data};
+    \legend{Train,Test}
+  \end{axis}
+\end{tikzpicture}

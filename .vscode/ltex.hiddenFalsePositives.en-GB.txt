@@ -1,0 +1,8 @@
+{"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"\\Qfig-\\E"}
+{"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"\\Qsec-\\E"}
+{"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"\\Qtab-\\E"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qand are highly correlated (\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q).\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qand are perfectly correlated (\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q).\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qapproach fig-\\E"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qdata-analysis\\E"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qsub-task\\E"}
