@@ -1,14 +1,14 @@
 
 \section{Sub-task 2}
-\label{sec:st2}
+\label{sec:sub-task-2}
 
 \subsection{Model classes}
-\label{sec:st2:model-classes}
+\label{sec:sub-task-2:model-classes}
 
 The information provided for sub-task~2 is a set of linear models that were trained on
 the data from a separate set of 200 stations.
 There are six models for each station, each of which uses a different set of features,
-listed in \cref{tab:st2:features-rlm}.
+listed in \cref{sub-task-2:tab-features-rlm}.
 Unlike the gradient-boosted decision tree implementation in \texttt{scikit-learn},
 these models do not support missing values, so I imputed them with the mean value of
 the feature over the data provided for sub-task~1.
@@ -19,61 +19,24 @@ predictions of a set of first-level regressors -- in this case, the pre-trained 
 
 \begin{table}
   \centering
-  \newcommand{\rlmtablerow}[7]{#1 & #7 & #2 & #3 & #4 & #5 & #6 \\}
-  \begin{tabular}{lllllll}
-
-    \rlmtablerow{Model}{\coldiag{\bikesh{}}}{\coldiag{\bikesavgfull{}}}{\coldiag{\bikesavgshort{}}}{\coldiag{\bikeshdiffavgfull{}}}{\coldiag{\bikeshdiffavgshort{}}}{\coldiag{\texttt{temperature}}}
-
-    \midrule
-
-    \rlmtablerow{\rlmfull{}}{\checkmark}{\checkmark}{}{\checkmark}{}{}
-
-    \rlmtablerow{\rlmfulltemp{}}{\checkmark}{\checkmark}{}{\checkmark}{}{\checkmark}
-
-    \rlmtablerow{\rlmshort{}}{\checkmark}{}{\checkmark}{}{\checkmark}{}
-
-    \rlmtablerow{\rlmshortfull{}}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{}
-
-    \rlmtablerow{\rlmshortfulltemp{}}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{\checkmark}{\checkmark}
-
-    \rlmtablerow{\rlmshorttemp{}}{\checkmark}{}{\checkmark}{}{\checkmark}{\checkmark}
-
-    \bottomrule
-  \end{tabular}
-  \caption{The features used by the different kinds of pre-trained linear
-    models for sub-task~2.
-    The features are described in \cref{tab:features} and follow the same ordering.
+  \import{sub-task-2}{tab-features-rlm}
+  \caption{
+    The features used by the different kinds of pre-trained linear models for sub-task~2.
+    The features are described in \cref{tab-features} and follow the same ordering.
   }
-  \label{tab:st2:features-rlm}
+  \label{sub-task-2:tab-features-rlm}
 \end{table}
 
 \begin{figure}
   \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-        width=5in,
-        height=2in,
-        cycle list/Paired,
-        xlabel={Mean score},
-        y dir=reverse,
-        ytick pos=right,
-        ytick={1,2,3,4,5,6},
-        yticklabels={\rlmfull{}, \rlmfulltemp{}, \rlmshort{}, \rlmshortfull{}, \rlmshortfulltemp{}, \rlmshorttemp{}},
-      ]
-      \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_full.csv};
-      \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_full_temp.csv};
-      \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short.csv};
-      \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short_full.csv};
-      \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short_full_temp.csv};
-      \addplot+ [boxplot] table [y index=0] {../more_bikes/analysis/rlm/rlm_mean_scores_short_temp.csv};
-    \end{axis}
-  \end{tikzpicture}
-  \caption{A box plot of the mean scores achieved by the different kinds of models for
+  \import{sub-task-2}{fig-box-plot}
+  \caption{
+    A box plot of the mean scores achieved by the different kinds of models for
     sub-task~2 over the ten cross-validation folds of the data from the 75 stations for
     the month of October 2014, i.e., the same data as for the second case of sub-task~1.
-    The kinds of models are listed in \cref{tab:st2:features-rlm}.
+    The kinds of models are listed in \cref{sub-task-2:tab-features-rlm}.
   }
-  \label{fig:st2:box-plot}
+  \label{sub-task-2:fig-box-plot}
 \end{figure}
 
 For this sub-task, I excluded zero-variance and highly correlated features, but
@@ -81,83 +44,57 @@ retained the `profile' features (\cref{sec:data-analysis:feature-selection}).
 The \texttt{full} and \texttt{short} features are perfectly correlated, and the latter
 were excluded for sub-task~1, so I first compared the different kinds of pre-trained
 models.
-\Cref{fig:st2:box-plot} indicates that individual \rlmshort{} and \rlmshorttemp{} models
+\Cref{sub-task-2:fig-box-plot} indicates that individual \rlmshort{} and \rlmshorttemp{} models
 generally achieved lower mean scores.
 However, with the default second-level regressor (ridge regression), stacked
 generalization performed very similarly with each kind of model, so I included all the
 models in the final analysis.
 For the second-level regressor, I evaluated the default, decision trees, and
-gradient-boosted decision trees, as in \cref{sec:st1:model-classes}.
+gradient-boosted decision trees, as in \cref{sec:sub-task-1:model-classes}.
 The best estimators were again determined by grid search with ten-fold
 cross-validation.
 
 \subsection{Results}
-\label{sec:st2:results}
+\label{sec:sub-task-2:results}
 
 The mean scores achieved by the best estimator for each model class over the
-cross-validation folds are listed in \cref{tab:st2:results}.
+cross-validation folds are listed in \cref{sub-task-2:tab-results}.
 All the model classes achieved a lower score than the baselines in sub-task~1.
-As in \cref{sec:st1}, I performed paired $t$-tests and the Nemenyi test on the scores
-on the cross-validation folds to determine whether the differences between the mean
-scores achieved by the best estimators were statistically significant
-(\cref{tab:st2:t-tests}).
+As in \cref{sec:sub-task-1}, I performed paired $t$-tests and the Nemenyi test on the
+scores on the cross-validation folds to determine whether the differences between the
+mean scores achieved by the best estimators were statistically significant
+(\cref{sub-task-2:tab-t-tests}).
 Stacked generalization with both ridge regression and gradient-boosted decision trees
 as the second-level regressor performed significantly better than with decision trees,
 but they did not perform significantly better than each other.
 
 \begin{table}
   \centering
-  \begin{tabular}{lrrr}
-    \toprule
-    Model                          & $\mu$            & $\sigma^2$ & Test
-    \\
-    \midrule
-    Ridge                          & 2.85             & 0.13       & 2.35
-    \\
-    Decision tree                  & 3.79             & 0.10       & 4.53
-    \\
-    Gradient-boosted decision tree & \underline{2.84} & 0.19       & \underline{2.25}
-    \\
-    \bottomrule
-  \end{tabular}
-  \caption{The mean scores and variances achieved by the best estimators for each model
-    class for sub-task~2 on the data provided for sub-task~1, and the corresponding score
-    on the held-out test set (\cref{sec:task-description}).
+  \import{sub-task-2}{tab-results}
+  \caption{
+    The mean scores and variances achieved by the best estimators for each model class
+    for sub-task~2 on the data provided for sub-task~1, and the corresponding score on
+    the held-out test set (\cref{sec:task-description}).
     The best scores on each dataset are underlined.
   }
-  \label{tab:st2:results}
+  \label{sub-task-2:tab-results}
 \end{table}
 
 \begin{table}
   \centering
-  \pgfplotstabletypeset[col sep=comma,
-    columns={
-        experiment1,
-        experiment2,
-        tstatistic,
-        pvalue,
-        significant
-      },
-    every head row/.style={
-        before row={\toprule},
-        after row={\midrule},
-      },
-    every last row/.style={
-        after row={\bottomrule},
-      }
-  ]{../more_bikes/util/test_results_posthoc_2.csv}
-  \caption{The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
-    mean scores of the best estimators for sub-task~2.
-    As in \cref{tab:st1:t-tests}, a positive $t$-statistic indicates that `Model B'
+  \import{sub-task-2}{tab-t-tests}
+  \caption{The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi
+    test, on the mean scores of the best estimators for sub-task~2.
+    As in \cref{sub-task-1:tab-t-tests}, a positive $t$-statistic indicates that `Model B'
     achieved a lower mean score than `Model A'.
   }
-  \label{tab:st2:t-tests}
+  \label{sub-task-2:tab-t-tests}
 \end{table}
 
 Finally, I performed the same statistical tests for the best estimators for
-sub-task~1~(b) and sub-task~2 (\cref{tab:t-tests}).
+sub-task~1~(b) and sub-task~2 (\cref{sub-task-2:tab-t-tests-all}).
 The results were consistent with those in
-\cref{tab:st1:t-tests-2,tab:st2:t-tests}, i.e., the following model classes
+\cref{sub-task-1:tab-t-tests-b,sub-task-2:tab-t-tests}, i.e., the following model classes
 performed significantly better than the baseline but not significantly better than
 each other:
 \begin{itemize}
@@ -166,34 +103,17 @@ each other:
   \item sub-task~2, gradient-boosted decision tree.
 \end{itemize}
 Among these, the first performed best on the held-out test set
-(\cref{tab:st1:results-2,tab:st2:results}).
+(\cref{sub-task-1:tab-results-b,sub-task-2:tab-results}).
 
 \begin{landscape}
   \begin{table}
     \centering
-    \pgfplotstabletypeset[col sep=comma,
-      columns={
-          task1,
-          experiment1,
-          task2,
-          experiment2,
-          tstatistic,
-          pvalue,
-          significant
-        },
-      every head row/.style={
-          before row={\toprule},
-          after row={\midrule},
-        },
-      every last row/.style={
-          after row={\bottomrule},
-        }
-    ]{../more_bikes/util/test_results_posthoc_all.csv}
+    \import{sub-task-2}{tab-t-tests-all}
     \caption{The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
       mean scores of the best estimators for sub-tasks~1~(b) and 2.
       As elsewhere, a positive $t$-statistic indicates that `Model B' achieved a lower mean
       score than `Model A'.
     }
-    \label{tab:t-tests}
+    \label{sub-task-2:tab-t-tests-all}
   \end{table}
 \end{landscape}

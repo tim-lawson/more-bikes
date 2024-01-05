@@ -1,12 +1,12 @@
 \section{Data analysis}
 \label{sec:data-analysis}
 
-\import{}{table-features.tex}
+\import{data-analysis}{tab-features}
 
 The data provided for sub-task~1 is recorded at hourly intervals with $n = 54385$
 instances across the 75 stations.
 A summary of its features and the numbers of missing values for the non-temporal
-quantitative features are given in \cref{tab:features,tab:features-na}.
+quantitative features are given in \cref{tab-features,tab-features-na}.
 This analysis revealed that many of the features and the target variable \texttt{bikes}
 are missing for $n = 73$ instances, which were henceforth excluded.
 Additionally, the `profile' features, i.e., the features derived from the numbers of
@@ -21,20 +21,20 @@ bikes at a station is bounded by zero and its number of docks
 \subsection{Feature selection}
 \label{sec:data-analysis:feature-selection}
 
-\import{}{table-feature-stats.tex}
+\import{data-analysis}{tab-features-na}
 
 Intuitively, features that have zero variance are not informative, so I automatically
 excluded them.\footnote{See \sklearn{feature\_selection}{VarianceThreshold}.
 }
 For the two cases of sub-task~1, the zero-variance features are indicated in
-\cref{tab:features}.
+\cref{tab-features}.
 Notably, the \texttt{precipitation} feature is zero for all instances.
 
 Correlations between explanatory variables can cause a regression model to make
 unreliable predictions \parencite{Alin2010}.
 \begin{samepage}
   I identified these by computing the Pearson correlation
-  coefficients between pairs of quantitative features (\cref{fig:correlations}), which
+  coefficients between pairs of quantitative features (\cref{fig-pearson}), which
   yielded the following observations:
   \begin{itemize}
     \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are perfectly correlated ($r = 1.00$).
@@ -44,9 +44,21 @@ unreliable predictions \parencite{Alin2010}.
 \end{samepage}
 Hence, for sub-task~1, the second of each of these pairs of features was also excluded.
 For sub-task~2, the `profile' features were retained because they are inputs to the
-pre-trained linear models (\cref{tab:st2:features-rlm}).
+pre-trained linear models (\cref{sub-task-2:tab-features-rlm}).
 
-\import{}{figure-correlations.tex}
+\begin{figure}
+  \centering
+  \import{data-analysis}{fig-pearson}
+  \caption{The Pearson correlation coefficients between pairs of the quantitative
+    features and the target variable (\texttt{bikes}).
+    The ordering follows \cref{tab-features}.
+    Features that have zero variance for the case of (a) separate models for each station
+    are excluded (\cref{sec:data-analysis-feature-selection}).
+    The \texttt{timestamp} feature is also excluded because it is naturally correlated with
+    the other temporal features.
+  }
+  \label{fig-pearson}
+\end{figure}
 
 \subsection{Feature engineering}
 \label{sec:data-analysis:feature-engineering}
@@ -61,16 +73,27 @@ to allow data-dependent transformations of the target variable.\footnote{See
 Another potential transformation of the target variable would have been to predict the
 \emph{change} in the number of available bikes, but I did not explore this option.
 
-\import{}{figure-weekday.tex}
+\begin{figure}
+  \centering
+  \import{data-analysis}{fig-weekday}
+  \caption{The average fraction of available bikes at each hour of the day, separated by
+    the day of the week.
+    In the top chart, the data is limited to the month of October 2014 for the 75 stations
+    to predict.
+    In the bottom chart, the data from the first ten stations is also included
+    (\cref{sec:task-description}).
+  }
+  \label{fig-weekday}
+\end{figure}
 
 Initially, I investigated introducing derived temporal features, e.g., by discretizing
 the hour of the day into intervals.
-However, as shown in \cref{fig:weekday}, the average fraction of available bikes
+However, as shown in \cref{fig-weekday}, the average fraction of available bikes
 throughout the day differs substantially between the data from the 75 stations for
 October 2014 and the data from the first ten stations between June 2012 and October
 2014 (\cref{sec:task-description}).
 Hence, I considered that a feature of this kind would be unlikely to generalize well to
 the test data.
-Additionally, because I chose to investigate tree models (\cref{sec:st1}), which
+Additionally, because I chose to investigate tree models (\cref{sec:sub-task-1}), which
 partition the spaces of quantitative features \parencite[155]{Flach2012},
 discretization may be irrelevant.

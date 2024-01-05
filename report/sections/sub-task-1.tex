@@ -1,15 +1,15 @@
 \section{Sub-task 1}
-\label{sec:st1}
+\label{sec:sub-task-1}
 
 \subsection{Model classes}
-\label{sec:st1:model-classes}
+\label{sec:sub-task-1:model-classes}
 
 Gradient-boosted decision trees are a popular choice of model class for time-series
 forecasting problems \parencite{Bojer2021}.
 In particular, \texttt{scikit-learn} provides an optimized implementation of
 gradient-boosted decision trees inspired by LightGBM \parencite{Ke2017}.
 An advantage of this model class is that it supports missing values, which are evident
-in the data (\cref{tab:features-na}).
+in the data (\cref{tab-features-na}).
 For both cases of sub-task~1, I elected to compare the performance of individual
 decision trees and gradient-boosted decision trees.
 As a baseline, I predicted the arithmetic mean of the fraction of available bikes.
@@ -24,60 +24,22 @@ then chose the values of the best estimator for the case of (a) a separate model
 each station.
 I note that this approach biased the results in favour of case (b), because I did not
 optimize the hyperparameters for each station individually.
-The parameter values are listed in \cref{tab:st1:params}.
+The parameter values are listed in \cref{sub-task-1:tab-params}.
 
 \begin{table}
   \centering
   \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{ll}
-      \toprule
-      Parameter                   & Values
-      \\
-      \midrule
-      \texttt{criterion}          & \texttt{absolute\_error}
-      \\
-      \midrule
-      \texttt{max\_depth}         & \underline{\None}, 1, 2, 5, 10, 20, 50
-      \\
-      \texttt{max\_leaf\_nodes}   & \None, \underline{7}, 15, 31, 63
-      \\
-      \texttt{min\_samples\_leaf} & 1, 2, 5, 10, \underline{20}, 50, 100
-      \\
-      \bottomrule
-    \end{tabular}
+    \import{sub-task-1}{tab-params-decision-tree}
     \caption{Decision tree}
-    \label{tab:st1:params-decision-tree}
+    \label{sub-task-1:tab-params-decision-tree}
   \end{subfigure}
   \subfigurespace
   \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{ll}
-      \toprule
-      Parameter                   & Values
-      \\
-      \midrule
-      \texttt{loss}               & \texttt{absolute\_error}
-      \\
-      \texttt{scoring}            & \texttt{neg\_mean\_absolute\_error}
-      \\
-      \midrule
-      \texttt{l2\_regularization} & 0.1, \underline{0.2}, 0.5, 1.0
-      \\
-      \texttt{learning\_rate}     & 0.02, 0.05, \underline{0.1}, 0.2, 0.5
-      \\
-      \texttt{max\_depth}         & \None, 1, 2, 5, 10, 20, \underline{50}, 100
-      \\
-      \texttt{max\_iter}          & 20, 50, \underline{100}, 200, 500
-      \\
-      \texttt{max\_leaf\_nodes}   & \None, 7, \underline{15}, 31, 63
-      \\
-      \texttt{min\_samples\_leaf} & 1, \underline{2}, 5, 10, 20, 50, 100
-      \\
-      \bottomrule
-    \end{tabular}
+    \import{sub-task-1}{tab-params-gbdt}
     \caption{Gradient-boosted decision tree}
-    \label{tab:st1:params-gbdt}
+    \label{sub-task-1:tab-params-gbdt}
   \end{subfigure}
   \caption{The parameter values over which I performed grid search.
     Except where stated, the default values were used, and the parameters of the best
@@ -86,14 +48,14 @@ The parameter values are listed in \cref{tab:st1:params}.
     \sklearn{tree}{DecisionTreeRegressor} and
     \sklearn{ensemble}{HistGradientBoostingRegressor}.
   }
-  \label{tab:st1:params}
+  \label{sub-task-1:tab-params}
 \end{table}
 
 \subsection{Results}
-\label{sec:st1:results}
+\label{sec:sub-task-1:results}
 
 The mean scores achieved by the best estimator for each model class over the
-cross-validation folds and stations are listed in \cref{tab:st1:results}.
+cross-validation folds and stations are listed in \cref{sub-task-1:tab-results}.
 With a separate model for each station, there is greater variance in the mean score
 because there are 75 times as many cross-validation folds with commensurately fewer
 instances per fold.
@@ -106,49 +68,25 @@ baseline.
   \centering
   \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{lrrr}
-      \toprule
-      Model                          & $\mu$            & $\sigma^2$ & Test
-      \\
-      \midrule
-      Baseline                       & 4.43             & 3.82       & 4.47
-      \\
-      Decision tree                  & 3.53             & 3.52       & \underline{3.01}
-      \\
-      Gradient-boosted decision tree & \underline{3.37} & 2.61       & 3.23
-      \\
-      \bottomrule
-    \end{tabular}
-    \caption{Separate models for each station. $\mu$ is the mean of the scores for the 75 stations
-      and ten cross-validation folds.}
-    \label{tab:st1:results-1}
+    \import{sub-task-1}{tab-results-a}
+    \caption{Separate models for each station. $\mu$ is the mean of the scores for the
+      75 stations and ten cross-validation folds.}
+    \label{sub-task-1:tab-results-a}
   \end{subfigure}
   \subfigurespace
   \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{lrrr}
-      \toprule
-      Model                          & $\mu$            & $\sigma^2$ & Test
-      \\
-      \midrule
-      Baseline                       & 5.45             & 0.06       & 5.38
-      \\
-      Decision tree                  & 3.51             & 0.08       & 3.08
-      \\
-      Gradient-boosted decision tree & \underline{2.60} & 0.08       & \underline{2.15}
-      \\
-      \bottomrule
-    \end{tabular}
+    \import{sub-task-1}{tab-results-b}
     \caption{Single model for all stations. $\mu$ is the mean of the scores for the ten
       cross-validation folds only.}
-    \label{tab:st1:results-2}
+    \label{sub-task-1:tab-results-b}
   \end{subfigure}
-  \caption{The mean scores and variances of the best estimators for each model
-    class on the data provided for sub-task~1, and the corresponding score on the
-    held-out test set (\cref{sec:task-description}).
+  \caption{The mean scores and variances of the best estimators for each model class on
+    the data provided for sub-task~1, and the corresponding score on the held-out test
+    set (\cref{sec:task-description}).
     The best scores on each dataset are underlined.
   }
-  \label{tab:st1:results}
+  \label{sub-task-1:tab-results}
 \end{table}
 
 To determine whether the differences between the mean scores achieved by the best
@@ -160,118 +98,48 @@ I did not compare the scores between estimators for the different cases of this
 sub-task because the samples are different \parencite[354]{Flach2012}.
 With separate models for each station, I only performed paired $t$-tests on the scores,
 so the $p$-values are not corrected for multiple comparisons
-(\cref{tab:st1:t-tests-1}).
+(\cref{sub-task-1:tab-t-tests-a}).
 Regardless, this indicated that the best decision trees and gradient-boosted decision
 trees performed better than the baseline for more than half of the stations.
 The best gradient-boosted decision trees only performed better than the best decision
 trees for seven stations.
 With a single model for all stations, I also performed the Nemenyi test to correct for
-multiple comparisons (\cref{tab:st1:t-tests-2}).
+multiple comparisons (\cref{sub-task-1:tab-t-tests-b}).
 This indicated that only the best gradient-boosted decision tree performed
 significantly better than the baseline, but it did not perform significantly better
 than the best decision tree.
 
-\pgfplotstableset{
-  columns/task1/.style={
-      column name={Sub-task A},
-      string type,
-      column type={l},
-    },
-  columns/task2/.style={
-      column name={Sub-task B},
-      string type,
-      column type={l},
-    },
-  columns/experiment1/.style={
-      column name={Model A},
-      string type,
-      column type={l},
-    },
-  columns/experiment2/.style={
-      column name={Model B},
-      string type,
-      column type={l},
-    },
-  columns/tstatistic/.style={
-      column name={$t$-statistic},
-      precision=2,
-      column type={r},
-    },
-  columns/pvalue/.style={
-      column name={$p$-value},
-      sci,
-      sci zerofill,
-      precision=2,
-      column type={r},
-    },
-  columns/significant/.style={
-      column name={$p$ < 0.05},
-      assign cell content/.code={%
-          \ifnum\pdfstrcmp{##1}{True}=0
-            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\checkmark}
-          \else
-            \pgfkeyssetvalue{/pgfplots/table/@cell content}{}
-          \fi
-        },
-    },
-}
+\import{sub-task-1}{tab-t-tests}
 
 \begin{table}
   \centering
   \begin{subfigure}{\textwidth}
     \centering
-    \begin{tabular}{llrr}
-      \toprule
-      Model A       & Model B                        & $t > 0$ & $p < 0.05$
-      \\
-      \midrule
-      Baseline      & Decision tree                  & 70      & 39
-      \\
-      Baseline      & Gradient-boosted decision tree & 70      & 44
-      \\
-      Decision tree & Gradient-boosted decision tree & 44      & 7
-      \\
-      \bottomrule
-    \end{tabular}
+    \import{sub-task-1}{tab-t-tests-a}
     \caption{Separate models for each station.
       The numbers of positive $t$-statistics and `significant' $p$-values from paired
       $t$-tests on the mean scores of the best estimators for each model class on the ten
       cross-validation folds for each of the 75 stations.
       The $p$-values are not corrected for multiple comparisons, unlike in
-      \cref{tab:st1:t-tests-2}.
+      \cref{sub-task-1:tab-t-tests-b}.
     }
-    \label{tab:st1:t-tests-1}
+    \label{sub-task-1:tab-t-tests-a}
   \end{subfigure}
   \subfigurespace
   \begin{subfigure}{\textwidth}
     \centering
-    \pgfplotstabletypeset[col sep=comma,
-      columns={
-          experiment1,
-          experiment2,
-          tstatistic,
-          pvalue,
-          significant
-        },
-      every head row/.style={
-          before row={\toprule},
-          after row={\midrule},
-        },
-      every last row/.style={
-          after row={\bottomrule},
-        }
-    ]{../more_bikes/util/test_results_posthoc_1b.csv}
+    \import{sub-task-1}{tab-t-tests-b}
     \caption{Single model for all stations.
       The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on the
       mean scores of the best estimators for each model class on the ten cross-validation
       folds for all 75 stations.
     }
-    \label{tab:st1:t-tests-2}
+    \label{sub-task-1:tab-t-tests-b}
   \end{subfigure}
   \caption{The results of statistical tests on the scores achieved by the best
     estimators for each model class.
     A positive $t$-statistic indicates that `Model B' achieved a lower mean score than
     `Model A'.
   }
-  \label{tab:st1:t-tests}
+  \label{sub-task-1:tab-t-tests}
 \end{table}

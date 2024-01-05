@@ -1,0 +1,44 @@
+\pgfplotstableset{
+  columns/task1/.style={
+      column name={Sub-task A},
+      string type,
+      column type={l},
+    },
+  columns/task2/.style={
+      column name={Sub-task B},
+      string type,
+      column type={l},
+    },
+  columns/experiment1/.style={
+      column name={Model A},
+      string type,
+      column type={l},
+    },
+  columns/experiment2/.style={
+      column name={Model B},
+      string type,
+      column type={l},
+    },
+  columns/tstatistic/.style={
+      column name={$t$-statistic},
+      precision=2,
+      column type={r},
+    },
+  columns/pvalue/.style={
+      column name={$p$-value},
+      sci,
+      sci zerofill,
+      precision=2,
+      column type={r},
+    },
+  columns/significant/.style={
+      column name={$p$ < 0.05},
+      assign cell content/.code={%
+          \ifnum\pdfstrcmp{##1}{True}=0
+            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\checkmark}
+          \else
+            \pgfkeyssetvalue{/pgfplots/table/@cell content}{}
+          \fi
+        },
+    },
+}
