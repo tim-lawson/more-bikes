@@ -5,6 +5,7 @@ csv
 cv
 DecisionTreeRegressor
 featureselection
+GBDT
 GBDTs
 GridSearchCV
 HalvingGridSearchCV
@@ -15,6 +16,7 @@ learningrate
 LGBMRegressor
 LightGBM
 linearmodel
+lr
 MAE
 MAEs
 maxdepth

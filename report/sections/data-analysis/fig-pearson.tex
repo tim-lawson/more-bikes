@@ -24,11 +24,18 @@
       point meta max=1,
       point meta min=0,
       scatter,
-      scatter/use mapped color = {draw opacity = 0, fill = mapped color},
+      scatter/use mapped color = {
+          draw opacity = 0,
+          fill = mapped color
+        },
       symbolic x coords = {{day,hour,weekhour,wind_speed_max,wind_speed_avg,wind_direction,temperature,humidity,pressure,bikes,bikes_avg_full,bikes_avg_short,bikes_3h,bikes_3h_diff_avg_full,bikes_3h_diff_avg_short}},
       symbolic y coords = {{day,hour,weekhour,wind_speed_max,wind_speed_avg,wind_direction,temperature,humidity,pressure,bikes,bikes_avg_full,bikes_avg_short,bikes_3h,bikes_3h_diff_avg_full,bikes_3h_diff_avg_short}},
       width = 4in,
-      x tick label style = {rotate = 90, anchor = west},
+      x tick label style = {
+          anchor = west,
+          rotate = 45,
+          yshift = 0.075in,
+        },
       x tick style = {draw = none},
       xtick = data,
       xticklabel = \texttt{\tick},

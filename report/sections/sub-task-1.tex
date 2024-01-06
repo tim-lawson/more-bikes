@@ -55,19 +55,19 @@ The parameter values are listed in \cref{sub-task-1:tab-params}.
 \subsection{Results}
 \label{sec:sub-task-1:results}
 
-The mean scores achieved by the best estimator for each model class over the
+The mean scores achieved by the best estimators for each model class on the
 cross-validation folds and stations are listed in \cref{sub-task-1:tab-results}.
 With a separate model for each station, there is greater variance in the mean score
 because there are 75 times as many cross-validation folds with commensurately fewer
 instances per fold.
 Intuitively, the baseline achieved a lower score with a separate model for each
-station.
-For both cases of sub-task~1, both model classes achieved a lower score than the
-baseline.
+station, i.e., the average fraction of available bikes varies between stations.
+For both cases of sub-task~1, decision trees and gradient-boosted decision trees
+achieved a lower score than the baseline.
 
 \begin{table}
   \centering
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}{0.5\textwidth}
     \centering
     \import{sub-task-1}{tab-results-a}
     \caption{
@@ -77,7 +77,7 @@ baseline.
     \label{sub-task-1:tab-results-a}
   \end{subfigure}
   \subfigurespace
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}{0.5\textwidth}
     \centering
     \import{sub-task-1}{tab-results-b}
     \caption{
@@ -94,9 +94,9 @@ baseline.
   \label{sub-task-1:tab-results}
 \end{table}
 
-To determine whether the differences between the mean scores achieved by the best
-estimators were statistically significant, I performed paired $t$-tests and the Nemenyi
-test on the scores on the cross-validation folds.
+I assessed whether the differences between the mean scores achieved by the best
+estimators were statistically significant by performing paired $t$-tests and the
+Nemenyi test on the scores on the cross-validation folds.
 The null hypothesis was that the differences between the mean scores were due to
 chance.
 I did not compare the scores between estimators for the different cases of this

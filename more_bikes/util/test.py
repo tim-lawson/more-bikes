@@ -83,9 +83,9 @@ def t_test_task(task1: str, task2: str, experiment1: str, experiment2: str):
 
 
 task_names = {
-    "task_1a": "Sub-task 1 (a)",
-    "task_1b": "Sub-task 1 (b)",
-    "task_2": "Sub-task 2",
+    "task_1a": "1 (a)",
+    "task_1b": "1 (b)",
+    "task_2": "2",
 }
 
 task_names_inverse = {v: k for k, v in task_names.items()}
@@ -93,12 +93,12 @@ task_names_inverse = {v: k for k, v in task_names.items()}
 experiment_names = {
     "baseline": "Baseline",
     "decision_tree": "Decision tree",
-    "hgbr": "Gradient-boosted decision tree",
+    "hgbr": "GBDT",
     "lightgbm": "LightGBM",
     "mlp": "Multi-layer perceptron",
     "stacking": "Stacked Ridge",
     "stacking_decision_tree": "Stacked Decision tree",
-    "stacking_hgbr": "Stacked Gradient-boosted decision tree",
+    "stacking_hgbr": "Stacked GBDT",
 }
 
 experiment_names_inverse = {v: k for k, v in experiment_names.items()}

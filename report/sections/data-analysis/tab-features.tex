@@ -1,8 +1,10 @@
 \newcommand{\tablefeaturesrow}[6]{#1 & #2 & #3 & #4 & #5 & #6 \\}
-\begin{tabular}{llllcc}
+\begin{tabular}
+  {llllC{0.4in}C{0.4in}}
   \toprule
    &  &  &  & \multicolumn{2}{c}{Zero-variance}
   \\
+  \cmidrule(lr){5-6}
   \tablefeaturesrow{Category}{Feature}{Data type}{Kind}{(a)}{(b)}
   \midrule
   \tablefeaturesrow{\multirow{4}{*}{Station}}{\texttt{station}}{\texttt{int}}{ordinal}{\checkmark}{}

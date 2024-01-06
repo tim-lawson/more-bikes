@@ -8,7 +8,7 @@
     A summary of the features and the target variable (\texttt{bikes}), which have been renamed to be easier to read.
     Except where indicated, the features are quantitative.
     The zero-variance columns indicate whether the feature has zero variance for the cases
-    of (a) separate models for each station; and (b) a single model for all stations.
+    of (a) separate models for each station, and (b) a single model for all stations.
   }
   \label{tab-features}
 \end{table}
@@ -72,7 +72,7 @@ pre-trained linear models (\cref{sub-task-2:tab-features-rlm}).
     the target variable (\texttt{bikes}).
     The ordering follows \cref{tab-features}.
     Features that have zero variance for the case of (a) separate models for each station
-    are excluded (\cref{sec:data-analysis:feature-selection}).
+    are excluded (\cref{tab-features}).
     The \texttt{timestamp} feature is also excluded because it is naturally correlated with
     the other temporal features.
   }
@@ -113,6 +113,7 @@ October 2014 and the data from the first ten stations between June 2012 and Octo
 2014 (\cref{sec:task-description}).
 Hence, I considered that a feature of this kind would be unlikely to generalize well to
 the test data.
-Additionally, because I chose to investigate tree models (\cref{sec:sub-task-1}), which
-partition the spaces of quantitative features \parencite[155]{Flach2012},
-discretization may be irrelevant.
+Additionally, because I chose to investigate tree models
+(\cref{sec:sub-task-1:model-classes,sec:sub-task-2:model-classes}), which partition the
+spaces of quantitative features \parencite[155]{Flach2012}, discretization may be
+irrelevant.

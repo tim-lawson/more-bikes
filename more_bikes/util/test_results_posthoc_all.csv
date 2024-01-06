@@ -1,16 +1,16 @@
 task1,experiment1,task2,experiment2,tstatistic,pvalue,significant
-Sub-task 1 (b),Baseline,Sub-task 1 (b),Decision tree,18.629759951604612,0.15951094812833932,False
-Sub-task 1 (b),Baseline,Sub-task 1 (b),Gradient-boosted decision tree,31.634201651531786,0.001,True
-Sub-task 1 (b),Baseline,Sub-task 2, Ridge,25.830209910966435,0.001822043901339332,True
-Sub-task 1 (b),Baseline,Sub-task 2, Decision tree,21.111052696463087,0.6805828425174463,False
-Sub-task 1 (b),Baseline,Sub-task 2, Gradient-boosted decision tree,21.380143004972147,0.001,True
-Sub-task 1 (b),Decision tree,Sub-task 1 (b),Gradient-boosted decision tree,8.189784556118159,0.0045345704169050816,True
-Sub-task 1 (b),Decision tree,Sub-task 2, Ridge,5.413400268773692,0.6805828425174463,False
-Sub-task 1 (b),Decision tree,Sub-task 2, Decision tree,-2.135547137278899,0.9,False
-Sub-task 1 (b),Decision tree,Sub-task 2, Gradient-boosted decision tree,4.536367156677412,0.3960144196191082,False
-Sub-task 1 (b),Gradient-boosted decision tree,Sub-task 2, Ridge,-7.286287928148556,0.26090302044956193,False
-Sub-task 1 (b),Gradient-boosted decision tree,Sub-task 2, Decision tree,-25.02043936684557,0.001,True
-Sub-task 1 (b),Gradient-boosted decision tree,Sub-task 2, Gradient-boosted decision tree,-4.401019883250244,0.5425184367491753,False
-Sub-task 2, Ridge,Sub-task 2, Decision tree,-20.701573777764356,0.15951094812833932,False
-Sub-task 2, Ridge,Sub-task 2, Gradient-boosted decision tree,0.4619131888669345,0.9,False
-Sub-task 2, Decision tree,Sub-task 2, Gradient-boosted decision tree,17.179059598430385,0.047414851532321056,True
+1 (b),Baseline,1 (b),Decision tree,18.629759951604612,0.15951094812833932,False
+1 (b),Baseline,1 (b),GBDT,31.634201651531786,0.001,True
+1 (b),Baseline,2, Ridge,25.830209910966435,0.001822043901339332,True
+1 (b),Baseline,2, Decision tree,21.111052696463087,0.6805828425174463,False
+1 (b),Baseline,2, GBDT,21.380143004972147,0.001,True
+1 (b),Decision tree,1 (b),GBDT,8.189784556118159,0.0045345704169050816,True
+1 (b),Decision tree,2, Ridge,5.413400268773692,0.6805828425174463,False
+1 (b),Decision tree,2, Decision tree,-2.135547137278899,0.9,False
+1 (b),Decision tree,2, GBDT,4.536367156677412,0.3960144196191082,False
+1 (b),GBDT,2, Ridge,-7.286287928148556,0.26090302044956193,False
+1 (b),GBDT,2, Decision tree,-25.02043936684557,0.001,True
+1 (b),GBDT,2, GBDT,-4.401019883250244,0.5425184367491753,False
+2, Ridge,2, Decision tree,-20.701573777764356,0.15951094812833932,False
+2, Ridge,2, GBDT,0.4619131888669345,0.9,False
+2, Decision tree,2, GBDT,17.179059598430385,0.047414851532321056,True
