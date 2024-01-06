@@ -3,8 +3,7 @@
 from sklearn.dummy import DummyRegressor
 from sklearn.pipeline import make_pipeline
 
-from more_bikes.experiments.experiment import Model
-from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
+from more_bikes.experiments.experiment import Model, TaskExperiment
 from more_bikes.preprocessing.bikes_fraction_transformer import BikesFractionTransformer
 from more_bikes.preprocessing.transformed_target_regressor import (
     TransformedTargetRegressor,
@@ -13,7 +12,8 @@ from more_bikes.preprocessing.transformed_target_regressor import (
 
 def baseline():
     """Baseline (average)."""
-    return Task1BExperiment(
+    return TaskExperiment(
+        task="1b",
         model=Model(
             name="baseline",
             pipeline=TransformedTargetRegressor(

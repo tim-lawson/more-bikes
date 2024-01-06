@@ -1,18 +1,14 @@
 """Task 1B experiments."""
 
-from typing import Callable
-
-from sklearn import set_config
-
+from more_bikes.experiments.experiment import TaskExperiment
+from more_bikes.experiments.experiments import TaskExperiments, run_experiments
 from more_bikes.experiments.task_1b.baseline import baseline
 from more_bikes.experiments.task_1b.decision_tree import decision_tree
 from more_bikes.experiments.task_1b.hgbr import hgbr
 from more_bikes.experiments.task_1b.lightgbm import lightgbm
 from more_bikes.experiments.task_1b.mlp import mlp
-from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
-from more_bikes.util.args import get_task_args
 
-task_experiments: dict[str, Callable[[], Task1BExperiment]] = {
+task_experiments: TaskExperiments[TaskExperiment] = {
     "baseline": baseline,
     "decision_tree": decision_tree,
     "hgbr": hgbr,
@@ -22,6 +18,4 @@ task_experiments: dict[str, Callable[[], Task1BExperiment]] = {
 
 
 if __name__ == "__main__":
-    set_config(transform_output="pandas")
-    for arg in get_task_args():
-        task_experiments[arg]().run().save()
+    run_experiments(task_experiments)

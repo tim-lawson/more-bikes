@@ -3,9 +3,8 @@
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.pipeline import make_pipeline
 
-from more_bikes.experiments.experiment import Model
+from more_bikes.experiments.experiment import Model, TaskExperiment
 from more_bikes.experiments.params.hgbr import best_params, params
-from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
 from more_bikes.feature_selection.drop import feature_selection_drop
 from more_bikes.feature_selection.variance_threshold import (
     feature_selection_variance_threshold,
@@ -19,7 +18,8 @@ from more_bikes.preprocessing.transformed_target_regressor import (
 
 def hgbr():
     """Histogram-based gradient-boosting regression tree."""
-    return Task1BExperiment(
+    return TaskExperiment(
+        task="1b",
         model=Model(
             name="hgbr",
             pipeline=TransformedTargetRegressor(

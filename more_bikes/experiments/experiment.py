@@ -21,6 +21,7 @@ from sklearn.model_selection import (
 from sklearn.pipeline import Pipeline
 from sklearn.utils import Bunch
 
+from more_bikes.data.data_loader import DataLoaderTestN, DataLoaderTrainN
 from more_bikes.data.feature import BIKES, Feature
 from more_bikes.experiments.params.cv import time_series_split
 from more_bikes.experiments.params.util import ParamGrid, SearchStrategy
@@ -34,6 +35,7 @@ from more_bikes.preprocessing.util import (
     post_identity,
     pre_chain,
     pre_dropna_row,
+    split,
     submission,
 )
 from more_bikes.util.log import create_logger
@@ -240,3 +242,40 @@ class Experiment(metaclass=ABCMeta):
                             f"{self._output_path}/{self._model.name}_{transformer_name}.csv",
                             index=False,
                         )
+
+
+class TaskExperiment(Experiment):
+    """A class to run task experiments."""
+
+    def __init__(
+        self,
+        task: str,
+        model: Model,
+        processing: Processing = Processing(),
+        cv: BaseCrossValidator = time_series_split,
+        search: SearchStrategy = "grid",
+        train=DataLoaderTrainN(),
+    ) -> None:
+        self._output_path = f"./more_bikes/experiments/task_{task}/{model.name}"
+        self.train = train
+        super().__init__(self._output_path, model, processing, cv, search)
+
+    def run(self) -> Self:
+        """Run the task experiment."""
+        super().run()
+
+        results, _best_score, scores = self.__run()
+
+        self.data = results
+
+        self.scores = scores
+        self.scores = self.scores.astype({"split": "int"})
+
+        return self
+
+    def __run(self) -> tuple[DataFrame, float, DataFrame]:
+        x_train, y_train = split(self.pre(self.train.data), self._processing.target)
+
+        x_test = DataLoaderTestN().data
+
+        return self._run(x_train, y_train, x_test)

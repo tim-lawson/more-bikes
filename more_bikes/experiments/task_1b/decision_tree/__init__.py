@@ -4,9 +4,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 from sklearn.tree import DecisionTreeRegressor
 
-from more_bikes.experiments.experiment import Model
+from more_bikes.experiments.experiment import Model, TaskExperiment
 from more_bikes.experiments.params.decision_tree import params
-from more_bikes.experiments.task_1b.task_1b_experiment import Task1BExperiment
 from more_bikes.feature_selection.drop import feature_selection_drop
 from more_bikes.feature_selection.variance_threshold import (
     feature_selection_variance_threshold,
@@ -20,7 +19,8 @@ from more_bikes.preprocessing.transformed_target_regressor import (
 
 def decision_tree():
     """Decision tree."""
-    return Task1BExperiment(
+    return TaskExperiment(
+        task="1b",
         model=Model(
             name="decision_tree",
             pipeline=TransformedTargetRegressor(
