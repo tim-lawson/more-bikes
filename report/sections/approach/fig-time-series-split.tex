@@ -9,23 +9,23 @@
 \centering
 \begin{tikzpicture}
   \begin{axis}[
-      xbar stacked,
-      width = 4in,
-      height = 2.5in,
-      ylabel = {Cross-validation iteration},
-      xlabel = {Sample index},
-      xmin = 0,
-      xmax = 100,
-      symbolic y coords = {3,2,1,0},
       enlarge y limits = 0.2,
-      xtick pos = lower,
-      xtick align = outside,
-      ytick pos = left,
+      height = 2.5in,
+      legend cell align={left},
       legend style = {
           draw = none,
           font = \small,
         },
-      legend cell align={left},
+      symbolic y coords = {3,2,1,0},
+      width = 4in,
+      xbar stacked,
+      xlabel = {Sample index},
+      xmax = 100,
+      xmin = 0,
+      xtick align = outside,
+      xtick pos = lower,
+      ylabel = {Cross-validation iteration},
+      ytick pos = left,
     ]
     \addplot table [
         x = train,

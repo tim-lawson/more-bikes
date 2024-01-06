@@ -3,19 +3,16 @@
 
 I used the \texttt{scikit-learn} Python package \parencite{Pedregosa2011} throughout
 this report.\footnote{The underlying code is available at
-  \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.
-}
-Preprocessing and feature selection were performed by \emph{estimators} that
-implemented the \emph{transformer} interface, prediction was performed by estimators
-that implemented the \emph{predictor} interface, and estimators were composed into
-\texttt{Pipeline} objects over which hyperparameter search was performed
-\parencite[4-9]{Buitinck2013}.
+  \github{https://github.com/tslwn/more-bikes}{tslwn/more-bikes}.} Preprocessing and
+feature selection were performed by \emph{estimators} that implemented the
+\emph{transformer} interface, prediction was performed by estimators that implemented
+the \emph{predictor} interface, and estimators were composed into \texttt{Pipeline}
+objects over which hyperparameter search was performed \parencite[4-9]{Buitinck2013}.
 
 Generally, standard $k$-fold cross-validation is disfavoured for time-series data due
 to the inherent correlation between successive folds \parencite{Bergmeir2018}.
 Instead, I used nested time-series cross-validation\footnote{See
-  \sklearn{model\_selection}{TimeSeriesSplit}.
-} with ten folds, which is illustrated in
+  \sklearn{model\_selection}{TimeSeriesSplit}.} with ten folds, which is illustrated in
 \cref{fig-cv}.
 I determined the best estimator for each model class by grid search\footnote{See
   \sklearn{model\_selection}{GridSearchCV} and
@@ -28,8 +25,9 @@ I describe these methods in more detail in \cref{sec:sub-task-1,sec:sub-task-2}.
 
 \begin{figure}
   \import{approach}{fig-time-series-split}
-  \caption{A visualization of the nested time-series cross-validation behaviour that I
-    used, after the documentation for \sklearn{model\_selection}{TimeSeriesSplit}.
+  \caption{
+    A visualization of the nested time-series cross-validation behaviour that I used,
+    after the documentation for \sklearn{model\_selection}{TimeSeriesSplit}.
   }
   \label{fig-cv}
 \end{figure}

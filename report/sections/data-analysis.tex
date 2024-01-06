@@ -1,7 +1,17 @@
 \section{Data analysis}
 \label{sec:data-analysis}
 
-\import{data-analysis}{tab-features}
+\begin{table}
+  \centering
+  \import{data-analysis}{tab-features}
+  \caption{
+    A summary of the features and the target variable (\texttt{bikes}), which have been renamed to be easier to read.
+    Except where indicated, the features are quantitative.
+    The zero-variance columns indicate whether the feature has zero variance for the cases
+    of (a) separate models for each station; and (b) a single model for all stations.
+  }
+  \label{tab-features}
+\end{table}
 
 The data provided for sub-task~1 is recorded at hourly intervals with $n = 54385$
 instances across the 75 stations.
@@ -21,12 +31,20 @@ bikes at a station is bounded by zero and its number of docks
 \subsection{Feature selection}
 \label{sec:data-analysis:feature-selection}
 
-\import{data-analysis}{tab-features-na}
+\begin{table}
+  \centering
+  \import{data-analysis}{tab-features-na}
+  \caption{
+    The numbers of missing values (n/a) of the non-temporal quantitative features and the target variable (\texttt{bikes}).
+    Features that have zero variance for the case of (a) separate models for each station
+    (\cref{tab-features}) are excluded.
+  }
+  \label{tab-features-na}
+\end{table}
 
 Intuitively, features that have zero variance are not informative, so I automatically
-excluded them.\footnote{See \sklearn{feature\_selection}{VarianceThreshold}.
-}
-For the two cases of sub-task~1, the zero-variance features are indicated in
+excluded them.\footnote{See \sklearn{feature\_selection}{VarianceThreshold}.} For the
+two cases of sub-task~1, the zero-variance features are indicated in
 \cref{tab-features}.
 Notably, the \texttt{precipitation} feature is zero for all instances.
 
@@ -77,8 +95,8 @@ Another potential transformation of the target variable would have been to predi
 \begin{figure}
   \centering
   \import{data-analysis}{fig-weekday}
-  \caption{The average fraction of available bikes at each hour of the day, separated by
-    the day of the week.
+  \caption{
+    The average fraction of available bikes at each hour of the day, separated by the day of the week.
     In the top chart, the data is limited to the month of October 2014 for the 75 stations
     to predict.
     In the bottom chart, the data from the first ten stations is also included

@@ -1,36 +1,30 @@
-\begin{table}
-  \centering
-  \catcode`\_=12 % category other
-  \pgfplotstabletypeset[col sep=comma,
-    column type={r},
-    columns={
-        feature,
-        na},
-    columns/feature/.style={
-        column name=Feature,
-        column type={l},
-        string type,
-        postproc cell content/.append style={
-            @cell content={\texttt{##1}}}},
-    columns/na/.style={
-        column name=n/a,
-        int detect},
-    columns/mean/.style={
-        column name=$\mu$},
-    columns/variance/.style={
-        column name=$\sigma^2$},
-    columns/skewness/.style={
-        column name=Skewness},
-    columns/kurtosis/.style={
-        column name=Kurtosis},
-    skip rows between index={0}{1},
-    every head row/.style={before row=\toprule, after row=\midrule},
-    every last row/.style={after row=\bottomrule}]{../more_bikes/analysis/csv/stats.csv}
-  \catcode`\_=8 % category subscript
-  \caption{The numbers of missing values (n/a) of the non-temporal quantitative features
-    and the target variable (\texttt{bikes}).
-    Features that have zero variance for the case of (a) separate models for each station
-    (\cref{tab-features}) are excluded.
-  }
-  \label{tab-features-na}
-\end{table}
+
+\catcode`\_=12 % category other
+\pgfplotstabletypeset[
+  col sep = comma,
+  column type = {r},
+  columns = {feature, na},
+  columns/feature/.style = {
+      column name = Feature,
+      column type = {l},
+      postproc cell content/.append style = {
+          @cell content = {\texttt{##1}}
+        },
+      string type,
+    },
+  columns/na/.style = {
+      column name=n/a,
+      int detect
+    },
+  columns/mean/.style = {column name = $\mu$},
+  columns/variance/.style = {column name = $\sigma^2$},
+  columns/skewness/.style = {column name = Skewness},
+  columns/kurtosis/.style = {column name = Kurtosis},
+  every head row/.style = {
+      after row = \midrule,
+      before row = \toprule
+    },
+  every last row/.style = {after row = \bottomrule},
+  skip rows between index = {0}{1}
+]{../more_bikes/analysis/csv/stats.csv}
+\catcode`\_=8 % category subscript
