@@ -24,3 +24,7 @@ conda activate more-bikes
 conda install pip
 pip install -r requirements.txt
 ```
+
+### Execution
+
+To run an experiment or analysis task, run the corresponding VS Code task.
