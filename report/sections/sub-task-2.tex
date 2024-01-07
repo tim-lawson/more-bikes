@@ -93,6 +93,20 @@ they did not perform significantly better than each other.
   \label{sub-task-2:tab-t-tests}
 \end{table}
 
+\section{Conclusion}
+
+\begin{table}
+  \centering
+  \import{sub-task-2}{tab-t-tests-all}
+  \caption{
+    The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on
+    the mean scores of the best estimators for sub-tasks~1~(b) and 2.
+    As elsewhere, a positive $t$-statistic indicates that `Model~B' achieved a lower mean
+    score than `Model~A'.
+  }
+  \label{sub-task-2:tab-t-tests-all}
+\end{table}
+
 Finally, I performed the same comparison for the best estimators for sub-task~1~(b) and
 sub-task~2 (\cref{sub-task-2:tab-t-tests-all}).
 The results were broadly consistent with those in
@@ -106,15 +120,5 @@ each other:
 \end{itemize}
 Among these, the first performed best on the held-out test set
 (\cref{sub-task-1:tab-results-b,sub-task-2:tab-results}).
-
-\begin{table}
-  \centering
-  \import{sub-task-2}{tab-t-tests-all}
-  \caption{
-    The $t$-statistics from paired $t$-tests, and $p$-values from the Nemenyi test, on
-    the mean scores of the best estimators for sub-tasks~1~(b) and 2.
-    As elsewhere, a positive $t$-statistic indicates that `Model~B' achieved a lower mean
-    score than `Model~A'.
-  }
-  \label{sub-task-2:tab-t-tests-all}
-\end{table}
+I investigated whether combining the best estimators would improve the score on the
+held-out test set, the results failed to improve on the best score of $2.15$.
