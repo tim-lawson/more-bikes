@@ -67,28 +67,28 @@ achieved a lower score than the baseline.
 
 \begin{table}
   \centering
-  \begin{subfigure}{0.5\textwidth}
+  \begin{subfigure}{0.6\textwidth}
     \centering
     \import{sub-task-1}{tab-results-a}
     \caption{
       Separate models for each station.
-      $\mu$ is the mean of the scores for the 75 stations and ten cross-validation folds.
+      The mean and variance are over the 75 stations and ten cross-validation folds.
     }
     \label{sub-task-1:tab-results-a}
   \end{subfigure}
   \subfigurespace
-  \begin{subfigure}{0.5\textwidth}
+  \begin{subfigure}{0.6\textwidth}
     \centering
     \import{sub-task-1}{tab-results-b}
     \caption{
       Single model for all stations.
-      $\mu$ is the mean of the scores for the ten cross-validation folds only.}
+      The mean and variance are over the ten cross-validation folds only.
+    }
     \label{sub-task-1:tab-results-b}
   \end{subfigure}
-  \caption{
-    The mean scores and variances of the best estimators for each model class on the
-    data provided for sub-task~1, and the corresponding score on the held-out test set
-    (\cref{sec:task-description}).
+  \caption{ The mean scores and variances of the best estimators for each
+    model class on the data provided for sub-task~1, and the corresponding score on the
+    held-out test set (\cref{sec:task-description}).
     The best scores on each dataset are underlined.
   }
   \label{sub-task-1:tab-results}

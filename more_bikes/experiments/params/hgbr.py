@@ -5,12 +5,12 @@ from more_bikes.experiments.experiment import SCORING
 from more_bikes.experiments.params.stacking import stacking_fixed
 from more_bikes.experiments.params.util import ParamGrid
 
-l2_regularization = [0.1, 0.2, 0.5, 1.0]
-learning_rate = [0.02, 0.05, 0.1, 0.2, 0.5]
-max_depth = [None, 1, 2, 5, 10, 20, 50]
-max_iter = [20, 50, 100, 200, 500]
-max_leaf_nodes = [None, 7, 15, 31, 63]
-min_samples_leaf = [1, 2, 5, 10, 20, 50, 100]
+l2_regularization = [0.05, 0.1, 0.2, 0.5]
+learning_rate = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5]
+max_depth = [None]
+max_iter = [100]
+max_leaf_nodes = [None]
+min_samples_leaf = [1]
 
 
 fixed = {

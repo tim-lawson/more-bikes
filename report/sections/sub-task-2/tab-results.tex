@@ -1,13 +1,17 @@
 \begin{tabular}{lrrr}
   \toprule
-  Model         & $\mu$            & $\sigma^2$ & Test
+                & \multicolumn{2}{c}{Train} & \multicolumn{1}{c}{Test}
+  \\
+  \cmidrule(lr){2-4}
+
+                & Mean score                & Variance                 & Score
   \\
   \midrule
-  Ridge         & 2.85             & 0.13       & 2.35
+  Ridge         & 2.85                      & 0.13                     & 2.35
   \\
-  Decision tree & 3.79             & 0.10       & 4.53
+  Decision tree & 3.79                      & 0.10                     & 4.53
   \\
-  GBDT          & \underline{2.84} & 0.19       & \underline{2.25}
+  GBDT          & \underline{2.84}          & 0.19                     & \underline{2.25}
   \\
   \bottomrule
 \end{tabular}
