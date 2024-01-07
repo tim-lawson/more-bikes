@@ -1,4 +1,4 @@
-# `More Bikes': Experiments in Univariate Regression
+# More Bikes: Experiments in Univariate Regression
 
 This repository holds the code and report written to fulfil the coursework
 requirements for the unit
