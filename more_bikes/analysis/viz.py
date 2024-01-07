@@ -7,7 +7,7 @@ from pandas import CategoricalDtype, DataFrame, concat
 from scipy.stats import describe
 
 from more_bikes.data.data_loader import DataLoaderAll, DataLoaderTrainN
-from more_bikes.data.feature import WEEKDAY
+from more_bikes.data.feature import FEATURE, WEEKDAY
 
 
 def _get_columns_stats(
@@ -33,6 +33,10 @@ def _get_columns_stats(
 def _get_column_histogram(data: DataFrame, column: str):
     counts, divisions = histogram(data[column].dropna().to_numpy(), density=True)
     return DataFrame({"counts": counts, "divisions": divisions[:-1]})
+
+
+def _get_na(data: DataFrame, column: str):
+    return data[column].isna().sum()
 
 
 def _get_column_stats(data: DataFrame, column: str):
@@ -87,7 +91,6 @@ if __name__ == "__main__":
     correlation.to_csv("more_bikes/analysis/csv/correlation.csv", index=False)
 
     correlation = correlation.sort_values("value", ascending=False)
-    print(correlation[correlation["x"] != correlation["y"]].head(10))
 
     for columns in [
         ["day"],
@@ -130,3 +133,13 @@ if __name__ == "__main__":
     concat(stats, ignore_index=True).to_csv(
         "more_bikes/analysis/csv/stats.csv", index=False
     )
+
+    columns = list(FEATURE) + ["bikes"]
+    na = DataFrame(
+        {
+            "feature": columns,
+            "na": [_get_na(data_train, column) for column in columns],
+        }
+    )
+
+    na.to_csv("more_bikes/analysis/csv/na.csv", index=False)

@@ -35,9 +35,8 @@ bikes at a station is bounded by zero and its number of docks
   \centering
   \import{data-analysis}{tab-features-na}
   \caption{
-    The numbers of missing values (n/a) of the non-temporal quantitative features and the target variable (\texttt{bikes}).
-    Features that have zero variance for the case of (a) separate models for each station
-    (\cref{tab-features}) are excluded.
+    The numbers of missing values (n/a) of features and the target variable (\texttt{bikes}).
+    Except where indicated, there are zero missing values.
   }
   \label{tab-features-na}
 \end{table}
@@ -47,7 +46,6 @@ excluded them.\footnote{See \sklearn{feature\_selection}{VarianceThreshold}.} Fo
 two cases of sub-task~1, the zero-variance features are indicated in
 \cref{tab-features}.
 Notably, the \texttt{precipitation} feature is zero for all instances.
-
 Correlations between explanatory variables can cause a regression model to make
 unreliable predictions \parencite{Alin2010}.
 \begin{samepage}
