@@ -5,27 +5,22 @@ requirements for the unit
 [Machine Learning Paradigms](https://www.bris.ac.uk/unit-programme-catalogue/UnitDetails.jsa?ayrCode=23%2F24&unitCode=COMSM0025)
 at the University of Bristol.
 
-[The assignment](https://www.kaggle.com/competitions/morebikes2023/overview)
-is to predict the number of available bikes at a set of rental stations.
-Predictions are evaluated by the mean absolute error (MAE) between the predicted
-and true values of the target variable `bikes`.
-It is divided into three tasks, which differ in the available data:
+The assignment was organized as [a Kaggle competition](https://www.kaggle.com/competitions/morebikes2023/overview).
+The task was to predict the number of available bikes at 75 rental stations in three hours' time between November 2014 and January 2015,
+i.e., a supervised univariate regression problem.
 
-1. The number of available bikes at 75 stations over one month
-   (`data/train/station_<201–275>_deploy.csv`).
+## Instructions
 
-   1. First, train a separate model for each station.
-   2. Second, train a single model for all stations.
+> [!WARNING]
+> This repository is designed to be used on macOS and has not been tested on other operating systems.
 
-2. A set of linear models to predict the number of available bikes at 200 other stations
-   (`data/models/model_station_<1–200>_<name>.csv`).
+### Installation
 
-3. Both of the above.
+Create a virtual environment and install Python dependencies:
 
-# TODO
-
-- Instructions to install/set up the project
-- Instructions to run experiments and tests
-- Description of the project structure
-- Description of the learning algorithms for each task
-- Write the report!
+```bash
+conda create --name more-bikes python=3.11
+conda activate more-bikes
+conda install pip
+pip install -r requirements.txt
+```
