@@ -228,9 +228,24 @@
       "type": "shell"
     },
     {
+      "args": [
+        "-m",
+        "more_bikes.experiments.task_3.task_3_experiments",
+        "-f",
+        "-e",
+        "stacking"
+      ],
+      "command": "${command:python.interpreterPath}",
+      "label": "[task 3] stacking",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "type": "shell"
+    },
+    {
       "args": ["-m", "more_bikes.analysis.rlm.rlm"],
       "command": "${command:python.interpreterPath}",
-      "label": "[task 2] rlm",
+      "label": "[analysis] rlm",
       "options": {
         "cwd": "${workspaceFolder}"
       },

@@ -21,7 +21,7 @@ from sklearn.model_selection import (
 from sklearn.pipeline import Pipeline
 from sklearn.utils import Bunch
 
-from more_bikes.data.data_loader import DataLoaderTestN, DataLoaderTrainN
+from more_bikes.data.data_loader import DataLoader, DataLoaderTestN, DataLoaderTrainN
 from more_bikes.data.feature import BIKES, Feature
 from more_bikes.experiments.params.cv import time_series_split
 from more_bikes.experiments.params.util import ParamGrid, SearchStrategy
@@ -254,7 +254,7 @@ class TaskExperiment(Experiment):
         processing: Processing = Processing(),
         cv: BaseCrossValidator = time_series_split,
         search: SearchStrategy = "grid",
-        train=DataLoaderTrainN(),
+        train: DataLoader = DataLoaderTrainN(),
     ) -> None:
         self._output_path = f"./more_bikes/experiments/task_{task}/{model.name}"
         self.train = train

@@ -22,7 +22,6 @@
     "**/*.ilg": true,
     "**/*.ind": true,
     "**/*.loe": true,
-    "**/*.log": true,
     "**/*.md5": true,
     "**/*.nav": true,
     "**/*.out": true,
