@@ -13,12 +13,13 @@ Unlike the gradient-boosted decision tree implementation in \texttt{scikit-learn
 these models do not support missing values, so I imputed the missing values of
 quantitative features with the mean value of the feature over the data provided for
 sub-task~1.
+
 I used \sklearn{ensemble}{StackingRegressor} to combine the predictions of the models
 by stacked generalization \parencite{Wolpert1992}.
 This model class is a meta-estimator that trains a second-level regressor on the
 predictions of a set of first-level regressors -- in this case, the pre-trained models.
 
-\begin{table}
+\begin{table}[!ht]
   \centering
   \import{sub-task-2}{tab-features-rlm}
   \caption{
@@ -52,8 +53,6 @@ generalization performed very similarly with each kind of model, so I included a
 models in the final analysis.
 For the second-level regressor, I evaluated the default, decision trees, and
 gradient-boosted decision trees, as in \cref{sec:sub-task-1:model-classes}.
-The best estimators were again determined by grid search with ten-fold
-cross-validation.
 
 \subsection{Results}
 \label{sec:sub-task-2:results}

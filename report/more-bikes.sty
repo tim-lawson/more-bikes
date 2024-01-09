@@ -7,6 +7,7 @@
   margin={1in,1in},
 }
 \usepackage{setspace}
+\onehalfspacing
 
 % Typography
 % https://ctan.math.washington.edu/tex-archive/fonts/etbb/doc/ETbb-doc.pdf
@@ -27,6 +28,7 @@
   backend=bibtex,
 ]{biblatex}
 
+% TODO: replace with repository-specific path
 \addbibresource{~/library.bib}
 
 % Map @misc to @online
@@ -49,10 +51,6 @@
   {\clearfield{urlyear}}
 }
 
-% Quotations
-\usepackage{csquotes}
-
-% Input/include relative paths
 \usepackage{import}
 
 % References
@@ -123,17 +121,6 @@
           \fi
         }
     }
-}
-
-% Comments
-\setlength{\marginparwidth}{1in}
-\usepackage{todonotes}
-\newcounter{todocounter}
-\newcommand{\todonum}[1]{%
-  \stepcounter{todocounter}%
-  \todo[color={red!100!green!33},inline,size=\small]{
-    \thetodocounter: #1
-  }%
 }
 
 \usepackage{siunitx}

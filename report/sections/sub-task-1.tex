@@ -104,15 +104,6 @@ sub-task because the samples are different \parencite[354]{Flach2012}.
 With separate models for each station, I only performed paired $t$-tests on the scores,
 so the $p$-values are not corrected for multiple comparisons
 (\cref{sub-task-1:tab-t-tests-a}).
-Regardless, this indicated that the best decision trees and gradient-boosted decision
-trees performed better than the baseline for more than half of the stations.
-The best gradient-boosted decision trees only performed better than the best decision
-trees for seven stations.
-With a single model for all stations, I also performed the Nemenyi test to correct for
-multiple comparisons (\cref{sub-task-1:tab-t-tests-b}).
-This indicated that only the best gradient-boosted decision tree performed
-significantly better than the baseline, but it did not perform significantly better
-than the best decision tree.
 
 \import{sub-task-1}{tab-t-tests}
 
@@ -150,3 +141,13 @@ than the best decision tree.
   }
   \label{sub-task-1:tab-t-tests}
 \end{table}
+
+Regardless, this indicated that the best decision trees and gradient-boosted decision
+trees performed better than the baseline for more than half of the stations.
+The best gradient-boosted decision trees only performed better than the best decision
+trees for seven stations.
+With a single model for all stations, I also performed the Nemenyi test to correct for
+multiple comparisons (\cref{sub-task-1:tab-t-tests-b}).
+This indicated that only the best gradient-boosted decision tree performed
+significantly better than the baseline, but it did not perform significantly better
+than the best decision tree.

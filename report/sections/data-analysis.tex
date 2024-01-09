@@ -15,8 +15,12 @@
 
 The data provided for sub-task~1 is recorded at hourly intervals with $n = 54385$
 instances across the 75 stations.
-A summary of its features and the numbers of missing values for the non-temporal
+Some features have a natural range -- in particular, the number of available bikes at a
+station is bounded by zero and its number of docks
+(\cref{sec:data-analysis:feature-engineering}).
+A summary of the features and the numbers of missing values for the non-temporal
 quantitative features are given in \cref{tab-features,tab-features-na}.
+
 This analysis revealed that many of the features and the target variable \texttt{bikes}
 are missing for $n = 73$ instances, which were henceforth excluded.
 Additionally, the `profile' features, i.e., the features derived from the numbers of
@@ -24,9 +28,6 @@ available bikes at preceding times, are not defined for the first week of Octobe
 at each station.
 Hence, they are missing for approximately $\frac{1}{4}$ of the instances.
 The meteorological features are constant for all stations at a given timestamp.
-Finally, some features have a natural range -- in particular, the number of available
-bikes at a station is bounded by zero and its number of docks
-(\cref{sec:data-analysis:feature-engineering}).
 
 \subsection{Feature selection}
 \label{sec:data-analysis:feature-selection}
@@ -46,6 +47,7 @@ excluded them.\footnote{See \sklearn{feature\_selection}{VarianceThreshold}.} Fo
 two cases of sub-task~1, the zero-variance features are indicated in
 \cref{tab-features}.
 Notably, the \texttt{precipitation} feature is zero for all instances.
+
 Correlations between explanatory variables can cause a regression model to make
 unreliable predictions \parencite{Alin2010}.
 \begin{samepage}
@@ -90,7 +92,7 @@ to allow data-dependent transformations of the target variable.\footnote{See
 Another potential transformation of the target variable would have been to predict the
 \emph{change} in the number of available bikes, but I did not explore this option.
 
-\begin{figure}
+\begin{figure}[!ht]
   \centering
   \import{data-analysis}{fig-weekday}
   \caption{
