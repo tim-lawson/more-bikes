@@ -2,15 +2,15 @@
 \label{sec:data-analysis}
 
 \begin{table}
-  \centering
-  \import{data-analysis}{tab-features}
-  \caption{
-    A summary of the features and the target variable (\texttt{bikes}), which have been renamed to be easier to read.
-    Except where indicated, the features are quantitative.
-    The zero-variance columns indicate whether the feature has zero variance for the cases
-    of (a) separate models for each station, and (b) a single model for all stations.
-  }
-  \label{tab-features}
+	\centering
+	\input{sections/data-analysis/tab-features}
+	\caption{
+		A summary of the features and the target variable (\texttt{bikes}), which have been renamed to be easier to read.
+		Except where indicated, the features are quantitative.
+		The zero-variance columns indicate whether the feature has zero variance for the cases
+		of (a) separate models for each station, and (b) a single model for all stations.
+	}
+	\label{tab-features}
 \end{table}
 
 The data provided for sub-task~1 is recorded at hourly intervals with $n = 54385$
@@ -33,13 +33,13 @@ The meteorological features are constant for all stations at a given timestamp.
 \label{sec:data-analysis:feature-selection}
 
 \begin{table}
-  \centering
-  \import{data-analysis}{tab-features-na}
-  \caption{
-    The numbers of missing values (n/a) of features and the target variable (\texttt{bikes}).
-    Except where indicated, there are zero missing values.
-  }
-  \label{tab-features-na}
+	\centering
+	\input{sections/data-analysis/tab-features-na}
+	\caption{
+		The numbers of missing values (n/a) of features and the target variable (\texttt{bikes}).
+		Except where indicated, there are zero missing values.
+	}
+	\label{tab-features-na}
 \end{table}
 
 Intuitively, features that have zero variance are not informative, so I automatically
@@ -51,32 +51,32 @@ Notably, the \texttt{precipitation} feature is zero for all instances.
 Correlations between explanatory variables can cause a regression model to make
 unreliable predictions \parencite{Alin2010}.
 \begin{samepage}
-  I identified these by computing the Pearson correlation
-  coefficients between pairs of quantitative features (\cref{fig-pearson}), which
-  yielded the following observations:
-  \begin{itemize}
-    \item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are perfectly correlated ($r = 1.00$).
-    \item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are perfectly correlated ($r  = 1.00$).
-    \item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
-  \end{itemize}
+	I identified these by computing the Pearson correlation
+	coefficients between pairs of quantitative features (\cref{fig-pearson}), which
+	yielded the following observations:
+	\begin{itemize}
+		\item \texttt{\bikesavgfull} and \texttt{\bikesavgshort} are perfectly correlated ($r = 1.00$).
+		\item \texttt{\bikeshdiffavgfull} and \texttt{\bikeshdiffavgshort} are perfectly correlated ($r  = 1.00$).
+		\item \texttt{\windspeedmax} and \texttt{\windspeedavg} are highly correlated ($r = 0.96$).
+	\end{itemize}
 \end{samepage}
 Hence, for sub-task~1, the second of each of these pairs of features was also excluded.
 For sub-task~2, the `profile' features were retained because they are inputs to the
 pre-trained linear models (\cref{sub-task-2:tab-features-rlm}).
 
 \begin{figure}
-  \centering
-  \import{data-analysis}{fig-pearson}
-  \caption{
-    The Pearson correlation coefficients between pairs of the quantitative features and
-    the target variable (\texttt{bikes}).
-    The ordering follows \cref{tab-features}.
-    Features that have zero variance for the case of (a) separate models for each station
-    are excluded (\cref{tab-features}).
-    The \texttt{timestamp} feature is also excluded because it is naturally correlated with
-    the other temporal features.
-  }
-  \label{fig-pearson}
+	\centering
+	\input{sections/data-analysis/fig-pearson}
+	\caption{
+		The Pearson correlation coefficients between pairs of the quantitative features and
+		the target variable (\texttt{bikes}).
+		The ordering follows \cref{tab-features}.
+		Features that have zero variance for the case of (a) separate models for each station
+		are excluded (\cref{tab-features}).
+		The \texttt{timestamp} feature is also excluded because it is naturally correlated with
+		the other temporal features.
+	}
+	\label{fig-pearson}
 \end{figure}
 
 \subsection{Feature engineering}
@@ -87,22 +87,22 @@ enforced by predicting the \emph{fraction} of bikes, i.e., the number of bikes d
 by the number of docks.
 I implemented this by extending the \texttt{TransformedTargetRegressor} meta-estimator
 to allow data-dependent transformations of the target variable.\footnote{See
-  \sklearn{compose}{TransformedTargetRegressor}.
+	\sklearn{compose}{TransformedTargetRegressor}.
 }
 Another potential transformation of the target variable would have been to predict the
 \emph{change} in the number of available bikes, but I did not explore this option.
 
 \begin{figure}[!ht]
-  \centering
-  \import{data-analysis}{fig-weekday}
-  \caption{
-    The average fraction of available bikes at each hour of the day, separated by the day of the week.
-    In the top chart, the data is limited to the month of October 2014 for the 75 stations
-    to predict.
-    In the bottom chart, the data from the first ten stations is also included
-    (\cref{sec:task-description}).
-  }
-  \label{fig-weekday}
+	\centering
+	\input{sections/data-analysis/fig-weekday}
+	\caption{
+		The average fraction of available bikes at each hour of the day, separated by the day of the week.
+		In the top chart, the data is limited to the month of October 2014 for the 75 stations
+		to predict.
+		In the bottom chart, the data from the first ten stations is also included
+		(\cref{sec:task-description}).
+	}
+	\label{fig-weekday}
 \end{figure}
 
 Initially, I investigated introducing derived temporal features, e.g., by discretizing

@@ -3,8 +3,8 @@
 % Page layout
 \usepackage{geometry}
 \geometry{
-  a4paper,
-  margin={1in,1in},
+	a4paper,
+	margin={1in,1in},
 }
 \usepackage{setspace}
 \onehalfspacing
@@ -21,11 +21,11 @@
 
 % Bibliography
 \usepackage[
-  style=authoryear-ibid,
-  maxcitenames=2,
-  doi=false,
-  isbn=false,
-  backend=bibtex,
+	style=authoryear-ibid,
+	maxcitenames=2,
+	doi=false,
+	isbn=false,
+	backend=bibtex,
 ]{biblatex}
 
 % \addbibresource{~/library.bib}
@@ -33,25 +33,23 @@
 
 % Map @misc to @online
 \DeclareSourcemap{
-  \maps[datatype=bibtex, overwrite=true]{
-    \map{
-      \step[typesource=misc, typetarget=online]
-    }
-  }
+	\maps[datatype=bibtex, overwrite=true]{
+		\map{
+			\step[typesource=misc, typetarget=online]
+		}
+	}
 }
 
 \AtEveryBibitem{%
-  \clearlist{language}%
-  \clearfield{month}%
-  \clearfield{note}%
-  \clearfield{eprint}%
-  % Omit "Visited on <date>"
-  \iffieldundef{urlyear}
-  {}
-  {\clearfield{urlyear}}
+	\clearlist{language}%
+	\clearfield{month}%
+	\clearfield{note}%
+	\clearfield{eprint}%
+	% Omit "Visited on <date>"
+	\iffieldundef{urlyear}
+	{}
+	{\clearfield{urlyear}}
 }
-
-\usepackage{import}
 
 % References
 \usepackage{hyperref}
@@ -71,9 +69,9 @@
 \usepackage{subcaption}
 
 \newcolumntype{D}[2]{
-  >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}
-  l
-  <{\egroup}
+	>{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}
+	l
+	<{\egroup}
 }
 \newcommand*\coldiag{\multicolumn{1}{D{45}{1em}}}
 \newcommand*\colvert{\multicolumn{1}{D{90}{1em}}}
@@ -97,37 +95,37 @@
 
 % Exclusive filter
 \pgfplotsset{
-  discard if/.style 2 args={
-      x filter/.append code={
-          \readlist\mylist{#2}%
-          \foreachitem\z\in\mylist[]{%
-            \ifdim\thisrow{#1} pt=\z pt
-              \def\pgfmathresult{inf}
-            \fi
-          }
-        }
-    },
+	discard if/.style 2 args={
+			x filter/.append code={
+					\readlist\mylist{#2}%
+					\foreachitem\z\in\mylist[]{%
+						\ifdim\thisrow{#1} pt=\z pt
+							\def\pgfmathresult{inf}
+						\fi
+					}
+				}
+		},
 }
 
 % Inclusive filter
 \pgfplotsset{
-  discard if not/.style 2 args={
-      x filter/.code={
-          \edef\tempa{\thisrow{#1}}
-          \edef\tempb{#2}
-          \ifx\tempa\tempb
-          \else
-            \def\pgfmathresult{inf}
-          \fi
-        }
-    }
+	discard if not/.style 2 args={
+			x filter/.code={
+					\edef\tempa{\thisrow{#1}}
+					\edef\tempb{#2}
+					\ifx\tempa\tempb
+					\else
+						\def\pgfmathresult{inf}
+					\fi
+				}
+		}
 }
 
 \usepackage{siunitx}
 
 \usepackage{listings}
 \lstset{
-  basicstyle=\tt,
+	basicstyle=\tt,
 }
 
 % Authors
@@ -137,7 +135,7 @@
 \usepackage{fontawesome5}
 \makeatletter
 \newcommand{\github}[2]{%
-  \href{#1}{\faGithub\ \texttt{#2}}%
+	\href{#1}{\faGithub\ \texttt{#2}}%
 }
 \makeatother
 
