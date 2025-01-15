@@ -9,6 +9,8 @@ The assignment was organized as [a Kaggle competition](https://www.kaggle.com/co
 The task was to predict the number of available bikes at 75 rental stations in three hours' time between November 2014 and January 2015,
 i.e., a supervised univariate regression problem.
 
+My entry performed best on the private (held-out) and public leaderboards within my PhD cohort.
+
 ## Instructions
 
 > [!WARNING]
